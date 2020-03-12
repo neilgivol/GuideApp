@@ -93,9 +93,7 @@ class SignIn extends Component {
                                 />
                                 <div className="mb-3">
                                
-                                <MDBCol md="6" className="remember">
-                                <MDBInput label="Remember me" filled type="checkbox" id="checkbox1" />
-                                </MDBCol>
+                               
                                 <MDBCol md="6" className="forgot">
                                 <a href="#!" className="blue-text ml-1"><p className="font-small blue-text d-flex justify-content-end pb-3">Forgot Password?</p></a>
                                 </MDBCol>
