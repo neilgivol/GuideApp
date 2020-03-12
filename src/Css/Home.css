@@ -1,0 +1,22 @@
+#close{
+    height: 100%;
+    left: 100px;
+    position: fixed;
+    top: 0px;
+    flex-direction: column;
+    transition: 300ms ease all;
+}
+#open{
+    height: 100%;
+    left: 300px;
+    position: fixed;
+    top: 0px;
+    flex-direction: column;
+    transition: 300ms ease all;
+}
+@media only screen and (max-width: 600px) {
+   #close{
+    left: 80px;
+
+   }
+  }

@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
  
-function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navOpenChange }) {
+function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc }) {
     const [ navOpen, setNavOpen ] = useState(true)
     const [ hoverIndex, setHoverIndex ] = useState(-1)
-  const  setNavOpenChange=()=>{
-        if (navOpenChange) {
-            navOpenChange = false;
-                }
-                else{
-                    navOpenChange = true;
-                }
-                console.log(navOpenChange)
-    }
     return (
         <nav
             className="responsive-toolbar"
@@ -22,7 +13,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                 className={ navOpen ? 'active' : '' }
                 id={ navOpen ? 'activeNav' : 'noActiveNav' }
             >
-                <figure className="image-logo" onClick={ () => { setNavOpen(!navOpen);setNavOpenChange();} }>
+                <figure className="image-logo" onClick={ () => { setNavOpen(!navOpen);navbarCheckFunc(navOpen);} }>
                     <img src={ logo } height="40px" width="40px" alt="toolbar-logo" />
                 </figure>
                 { navLinks.map((link, index) => 

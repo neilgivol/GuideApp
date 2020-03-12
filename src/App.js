@@ -43,7 +43,7 @@ class App extends Component {
     super(props)
     this.state={
       guides:[],
-      //activeNavBar:document.getElementById('activeNav'),
+      navbarCheckOpen:"open"
     }
     let local = true;
     this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -199,8 +199,19 @@ class App extends Component {
         });
       }
   }
-  CheckIfGuideExist=()=>{
-
+  navbarCheck=(nav)=>{
+    if (nav) {
+      this.setState({
+        navbarCheckOpen:"close"
+      })
+    }
+    else{
+      this.setState({
+        navbarCheckOpen:"open"
+      })
+    }
+      
+      console.log(this.state.navbarCheckOpen);
   }
 
   GetUserValues = () =>{
@@ -223,18 +234,18 @@ class App extends Component {
         </Route>
         <Route path="/home">
         <ResponsiveNavigation
-        tempOpen2 = {true}
+        navbarCheckFunc = {this.navbarCheck}
 				navLinks={ navLinks }
 				logo={ logo }
 				background="#0099cc"
 				hoverBackground="#ddd"
 				linkColor="#777"
 			/>
-        <Home />
+       <Home navbarOpenCheck={this.state.navbarCheckOpen}/>
         </Route>
         <Route path="/contact">
         <ResponsiveNavigation
-        tempOpen2 = {true}
+        navbarCheckFunc = {this.navbarCheck}
 				navLinks={ navLinks }
 				logo={ logo }
 				background="#0099cc"
@@ -264,14 +275,6 @@ class App extends Component {
         <About />
         </Route>
         <Route path="/details">
-        <ResponsiveNavigation
-                navOpen2 = "open"
-				navLinks={ navLinks }
-				logo={ logo }
-				background="#0099cc"
-				hoverBackground="#ddd"
-				linkColor="#777"
-			/>
         <ProfileDetails />
         </Route>
       </Switch>

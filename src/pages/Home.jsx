@@ -7,8 +7,7 @@ import Area from '../Screens/Area';
 import ProfileCard from '../Components/ProfileCard.jsx';
 import NavbarProfile from '../Components/NavbarProfile';
 import Languages from '../Screens/Languages';
-const classEl = document.getElementsByClassName("container");
-
+import '../Css/Home.css';
 class Home extends Component {
     constructor(props){
         super(props);
@@ -21,7 +20,8 @@ class Home extends Component {
             firstName:this.props.location.state.firstName,
             lastName:this.props.location.state.lastName,
             userID:this.props.location.state.userID,
-            email:this.props.location.state.email
+            email:this.props.location.state.email,
+            navbar:this.props.navbarOpenCheck
             };
     }
 
@@ -49,13 +49,13 @@ class Home extends Component {
     else if(namePage2 == "Languages")
     return <Languages/>
  }
- 
+
    
     render() {
         console.log(this.state.namePage);
    console.log()
         return (
-            <div className="container">
+            <div id={this.props.navbarOpenCheck} className="container">
                 <NavbarProfile  ClickPage2 = {this.ClickPage2} />
                     <div className="row homePage">
                     <div className="col-lg-4">
