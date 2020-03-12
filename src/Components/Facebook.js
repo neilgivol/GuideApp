@@ -75,7 +75,7 @@ class Facebook extends Component {
             );
 
         return (
-            <div>
+            <div className="FacebookBTN">
                 {fbContent}
             </div>
         );

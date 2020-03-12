@@ -37,10 +37,21 @@
       top: -11px;
       z-index: 1;
   }
-  .labelRem{
-    margin:0 auto;
-  }
-  .checkBoxRem{
-    margin:0 auto;
-  }
-  
+ 
+  .CardBody{
+    text-align: left;
+}
+.forgotPass{
+ display: flex;
+}
+.signUp{
+  float: right;
+}
+.btnSignIn{
+  width: 80%;
+  margin: 0 auto;
+}
+.divRemember {
+text-align: left;
+}
+

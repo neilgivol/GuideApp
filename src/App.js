@@ -10,11 +10,12 @@ import Portfolio from './pages/Portfolio.jsx'
 import Blog from './pages/Blog.jsx'
 import Home from './pages/Home.jsx'
 import ResponsiveNavigation from './Components/ResponsiveNavigation.jsx'
-
+import ResetPassword from './Screens/ResetPassword'
 import logo from './logo.svg';
 import ProfileDetails from './Screens/ProfileDetails';
 import Area from './Screens/Area';
 import Check from './Screens/Check';
+import SignInTemp from './Screens/SignInTemp';
 const navLinks = [
   {
     text: 'Profile',
@@ -225,6 +226,12 @@ class App extends Component {
       <Check
        color="#999"
        type="spin"/>
+      </Route>
+      <Route exact path="/reset" >
+      <ResetPassword />
+      </Route>
+      <Route exact path="/temp" >
+      <SignInTemp />
       </Route>
       <Route  path="/signIn" >
       <SignIn Allusers={this.state.guides} PostGuideToSQLFromFacebook={this.PostGuideToSQLFromFacebook} PostGuideToSQLFromGoogle={this.PostGuideToSQLFromGoogle}/>

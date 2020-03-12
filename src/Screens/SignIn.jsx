@@ -8,6 +8,24 @@ import logo from '../Img/logo.png';
 import Facebook from "../Components/Facebook.js";
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import Google from '../Components/Google';
+import { Form } from 'react-bootstrap';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="#">
+                IsraVisor
+        </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
 
 
 class SignIn extends Component {
@@ -73,35 +91,34 @@ class SignIn extends Component {
                                         <strong>Sign in</strong>
                                     </h3>
                                 </div>
-                                <MDBInput
-                                    label="Your email"
-                                    group
-                                    type="email"
-                                    validate
-                                    error="wrong"
-                                    success="right"
-                                    onChange={this.HandelEmailInput}
-                                />
-                                <MDBInput
-                                    label="Your password"
-                                    group
-                                    type="password"
-                                    validate
-                                    containerClass="mb-0"
-                                    onChange={this.HandelPasswordInput}
-
-                                />
-                                <div className="mb-3">
-                               
-                               
-                                <MDBCol md="6" className="forgot">
-                                <a href="#!" className="blue-text ml-1"><p className="font-small blue-text d-flex justify-content-end pb-3">Forgot Password?</p></a>
-                                </MDBCol>
-
-                               
-                                </div>
-                               
                                 <div className="text-center mb-3">
+                                    <MDBInput
+                                        label="Your email"
+                                        group
+                                        type="email"
+                                        validate
+                                        error="wrong"
+                                        success="right"
+                                        onChange={this.HandelEmailInput}
+                                    />
+                                    <MDBInput
+                                        label="Your password"
+                                        group
+                                        type="password"
+                                        validate
+                                        containerClass="mb-0"
+                                        onChange={this.HandelPasswordInput}
+
+                                    />
+                                </div>
+
+                                <div className="divRemember">
+                                    <FormControlLabel
+                                        control={<Checkbox value="remember" color="primary" />}
+                                        label="Remember me"
+                                    />
+                                </div>
+                                <div className="text-center mb-3 btnSignIn">
                                     <MDBBtn
                                         type="button"
                                         gradient="blue"
@@ -120,20 +137,29 @@ class SignIn extends Component {
                                 <div className="text-center mb-3">
                                     <Facebook faceLogin={this.state.faceLogin} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
                                     <Google PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
-
                                 </div>
 
 
                             </MDBCardBody>
                             <MDBModalFooter className="mx-5 pt-3 mb-1">
-                                <p className="font-small grey-text d-flex justify-content-end">
-                                    Not a member?
+                                <div className="row col-12">
+                                    <div className="col-6 forgotPass">
+                                        <p className="font-small blue-text d-flex justify-content-end"><Link to="/reset">Forgot Password?</Link></p>
+                                    </div>
+                                    <div className="col-6 signUp">
+                                        <p className="font-small grey-text d-flex justify-content-end">
+                                            Not a member?
                                 <Link to="/SignUp">SignUp</Link>
-                                </p>
+                                        </p>
+                                    </div>
+                                </div>
                             </MDBModalFooter>
                         </MDBCard>
                     </MDBCol>
                 </MDBRow>
+                <Box mt={8}>
+                    <Copyright />
+                </Box>
             </MDBContainer>
         );
     }
