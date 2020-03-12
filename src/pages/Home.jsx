@@ -12,7 +12,7 @@ class Home extends Component {
     constructor(props){
         super(props);
         this.state = {
-            namePage: '',
+            namePage: 'Profile Details',
                 detailsGoogle:this.props.location.state.profileObj,
             facebookLogin:this.props.location.state.facebookLogin,
             googleLogin:this.props.location.state.googleLogin,
@@ -55,7 +55,7 @@ class Home extends Component {
         console.log(this.state.namePage);
    console.log()
         return (
-            <div id={this.props.navbarOpenCheck} className="container">
+            <div id={this.props.navbarOpenCheck} className="container-fluid HomePageContainer">
                 <NavbarProfile  ClickPage2 = {this.ClickPage2} />
                     <div className="row homePage">
                     <div className="col-lg-4">

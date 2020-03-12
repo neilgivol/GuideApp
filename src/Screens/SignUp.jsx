@@ -3,7 +3,22 @@ import '../Css/SignUp.css';
 import logo from '../Img/logo.png';
 import { Link } from "react-router-dom";
 import React, { Component } from 'react';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 const guide = null;
+function Copyright() {
+  return (
+      <Typography variant="body2" color="textSecondary" align="center">
+          {'Copyright © '}
+          <Link color="inherit" href="#">
+              IsraVisor
+      </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+      </Typography>
+  );
+}
+
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -149,6 +164,9 @@ class SignUp extends Component {
             </MDBCard>
           </MDBCol>
         </MDBRow>
+        <Box mt={8}>
+                    <Copyright />
+                </Box>
       </MDBContainer>
     );
   }

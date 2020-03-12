@@ -7,14 +7,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
-import 'react-phone-input-2/lib/style.css'
-import { Dropdown } from 'semantic-ui-react'
+import 'react-phone-input-2/lib/style.css';
+import { Dropdown } from 'semantic-ui-react';
+import '../Css/ProfileDetails.css';
 const friendOptions = [
     {
         key: 'Instegram',
         text: 'Instegram',
         value: 'Instegram',
-        image: { avatar: true, src: '/images/avatar/small/jenny.jpg' },
+        image: { avatar: true, src: 'src\Img\The_Instagram_Logo.jpg' },
     },
     {
         key: 'Facebook',
@@ -92,7 +93,7 @@ class ProfileDetails extends Component {
                         <ListGroupItem className="p-3">
                             <Form>
                                 <div className="row labelInputs">
-                                    <div className="col-lg-6 form-group"><label htmlFor="feFirstName">First Name</label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feFirstName">First Name</label><br />
                                         <input
                                             id="feFirstName"
                                             placeholder="First Name"
@@ -100,7 +101,7 @@ class ProfileDetails extends Component {
                                             onChange={() => { }}
                                         />
                                     </div>
-                                    <div className="col-lg-6 form-group" ><label htmlFor="feLastName">Last Name</label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLastName">Last Name</label><br />
                                         <input
                                             id="feLastName"
                                             placeholder="Last Name"
@@ -110,7 +111,7 @@ class ProfileDetails extends Component {
                                     </div>
                                 </div>
                                 <div className="row labelInputs">
-                                    <div className="col-lg-6 form-group"><label htmlFor="feEmail">Email</label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feEmail">Email</label><br />
                                         <input
                                             id="feEmail"
                                             placeholder="Email"
@@ -118,7 +119,7 @@ class ProfileDetails extends Component {
                                             onChange={() => { }}
                                         />
                                     </div>
-                                    <div className="col-lg-6 form-group" ><label htmlFor="feLicense">License Number</label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
                                         <input
                                             id="feLicense"
                                             placeholder="License Number"
@@ -128,7 +129,7 @@ class ProfileDetails extends Component {
                                     </div>
                                 </div>
                                 <div className="row labelInputs">
-                                    <div className="col-lg-6 form-group"><label htmlFor="feBirth">Birthday</label><br />
+                                    <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
                                         <DatePicker
                                             selected={this.state.startDate}
                                             onChange={this.handleChange}
@@ -136,7 +137,7 @@ class ProfileDetails extends Component {
                                             dateFormat="MM/dd/yyyy"
                                         />
                                     </div>
-                                    <div className="col-lg-6 form-group" ><label htmlFor="feGender">Gender</label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
                                         <Radio
                                             checked={this.state.size === "female"}
                                             onChange={this.handleChange2}
@@ -156,7 +157,7 @@ class ProfileDetails extends Component {
                                     </div>
                                 </div>
                                 <div className="row labelInputs">
-                                    <div className="col-lg-6 form-group"><label htmlFor="fephone">Phone </label><br />
+                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="fephone">Phone </label><br />
                                         <ReactPhoneInput
                                             inputExtraProps={{
                                                 name: "phone",
@@ -171,28 +172,35 @@ class ProfileDetails extends Component {
 
                                 </div>
                                 <div className="row labelInputs">
-                                <div className="col-lg-12 form-group">
-                                <label htmlFor="feLinks">Link Type</label><br />
-                                </div>
+                                    <div className="col-lg-12 form-group">
+                                        <label htmlFor="feLinks">Link Type</label><br />
+                                    </div>
                                 </div>
                                 <div className="row labelInputs">
                                     <div className="col-lg-3">
                                         <Dropdown
-                                            placeholder='Select Friend'
+                                            placeholder='Select links'
                                             fluid
                                             selection
                                             options={friendOptions}
                                         />
                                     </div>
-                                    <div className="col-lg-9">
-                                    <input
+                                    <div className="col-lg-9 chooseLink">
+                                        <input
                                             id="feFirstName"
                                             placeholder="First Name"
                                             value="Aviel"
                                             onChange={() => { }}
                                         />
                                     </div>
-                                    </div>
+                                </div>
+                                <div>
+                                <Form.Group controlId="exampleForm.ControlTextarea1">
+                                    <Form.Label>Short Description</Form.Label>
+                                    <Form.Control as="textarea" rows="3" />
+                                </Form.Group>
+                                </div>
+                               
                             </Form>
                         </ListGroupItem>
                     </ListGroup>

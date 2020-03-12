@@ -7,7 +7,22 @@ import '../Css/SignIn.css';
 import logo from '../Img/logo.png';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
-import '../Css/passwordReset.css'
+import '../Css/passwordReset.css';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" href="#">
+                IsraVisor
+        </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+  }
+
 class ResetPassword extends Component {
     render() {
         return (
@@ -43,6 +58,9 @@ class ResetPassword extends Component {
                         </MDBCard>
                     </MDBCol>
                 </MDBRow>
+                <Box mt={8}>
+                    <Copyright />
+                </Box>
             </MDBContainer>
 
         );

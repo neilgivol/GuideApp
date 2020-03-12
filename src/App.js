@@ -224,7 +224,7 @@ class App extends Component {
       <Switch>
       <Route exact path="/" >
       <Check
-       color="#999"
+       color="#008ae6"
        type="spin"/>
       </Route>
       <Route exact path="/reset" >

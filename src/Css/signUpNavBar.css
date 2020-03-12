@@ -3,7 +3,8 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #D9D9D9;
+    background-color:  #66c2ff;
+    border-top-left-radius: 8px;
   }
   
  .ulSign li {
@@ -20,7 +21,7 @@
   
   /* Change the link color to #111 (black) on hover */
  .ulSign li a:hover {
-    background-color: #D7D7D7;
+    background-color:  #b3e0ff;
   }
 
   .active {

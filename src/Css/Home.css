@@ -5,6 +5,7 @@
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
+    width: 90%;
 }
 #open{
     height: 100%;
@@ -13,6 +14,15 @@
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
+    width: 80%;
+}
+.HomePageContainer{
+    margin-right: 100px;
+    margin-top:10px;
+}
+.homePage{
+    border:1px solid #999;
+    margin:0 auto;
 }
 @media only screen and (max-width: 600px) {
    #close{
