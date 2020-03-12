@@ -1,0 +1,46 @@
+.form-elegant .font-small {
+    font-size: 0.8rem; }
+  
+  .form-elegant .z-depth-1a {
+    -webkit-box-shadow: 0 2px 5px 0 rgba(55, 161, 255, 0.26), 0 4px 12px 0 rgba(121, 155, 254, 0.25);
+    box-shadow: 0 2px 5px 0 rgba(55, 161, 255, 0.26), 0 4px 12px 0 rgba(121, 155, 254, 0.25); }
+  
+  .form-elegant .z-depth-1-half,
+  .form-elegant .btn:hover {
+    -webkit-box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15);
+    box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15); }
+
+    .ColDivSignIn{
+        text-align: center;
+        margin: auto;
+    }
+    .RowDivSignIn{
+        display: flex;
+  flex-direction: column;
+    }
+    .LogoDiv{
+        text-align: center;
+        margin: auto;
+    }
+    label.active{
+      background-color: white;
+    }
+    .or-seperator {
+      margin-top: 20px;
+      text-align: center;
+      border-top: 1px solid #ccc;
+  }
+  .or-seperator i {
+      padding: 0 10px;
+      background: #f7f7f7;
+      position: relative;
+      top: -11px;
+      z-index: 1;
+  }
+  .labelRem{
+    margin:0 auto;
+  }
+  .checkBoxRem{
+    margin:0 auto;
+  }
+  

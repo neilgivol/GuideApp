@@ -1,0 +1,28 @@
+.ColDivSignIn{
+    text-align: center;
+    margin: auto;
+}
+.RowDivSignIn{
+    display: flex;
+flex-direction: column;
+}
+.LogoDiv{
+    text-align: center;
+    margin: auto;
+}
+.CardBody{
+    text-align: left;
+}
+.btn-default{
+    background-color:#008ae6 ;
+}
+i.active{
+    background-color: white;
+}
+.right{
+    float: right;
+
+}
+.left{
+    float: left;
+}
