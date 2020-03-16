@@ -6,9 +6,8 @@ import 'mdbreact/dist/css/mdb.css';
 import '../Css/SignIn.css';
 import logo from '../Img/logo.png';
 import Facebook from "../Components/Facebook.js";
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Google from '../Components/Google';
-import { Form } from 'react-bootstrap';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -34,13 +33,11 @@ class SignIn extends Component {
         this.state = {
             email: "",
             password: "",
-            users: props.Allusers,
+            users: this.props.Allusers,
             faceLogin: [],
         }
     }
-    componentWillMount() {
-        console.log(this.state.users)
-    }
+  
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
@@ -57,19 +54,33 @@ class SignIn extends Component {
 
     UserExists = () => {
         const tempUsers = this.state.users;
+        let logginUser = "";
         let ifExist = false;
-        console.log(tempUsers);
         for (let i = 0; i < tempUsers.length; i++) {
             const element = tempUsers[i];
             console.log(element)
-            if (element.Email == this.state.email && element.PasswordGuide == this.state.password) {
+            if (element.Email === this.state.email && element.PasswordGuide === this.state.password) {
                 ifExist = true;
+                logginUser = element;
             }
 
         }
         if (ifExist) {
-            this.props.history.push({
+            const facebookLogin = false;
+            const googleLogin = false;
+            const SignUpUser = {
+                Email:logginUser.Email,
+                FirstName:logginUser.FirstName,
+                LastName:logginUser.LastName,
+                facebookLogin:facebookLogin,
+                googleLogin:googleLogin
+            }
+            localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
+            //localStorage.removeItem('GoogleUser');
+            //localStorage.removeItem('FacebookUser');
+                      this.props.history.push({
                 pathname: '/home',
+
             });
         }
         else {
@@ -135,7 +146,7 @@ class SignIn extends Component {
                                 </div>
 
                                 <div className="text-center mb-3">
-                                    <Facebook faceLogin={this.state.faceLogin} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+                                    <Facebook PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
                                     <Google PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                 </div>
 

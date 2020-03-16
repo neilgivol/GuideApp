@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import SignIn from './Screens/SignIn';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import SignUp from './Screens/SignUp';
 import { Router } from '@reach/router'
 import About from './pages/About.jsx'
@@ -24,7 +24,7 @@ const navLinks = [
   },
   {
     text: 'Chat',
-    path: '/contact',
+    path: '/chat',
     icon: 'ion-ios-megaphone'
   },
   {
@@ -40,11 +40,14 @@ const navLinks = [
 ]
 
 class App extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state={
-      guides:[],
-      navbarCheckOpen:"open"
+    this.state = {
+      guides: [],
+      navbarCheckOpen: "open",
+      email: "",
+      firstName: "",
+      lastName: ""
     }
     let local = true;
     this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -54,6 +57,152 @@ class App extends Component {
   }
 
   componentWillMount() {
+
+    this.GetGuidesFromSQL();
+  }
+
+  PostGuideToSQL = (guide) => {
+    let isExist = false;
+    for (let i = 0; i < this.state.guides.length; i++) {
+      const g = this.state.guides[i];
+      if (g.Email === guide.email) {
+        isExist = true;
+      }
+    }
+
+    if (isExist) {
+      alert("Already Exist");
+    }
+    else {
+      //pay attention case sensitive!!!! should be exactly as the prop in C#!
+      fetch(this.apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          Email: guide.email,
+          PasswordGuide: guide.password,
+          FirstName: guide.firstName,
+          LastName: guide.lastName,
+          ProfilePic: ""
+        }),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+
+      })
+        .then(res => {
+          console.log('res=', res);
+          return res.json()
+        })
+        .then(
+          (result) => {
+            console.log("fetch POST= ", result);
+            console.log(result);
+          },
+          (error) => {
+            console.log("err post=", error);
+          });
+    }
+
+  }
+  PostGuideToSQLFromFacebook = (guideFacebook) => {
+    let isExist = false;
+    for (let i = 0; i < this.state.guides.length; i++) {
+      const g = this.state.guides[i];
+      if (g.Email === guideFacebook.email) {
+        isExist = true;
+      }
+    }
+
+    if (isExist) {
+
+    }
+    else {
+      fetch(this.apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          Email: guideFacebook.email,
+          PasswordGuide: "No Password",
+          FirstName: guideFacebook.firstName,
+          LastName: guideFacebook.lastName,
+          ProfilePic: guideFacebook.picture
+        }),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+
+      })
+        .then(res => {
+          console.log('res=', res);
+          return res.json()
+        })
+        .then(
+          (result) => {
+            console.log("fetch POST= ", result);
+            console.log(result);
+          },
+          (error) => {
+            console.log("err post=", error);
+          });
+    }
+  }
+  PostGuideToSQLFromGoogle = (guideGoogle) => {
+    let isExist = false;
+    for (let i = 0; i < this.state.guides.length; i++) {
+      const g = this.state.guides[i];
+      if (g.Email === guideGoogle.email) {
+        isExist = true;
+      }
+    }
+
+    if (isExist) {
+
+    }
+    else {
+      fetch(this.apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({
+          Email: guideGoogle.email,
+          PasswordGuide: "No Password",
+          FirstName: guideGoogle.givenName,
+          LastName: guideGoogle.familyName,
+          ProfilePic: guideGoogle.imageUrl
+        }),
+        headers: new Headers({
+          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        })
+
+      })
+        .then(res => {
+          console.log('res=', res);
+          return res.json()
+        })
+        .then(
+          (result) => {
+            console.log("fetch POST= ", result);
+            console.log(result);
+          },
+          (error) => {
+            console.log("err post=", error);
+          });
+    }
+  }
+  navbarCheck = (nav) => {
+    if (nav) {
+      this.setState({
+        navbarCheckOpen: "close"
+      })
+    }
+    else {
+      this.setState({
+        navbarCheckOpen: "open"
+      })
+    }
+
+    console.log(this.state.navbarCheckOpen);
+  }
+
+
+  GetGuidesFromSQL = () => {
     fetch(this.apiUrl, {
       method: 'GET',
       headers: new Headers({
@@ -65,227 +214,115 @@ class App extends Component {
       })
       .then(
         (result) => {
-          this.setState({guides:result})
-          console.log(this.state.guides)
+          this.setState({ guides: result })
         },
         (error) => {
           console.log("err post=", error);
         });
-
-
-  }
- 
-  PostGuideToSQL = (guide) => {
-  let isExist = false;
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email == guide.email) {
-        isExist = true;
-      }
-    }
-
-      if(isExist){
-        alert("Already Exist");
-      } 
-      else{
-            //pay attention case sensitive!!!! should be exactly as the prop in C#!
-    fetch(this.apiUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        Email:guide.email,
-        PasswordGuide:guide.password,
-        FirstName:guide.firstName,
-        LastName:guide.lastName,
-        ProfilePic:""
-      }),
-      headers: new Headers({
-        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-
-    })
-      .then(res => {
-        console.log('res=', res);
-        return res.json()
-      })
-      .then(
-        (result) => {
-          console.log("fetch POST= ", result);
-          console.log(result);
-        },
-        (error) => {
-          console.log("err post=", error);
-        });
-      }
-  
-  }
-  PostGuideToSQLFromFacebook=(guideFacebook)=>{
-    let isExist = false;
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email == guideFacebook.email) {
-        isExist = true;
-      }
-    }
-
-      if(isExist){
-       
-      } 
-      else{
-    fetch(this.apiUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        Email:guideFacebook.email,
-        PasswordGuide:"No Password",
-        FirstName:guideFacebook.firstName,
-        LastName:guideFacebook.lastName,
-        ProfilePic:guideFacebook.picture
-      }),
-      headers: new Headers({
-        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-
-    })
-      .then(res => {
-        console.log('res=', res);
-        return res.json()
-      })
-      .then(
-        (result) => {
-          console.log("fetch POST= ", result);
-          console.log(result);
-        },
-        (error) => {
-          console.log("err post=", error);
-        });
-      }
-  }
-  PostGuideToSQLFromGoogle=(guideGoogle)=>{
-    let isExist = false;
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email == guideGoogle.email) {
-        isExist = true;
-      }
-    }
-
-      if(isExist){
-       
-      } 
-      else{
-    fetch(this.apiUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        Email:guideGoogle.email,
-        PasswordGuide:"No Password",
-        FirstName:guideGoogle.givenName,
-        LastName:guideGoogle.familyName,
-        ProfilePic:guideGoogle.imageUrl
-      }),
-      headers: new Headers({
-        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-      })
-
-    })
-      .then(res => {
-        console.log('res=', res);
-        return res.json()
-      })
-      .then(
-        (result) => {
-          console.log("fetch POST= ", result);
-          console.log(result);
-        },
-        (error) => {
-          console.log("err post=", error);
-        });
-      }
-  }
-  navbarCheck=(nav)=>{
-    if (nav) {
-      this.setState({
-        navbarCheckOpen:"close"
-      })
-    }
-    else{
-      this.setState({
-        navbarCheckOpen:"open"
-      })
-    }
-      
-      console.log(this.state.navbarCheckOpen);
-  }
-
-  GetUserValues = () =>{
+        let tempArray = this.state.guides;
+        return tempArray;
 
   }
   render() {
     return (
       <div className="app">
-      <Switch>
-      <Route exact path="/" >
-      <Check
-       color="#008ae6"
-       type="spin"/>
-      </Route>
-      <Route exact path="/reset" >
-      <ResetPassword />
-      </Route>
-      <Route exact path="/temp" >
-      <SignInTemp />
-      </Route>
-      <Route  path="/signIn" >
-      <SignIn Allusers={this.state.guides} PostGuideToSQLFromFacebook={this.PostGuideToSQLFromFacebook} PostGuideToSQLFromGoogle={this.PostGuideToSQLFromGoogle}/>
-      </Route>
-        <Route path="/signUp">
-        <SignUp PostGuideToSQL={this.PostGuideToSQL} CheckIfGuideExist={this.CheckIfGuideExist}/>
-        </Route>
-        <Route path="/home">
-        <ResponsiveNavigation
-        navbarCheckFunc = {this.navbarCheck}
-				navLinks={ navLinks }
-				logo={ logo }
-				background="#0099cc"
-				hoverBackground="#ddd"
-				linkColor="#777"
-			/>
-       <Home navbarOpenCheck={this.state.navbarCheckOpen}/>
-        </Route>
-        <Route path="/contact">
-        <ResponsiveNavigation
-        navbarCheckFunc = {this.navbarCheck}
-				navLinks={ navLinks }
-				logo={ logo }
-				background="#0099cc"
-				hoverBackground="#ddd"
-				linkColor="#777"
-			/>
-        <Contact />
-        </Route>
-        <Route path="/area">
-        <ResponsiveNavigation
-        tempOpen2 = {true}
-				navLinks={ navLinks }
-				logo={ logo }
-				background="#0099cc"
-				hoverBackground="#ddd"
-				linkColor="#777"
-			/>
-        <Area />
-        </Route>
-        <Route path="/portfolio">
-        <Portfolio />
-        </Route>
-        <Route path="/blog">
-        <Blog />
-        </Route>
-        <Route path="/about">
-        <About />
-        </Route>
-        <Route path="/details">
-        <ProfileDetails />
-        </Route>
-      </Switch>
-    </div>
+        <Switch>
+          <Route exact path="/" >
+            <Check
+              color="#008ae6"
+              type="spin" />
+          </Route>
+          <Route exact path="/reset" >
+            <ResetPassword />
+          </Route>
+          <Route exact path="/temp" >
+            <SignInTemp />
+          </Route>
+          <Route path="/signIn" >
+            <SignIn Allusers={this.state.guides} PostGuideToSQLFromFacebook={this.PostGuideToSQLFromFacebook} PostGuideToSQLFromGoogle={this.PostGuideToSQLFromGoogle} />
+          </Route>
+          <Route path="/signUp">
+            <SignUp PostGuideToSQL={this.PostGuideToSQL} CheckIfGuideExist={this.CheckIfGuideExist} />
+          </Route>
+          <Route path="/home">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <Home Allusers={this.state.guides} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+          </Route>
+          <Route path="/chat">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <Contact />
+          </Route>
+          <Route path="/area">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <Area />
+          </Route>
+          <Route path="/portfolio">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <Portfolio />
+          </Route>
+          <Route path="/blog">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <Blog />
+          </Route>
+          <Route path="/about">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <About />
+          </Route>
+          <Route path="/details">
+            <ResponsiveNavigation
+              navbarCheckFunc={this.navbarCheck}
+              navLinks={navLinks}
+              logo={logo}
+              background="#0099cc"
+              hoverBackground="#ddd"
+              linkColor="#777"
+            />
+            <ProfileDetails />
+          </Route>
+        </Switch>
+      </div>
     );
   }
 }

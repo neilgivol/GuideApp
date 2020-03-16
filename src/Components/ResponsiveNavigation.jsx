@@ -4,6 +4,7 @@ import { Switch, Route, Link, withRouter } from 'react-router-dom';
 function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc }) {
     const [ navOpen, setNavOpen ] = useState(true)
     const [ hoverIndex, setHoverIndex ] = useState(-1)
+    const [ clickIndex, setClickIndex ] = useState(-1)
     return (
         <nav
             className="responsive-toolbar"
@@ -21,6 +22,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                         key={ index }
                         onMouseEnter={ () => { setHoverIndex(index) } }
                         onMouseLeave={ () => { setHoverIndex(-1) } }
+                        onClick={ () => { setClickIndex(index)} }
                         style={{ background: hoverIndex === index ? (hoverBackground || '#D7D7D7') : '' }}
                     >
                         <Link

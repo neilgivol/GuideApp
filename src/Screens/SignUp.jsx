@@ -1,7 +1,7 @@
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBCard, MDBCardBody } from 'mdbreact';
 import '../Css/SignUp.css';
 import logo from '../Img/logo.png';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
@@ -67,15 +67,37 @@ class SignUp extends Component {
   CheckPasswordConfirm = () => {
     let password = this.state.password;
     let confirmPassword = this.state.confirmPassword;
-
-    if (password != confirmPassword) {
+   
+    if (password !== confirmPassword) {
       alert("Password not Match")
     }
     else {
-      return <div>{this.props.PostGuideToSQL(this.guide)}</div>
+      return <div>{this.moveFunc()}</div>;
     }
 
   }
+  moveFunc = () =>{
+    const googleLogin = false;
+    const facebookLogin = false;
+    const SignUpUser = {
+      email:this.state.email,
+      picture:this.state.picture,
+      firstName:this.state.firstName,
+      lastName:this.state.lastName,
+      facebookLogin:facebookLogin,
+      googleLogin:googleLogin
+  }
+  localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
+  localStorage.removeItem('GoogleUser');
+  localStorage.removeItem('FacebookUser');
+
+    this.props.history.push({
+      pathname: '/home/',
+
+  });
+    return <div>{this.props.PostGuideToSQL(this.guide)}</div>;
+  }
+ 
   render() {
     this.guide = {
       email: this.state.email,
@@ -171,4 +193,4 @@ class SignUp extends Component {
     );
   }
 }
-export default SignUp;
+export default withRouter(SignUp);

@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
 import GoogleLogin from 'react-google-login';
-import { GoogleLogout } from "react-google-login";
-import { Link, withRouter, Redirect } from 'react-router-dom';
+import {  withRouter } from 'react-router-dom';
 
 class Google extends Component {
   constructor() {
@@ -20,9 +19,20 @@ class Google extends Component {
     this.setState({ userDetails: response.profileObj, isUserLoggedIn: true });
     const googleLogin = true;
     const facebookLogin = false;
+    const GoogleUser = {
+      Email:this.state.userDetails.email,
+      FirstName:this.state.userDetails.givenName,
+      LastName:this.state.familyName,
+      facebookLogin:facebookLogin,
+      googleLogin:googleLogin
+  }
+  localStorage.setItem('GoogleUser',JSON.stringify(GoogleUser))
+  localStorage.removeItem('FacebookUser');
+  localStorage.removeItem('SignUpUser');
+
     this.props.history.push({
       pathname: '/home/',
-      state: { profileObj: response.profileObj, googleLogin: googleLogin, facebookLogin: facebookLogin }
+
     });
   return <div>{this.props.PostGuideToSQLFromGoogle(this.state.userDetails)}</div>
   };
@@ -36,23 +46,13 @@ class Google extends Component {
         {!this.state.isUserLoggedIn && (
           <GoogleLogin
             clientId="383883505141-igdv29benmn8rp60edikg4j8ed5t20rs.apps.googleusercontent.com" //CLIENTID NOT CREATED YET
-            // render={renderProps => (
-            //   <button
-            //     className="button"
-            //     onClick={renderProps.onClick}
-            //     disabled={renderProps.disabled}
-            //   >
-            //     Log in with Google
-            //   </button>
-            // )}
+           
             buttonText="Login With Google"
             onSuccess={this.responseGoogle}
             onFailure={this.responseGoogle}
           />
         )}
-        {/* {this.state.isUserLoggedIn && (
-           
-        )} */}
+     
         </div>
     );
   }

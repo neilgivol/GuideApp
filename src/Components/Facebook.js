@@ -1,9 +1,7 @@
 
 import React, { Component } from 'react';
 import FacebookLoginBtn from 'react-facebook-login';
-import { Link, withRouter,Redirect } from 'react-router-dom';
-import { redirectTo } from '@reach/router';
-
+import { withRouter } from 'react-router-dom';
 
 class Facebook extends Component {
     constructor(props){
@@ -45,9 +43,20 @@ class Facebook extends Component {
     userEnter=()=>{
         const facebookLogin = true;
         const googleLogin = false;
+        const FacebookUser = {
+            Email:this.state.email,
+            picture:this.state.picture,
+            FirstName:this.state.firstName,
+            LastName:this.state.lastName,
+            facebookLogin:facebookLogin,
+            googleLogin:googleLogin
+        }
+        localStorage.setItem('FacebookUser',JSON.stringify(FacebookUser))
+        localStorage.removeItem('GoogleUser');
+        localStorage.removeItem('SignUpUser');
+
         this.props.history.push({
             pathname: '/home/',
-            state: {firstName:this.state.firstName,lastName:this.state.lastName,email:this.state.email,picture:this.state.picture,userID:this.state.userID,facebookLogin:facebookLogin, googleLogin:googleLogin }
         });
         const gFacebook = {
             firstName:this.state.firstName,
