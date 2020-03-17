@@ -70,7 +70,7 @@ class Home extends Component {
         // localStorage.removeItem('SignUpUser');
 
     }
-
+    
 
     ClickPage2 = (e) => {
         let tempArray = this.props.GetGuidesFromSQL();
@@ -83,19 +83,7 @@ class Home extends Component {
     }
     funcGoogleFacebook = () => {
         const Guide = JSON.parse(localStorage.getItem('Guide'));
-        // if (FacebookUser !== null) {
-        //     return <ProfileCard guideDetails={Guide} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
-        // }
-        // else if (GoogleUser !== null) {
-        //     return <ProfileCard guideDetails={Guide} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
-        // }
-        // else if (SignUpUser !== null) {
-        //     return <ProfileCard guideDetails={Guide} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
-        // }
-        // else if (FacebookUser === null & GoogleUser === null & SignUpUser === null) {
-        //     return <ProfileCard guideDetails={Guide} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
-
-        // }
+      
         return <ProfileCard email={Guide.Email} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
 
     }
@@ -104,18 +92,7 @@ class Home extends Component {
         const namePage2 = this.state.namePage;
         const Guide = JSON.parse(localStorage.getItem('Guide'));
         if (namePage2 === "Profile Details") {
-            // if (FacebookUser !== null) {
-            //     return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={FacebookUser.email} />
-            // }
-            // else if (GoogleUser !== null) {
-            //     return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={GoogleUser.userDetails.email} />
-            // }
-            // else if (SignUpUser !== null) {
-            //     return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={SignUpUser.email} />
-            // }
-            // else if (FacebookUser === null & GoogleUser === null & SignUpUser === null) {
-            //     return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={Guide.Email} />
-            // }
+          
             return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={Guide.Email} />
 
         }

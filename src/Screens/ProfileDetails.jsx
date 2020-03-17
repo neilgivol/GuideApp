@@ -59,46 +59,48 @@ class ProfileDetails extends Component {
             gender: '',
             size: '',
             phone: "",
-            user : {
-                FirstName:"",
-                LastName:"",
-                Phone:"",
-                License:"",
-                Email:"",
-                Gender:""
+            user: {
+                FirstName: "",
+                LastName: "",
+                Phone: "",
+                License: "",
+                Email: "",
+                Gender: "",
+                DescriptionGuide: ""
             },
-            allUsers:this.props.Allusers
+            allUsers: this.props.Allusers
         };
-        this.handleChange = this.handleChange.bind(this);
+        //this.handleChange = this.handleChange.bind(this);
         this.onFormSubmit = this.onFormSubmit.bind(this);
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
-          this.apiUrl = '';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/IsraVisor/ServerSide/api/Guide';
         }
     }
-    componentWillMount(){
-       fetch(this.apiUrl, {
-                method: 'GET',
-                headers: new Headers({
-                  'Content-Type': 'application/json; charset=UTF-8',
-                })
-              })
-                .then(res => {
-                  return res.json()
-                })
-                .then(
-                  (result) => {
-                    this.setState({allUsers:result})
-                  
-                  },
-                  (error) => {
+    componentWillMount() {
+        fetch(this.apiUrl, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ allUsers: result })
+
+                },
+                (error) => {
                     console.log("err post=", error);
-                  });
+                });
+        console.log(this.state.allUsers)
 
     }
-    componentDidMount(){
-      
+    componentDidMount() {
+
         let logginUser = "";
         for (let i = 0; i < this.state.allUsers.length; i++) {
             const element = this.state.allUsers[i];
@@ -106,13 +108,17 @@ class ProfileDetails extends Component {
                 logginUser = element;
             }
         }
+        let dateBirth =new Date(logginUser.BirthDay);
+        //let PhoneTemp = logginUser.Phone.substr(1);
+        //console.log(PhoneTemp);
         this.setState({
-            user:logginUser,
-            size:logginUser.Gender
-           // phone:logginUser.Phone
+            user: logginUser,
+            size: logginUser.Gender,
+            startDate:dateBirth,
+            phone:logginUser.Phone
         })
-        
-      
+
+
     }
     handleOnChange3 = value => {
         console.log(value);
@@ -123,15 +129,16 @@ class ProfileDetails extends Component {
         this.setState({
             gender: e.target.value,
             size: e.target.value,
-            user:{...this.state.user,Gender:e.target.value}
+            user: { ...this.state.user, Gender: e.target.value }
 
         });
     }
-    handleChange(date) {
-        this.setState({
-            startDate: date
-        })
-    }
+    // handleChange(event) {
+    //     this.setState({
+    //         birthDate: event.target.value
+    //       });
+    //       console.log(this.state.birthDate)
+    // }
 
 
     onFormSubmit(e) {
@@ -139,71 +146,79 @@ class ProfileDetails extends Component {
         console.log(this.state.startDate)
     }
 
-    onChangeFirstName=(e)=>{
+    onChangeFirstName = (e) => {
         this.setState({
-            user:{...this.state.user,FirstName:e.target.value}
+            user: { ...this.state.user, FirstName: e.target.value }
         });
     }
-    onChangeLastName=(e)=>{
+    onChangeLastName = (e) => {
         this.setState({
-            user:{...this.state.user,LastName:e.target.value}
+            user: { ...this.state.user, LastName: e.target.value }
         });
     }
-        onChangePhone=(e)=>{
-            this.setState({
-                user:{...this.state.user,Phone:e.target.value}
-            });
-        }
-            onChangeLicense=(e)=>{
-                this.setState({
-                    user:{...this.state.user,License:e.target.value}
-                });
-            }
-                onChangeLastName=(e)=>{
-                    this.setState({
-                        user:{...this.state.user,LastName:e.target.value}
-                    });
+    onChangePhone = (e) => {
+        this.setState({
+            user: { ...this.state.user, Phone: e.target.value }
+        });
     }
-    UpdateDetails=()=>{
+    onChangeLicense = (e) => {
+        this.setState({
+            user: { ...this.state.user, License: e.target.value }
+        });
+    }
+    onChangeDescriptionGuide = (e) => {
+        this.setState({
+            user: { ...this.state.user, DescriptionGuide: e.target.value }
+        });
+    }
+    UpdateDetails = () => {
         console.log(this.state.phone);
         let userGuide = this.state.user;
+        let startDate = this.state.startDate.toLocaleDateString('en-US');
+        let phoneGuide = this.state.phone;
+        //let startDate =  Date.parse(startDate);
+        console.log(phoneGuide);
         fetch(this.apiUrl, {
-          method: 'PUT',
-          body: JSON.stringify({
-            FirstName:userGuide.FirstName,
-            LastName:userGuide.LastName,
-            Email:userGuide.Email,
-            Phone:this.state.phone,
-            License:userGuide.License,
-            Gender:userGuide.Gender
-          }),
-          headers: new Headers({
-            'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-          })
-    
-        })
-          .then(res => {
-            console.log('res=', res);
-            return res.json()
-          })
-          .then(
-            (result) => {
-              console.log("fetch PUT= ", result);
-              console.log(result);
-            },
-            (error) => {
-              console.log("err post=", error);
-            });
-
-            alert("Success");
-            this.setState({
-                user:userGuide
+            method: 'PUT',
+            body: JSON.stringify({
+                FirstName: userGuide.FirstName,
+                LastName: userGuide.LastName,
+                Email: userGuide.Email,
+                Phone: this.state.phone,
+                License: userGuide.License,
+                Gender: userGuide.Gender,
+                DescriptionGuide: userGuide.DescriptionGuide,
+                BirthDay: startDate,
+                Phone:phoneGuide
+            }),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
-            //       window.location.reload(false);
-          }
+
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log("fetch PUT= ", result);
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+
+        alert("Success");
+        this.setState({
+            user: userGuide
+        })
+        //window.location.reload(false);
+        console.log(this.state.user)
+    }
 
 
-   
+
     render() {
         return (
             <div className="col-lg-8">
@@ -238,7 +253,7 @@ class ProfileDetails extends Component {
                                             id="feEmail"
                                             placeholder="Email"
                                             value={this.state.user.Email}
-                                            //onChange={() => { }}
+                                        //onChange={() => { }}
                                         />
                                     </div>
                                     <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
@@ -254,9 +269,9 @@ class ProfileDetails extends Component {
                                     <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
                                         <DatePicker
                                             selected={this.state.startDate}
-                                            onChange={this.handleChange}
-                                            name="startDate"
-                                            dateFormat="MM/dd/yyyy"
+                                            onChange={(newDate) => this.setState({ startDate: newDate })}
+                                            name="birthDate"
+                                            dateFormat="dd/MM/yyyy"
                                         />
                                     </div>
                                     <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
@@ -317,15 +332,18 @@ class ProfileDetails extends Component {
                                     </div>
                                 </div>
                                 <div>
-                                <Form.Group controlId="exampleForm.ControlTextarea1">
-                                    <Form.Label>Short Description</Form.Label>
-                                    <Form.Control as="textarea" rows="3" />
-                                </Form.Group>
+                                    <Form.Group controlId="exampleForm.ControlTextarea1">
+                                        <Form.Label>Short Description</Form.Label>
+                                        <Form.Control as="textarea" rows="3"
+                                            value={this.state.user.DescriptionGuide}
+                                            onChange={this.onChangeDescriptionGuide}
+                                        />
+                                    </Form.Group>
                                 </div>
                                 <div>
-                                    <Button onClick={() => {this.UpdateDetails();this.props.GetGuidesFromSQL();}}>Save</Button>
+                                    <Button onClick={() => { this.UpdateDetails(); this.props.GetGuidesFromSQL(); }}>Save</Button>
                                 </div>
-                               
+
                             </Form>
                         </ListGroupItem>
                     </ListGroup>
