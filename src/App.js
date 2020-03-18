@@ -55,6 +55,7 @@ class App extends Component {
       this.apiUrl = '';
     }
   }
+  
 
   componentWillMount() {
 
@@ -106,6 +107,7 @@ class App extends Component {
   }
   PostGuideToSQLFromFacebook = (guideFacebook) => {
     let isExist = false;
+    this.GetGuidesFromSQL();
     for (let i = 0; i < this.state.guides.length; i++) {
       const g = this.state.guides[i];
       if (g.Email === guideFacebook.email) {
@@ -147,6 +149,7 @@ class App extends Component {
   }
   PostGuideToSQLFromGoogle = (guideGoogle) => {
     let isExist = false;
+    this.GetGuidesFromSQL();
     for (let i = 0; i < this.state.guides.length; i++) {
       const g = this.state.guides[i];
       if (g.Email === guideGoogle.email) {

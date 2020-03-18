@@ -8,37 +8,14 @@ import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
-import { Dropdown } from 'semantic-ui-react';
+//import { Dropdown } from 'semantic-ui-react';
 import '../Css/ProfileDetails.css';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
 const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
 const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
-const friendOptions = [
-    {
-        key: 'Instegram',
-        text: 'Instegram',
-        value: 'Instegram',
-        image: { avatar: true, src: 'src\Img\The_Instagram_Logo.jpg' },
-    },
-    {
-        key: 'Facebook',
-        text: 'Facebook',
-        value: 'Facebook',
-        image: { avatar: true, src: '/images/avatar/small/elliot.jpg' },
-    },
-    {
-        key: 'Twitter',
-        text: 'Twitter',
-        value: 'Twitter',
-        image: { avatar: true, src: '/images/avatar/small/stevie.jpg' },
-    },
-    {
-        key: 'Website',
-        text: 'Website',
-        value: 'Website',
-        image: { avatar: true, src: '/images/avatar/small/christian.jpg' },
-    },
-]
+
 const GreenRadio = withStyles({
     root: {
         color: green[400],
@@ -59,6 +36,8 @@ class ProfileDetails extends Component {
             gender: '',
             size: '',
             phone: "",
+            linkURL: "",
+            linkType: "",
             user: {
                 FirstName: "",
                 LastName: "",
@@ -68,7 +47,33 @@ class ProfileDetails extends Component {
                 Gender: "",
                 DescriptionGuide: ""
             },
-            allUsers: this.props.Allusers
+            allUsers: this.props.Allusers,
+            options: [
+                {
+                  name: 'Select…',
+                  value: null,
+                },
+                {
+                  name: 'Instegram',
+                  value: 'Instegram',
+                },
+                {
+                  name: 'Facebook',
+                  value: 'Facebook',
+                },
+                {
+                  name: 'Twitter',
+                  value: 'Twitter',
+                },
+                {
+                    name: 'Linkdin',
+                    value: 'Linkdin',
+                  },
+                  {
+                    name: 'Website',
+                    value: 'Website',
+                  },
+              ],
         };
         //this.handleChange = this.handleChange.bind(this);
         this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -79,6 +84,7 @@ class ProfileDetails extends Component {
         }
     }
     componentWillMount() {
+
         fetch(this.apiUrl, {
             method: 'GET',
             headers: new Headers({
@@ -97,29 +103,33 @@ class ProfileDetails extends Component {
                     console.log("err post=", error);
                 });
         console.log(this.state.allUsers)
+        this.CheckGuideFunction();
 
     }
     componentDidMount() {
 
-        let logginUser = "";
-        for (let i = 0; i < this.state.allUsers.length; i++) {
-            const element = this.state.allUsers[i];
-            if (element.Email === this.props.email) {
-                logginUser = element;
-            }
-        }
-        let dateBirth =new Date(logginUser.BirthDay);
-        //let PhoneTemp = logginUser.Phone.substr(1);
-        //console.log(PhoneTemp);
-        this.setState({
-            user: logginUser,
-            size: logginUser.Gender,
-            startDate:dateBirth,
-            phone:logginUser.Phone
-        })
+      this.CheckGuideFunction();
 
 
     }
+CheckGuideFunction=()=>{
+     let logginUser = "";
+        for (let i = 0; i < this.state.allUsers.length; i++) {
+            const element = this.state.allUsers[i];
+            if (element.Email === this.props.GuideDetails.Email) {
+                logginUser = element;
+            }
+        }
+        let dateBirth = new Date(logginUser.BirthDay);
+        
+        this.setState({
+            user: logginUser,
+            size: logginUser.Gender,
+            startDate: dateBirth,
+            phone: logginUser.Phone
+        })
+}
+
     handleOnChange3 = value => {
         console.log(value);
         this.setState({ phone: value }, () => {
@@ -133,14 +143,7 @@ class ProfileDetails extends Component {
 
         });
     }
-    // handleChange(event) {
-    //     this.setState({
-    //         birthDate: event.target.value
-    //       });
-    //       console.log(this.state.birthDate)
-    // }
-
-
+   
     onFormSubmit(e) {
         e.preventDefault();
         console.log(this.state.startDate)
@@ -171,6 +174,10 @@ class ProfileDetails extends Component {
             user: { ...this.state.user, DescriptionGuide: e.target.value }
         });
     }
+    handleChangeListType = (event) => {
+        this.setState({ linkType: event.target.value });
+        console.log(this.state.value)
+      }
     UpdateDetails = () => {
         console.log(this.state.phone);
         let userGuide = this.state.user;
@@ -189,7 +196,7 @@ class ProfileDetails extends Component {
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
                 BirthDay: startDate,
-                Phone:phoneGuide
+                Phone: phoneGuide
             }),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -216,7 +223,28 @@ class ProfileDetails extends Component {
         //window.location.reload(false);
         console.log(this.state.user)
     }
+    Addlinks = () => {
+        const fullLinkList = [];
+        let type = this.state.linkType;
+        let urlLink = this.state.linkURL;
+        let link = type + " - " + urlLink; 
+        fullLinkList.push(link);
+        console.log(fullLinkList);
+    }
+    handleOnChangeTypeList = (e) => {
+        this.setState({
+            linkType: e.target.value
+        })
+        console.log(this.state.linkType);
 
+    }
+    handleChangeLinkUrl = (e) => {
+        this.setState({
+            linkURL: e.target.value
+        })
+        console.log(this.state.linkURL);
+
+    }
 
 
     render() {
@@ -315,20 +343,28 @@ class ProfileDetails extends Component {
                                 </div>
                                 <div className="row labelInputs">
                                     <div className="col-lg-3">
-                                        <Dropdown
-                                            placeholder='Select links'
-                                            fluid
-                                            selection
-                                            options={friendOptions}
-                                        />
+                                        <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
+                                            {this.state.options.map(item => (
+                                                <option key={item.value} value={item.value}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                        </select>
+
                                     </div>
-                                    <div className="col-lg-9 chooseLink">
+                                    <div className="col-lg-7 chooseLink">
                                         <input
                                             id="feFirstName"
                                             placeholder="First Name"
-                                            value="Aviel"
-                                            onChange={() => { }}
+                                            value={this.state.linkURL}
+                                            onChange={this.handleChangeLinkUrl}
                                         />
+                                    </div>
+                                    <div className="col-lg-2 Addlinks">
+                                        <button onClick={this.Addlinks}>+</button>
+                                    </div>
+                                    <div className="LinkList col-12">
+
                                     </div>
                                 </div>
                                 <div>

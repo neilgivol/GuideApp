@@ -18,7 +18,8 @@ class Home extends Component {
             namePage: 'Profile Details',
             navbar: this.props.navbarOpenCheck,
             allUsers: this.props.Allusers,
-            Guide: ""
+            Guide: [],
+            GuideLanguages: []
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -27,13 +28,14 @@ class Home extends Component {
         }
 
     }
+
     componentWillMount() {
         let tempArray = this.props.GetGuidesFromSQL();
         this.setState({
-            allUsers:tempArray
-        }) 
-
+            allUsers: tempArray
+        })
         this.GetGuideDetails();
+      this.GetLanguagesGuideList();
     }
 
     GetGuideDetails = () => {
@@ -65,44 +67,57 @@ class Home extends Component {
         }
         console.log(logginUser);
         localStorage.setItem('Guide', JSON.stringify(logginUser));
-        // localStorage.removeItem('FacebookUser');
-        // localStorage.removeItem('GoogleUser');
-        // localStorage.removeItem('SignUpUser');
-
     }
-    
+
 
     ClickPage2 = (e) => {
         let tempArray = this.props.GetGuidesFromSQL();
-      this.setState({
-          allUsers:tempArray
-      }) 
+        this.setState({
+            allUsers: tempArray
+        })
         this.setState({
             namePage: e
         });
     }
     funcGoogleFacebook = () => {
         const Guide = JSON.parse(localStorage.getItem('Guide'));
-      
         return <ProfileCard email={Guide.Email} Allusers={this.state.allUsers} GetGuidesFromSQL={this.props.GetGuidesFromSQL} />
-
     }
 
     func1 = () => {
         const namePage2 = this.state.namePage;
         const Guide = JSON.parse(localStorage.getItem('Guide'));
         if (namePage2 === "Profile Details") {
-          
-            return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} email={Guide.Email} />
-
+            return <ProfileDetails GetGuidesFromSQL={this.props.GetGuidesFromSQL} Allusers={this.state.allUsers} GuideDetails={Guide} />
         }
         else if (namePage2 === "Area Knowledge") {
             return <Area />
         }
         else if (namePage2 === "Languages")
-            return <Languages />
+            return <Languages guideListLanguages={this.state.GuideLanguages} GuideDetails={Guide} />
     }
 
+
+    GetLanguagesGuideList = () => {
+        const Guide = JSON.parse(localStorage.getItem('Guide'));
+        fetch(this.apiUrl + "/" + Guide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                  result.map(st => this.state.GuideLanguages.push(st));
+                },
+                (error) => {
+                  console.log("err post=", error);
+                });
+                console.log(this.state.GuideLanguages)
+    }
 
     render() {
         return (

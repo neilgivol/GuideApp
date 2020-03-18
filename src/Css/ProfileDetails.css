@@ -6,3 +6,13 @@ border-bottom-left-radius: 0px;
 border-bottom-right-radius: 0px;
 height: 30px;
 }
+
+.LinkList{
+    margin:auto;
+    margin-top:15px;
+    margin-bottom: 5px;
+    border:1px solid black;
+    border-radius: 4px;
+    height: 50px;
+    max-width: 95%;
+}
