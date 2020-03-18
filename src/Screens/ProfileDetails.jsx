@@ -249,7 +249,6 @@ CheckGuideFunction=()=>{
 
     render() {
         return (
-            <div className="col-lg-8">
                 <Card small className="mb-4">
                     <Card.Header className="border-bottom">
                         <h6 className="m-0">Profile Details</h6>
@@ -384,7 +383,6 @@ CheckGuideFunction=()=>{
                         </ListGroupItem>
                     </ListGroup>
                 </Card>
-            </div>
         );
     }
 }

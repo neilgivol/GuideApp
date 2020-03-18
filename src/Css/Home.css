@@ -7,6 +7,14 @@
     transition: 300ms ease all;
     width: 90%;
 }
+.cardDiv{
+}
+
+#close .CardBodyDiv{
+    max-height: 600px;
+}
+
+
 #open{
     height: 100%;
     left: 300px;
@@ -23,6 +31,7 @@
 .homePage{
     border:1px solid #999;
     margin:0 auto;
+
 }
 @media only screen and (max-width: 600px) {
    #close{

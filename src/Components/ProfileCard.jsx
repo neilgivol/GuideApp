@@ -1,5 +1,7 @@
 import React, { Component, useState } from 'react';
 import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
+import '../Css/ProfileCard.css';
+
 const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
 const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
 const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
@@ -43,7 +45,7 @@ class ProfileCard extends Component {
     }
     render() {
         return (
-            <Card>
+            <Card className="CardBodyDiv">
                 {this.funcPic()}
                 <Card.Body>
                     <Card.Title>{this.funcName()}</Card.Title>

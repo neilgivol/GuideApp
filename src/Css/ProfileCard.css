@@ -1,0 +1,7 @@
+.CardBodyDiv img{
+max-width: 80%;
+max-height: 80%;
+}
+.CardBodyDiv{
+    max-height: 500px;
+}

@@ -124,10 +124,12 @@ class Home extends Component {
             <div id={this.props.navbarOpenCheck} className="container-fluid HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
                 <div className="row homePage">
-                    <div className="col-lg-4">
+                    <div className="cardDiv col-lg-4 col-md-2 hidden-xs hidden-sm">
                         {this.funcGoogleFacebook()}
                     </div>
+                    <div className="col-lg-8 col-md-10 col-sm-12 ">
                     {this.func1()}
+                    </div>
                 </div>
             </div>
         )

@@ -32,7 +32,6 @@ class Area extends Component {
     render() {
         const { items, selectedItems } = this.state;
         return (
-            <div className="col-lg-8">
                 <Card>
                     <Card.Header>Area Knowledge</Card.Header>
                     <ListGroup>
@@ -50,7 +49,6 @@ class Area extends Component {
                         </ListGroupItem>
                     </ListGroup>
                 </Card>
-            </div>
         );
     }
 }

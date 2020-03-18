@@ -12,17 +12,17 @@ class Languages extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.state = {
             items: [
-                { id: 1, label: "Hebrew" },
+                { id: 1, label: "Hebrew / עברית" },
                 { id: 2, label: "English", disabled: false },
-                { id: 3, label: "Spainish", disabled: false },
-                { id: 4, label: "Arabic" },
-                { id: 5, label: "Chinese" },
-                { id: 6, label: "Dutch" },
-                { id: 7, label: "French" },
-                { id: 8, label: "German" },
-                { id: 9, label: "Italian" },
-                { id: 10, label: "Portuguese" },
-                { id: 11, label: "Russian" }
+                { id: 3, label: "Spainish / Español", disabled: false },
+                { id: 4, label: "Arabic / العربية" },
+                { id: 5, label: "Chinese / 古文" },
+                { id: 6, label: "Dutch / Nederlands" },
+                { id: 7, label: "French / Français" },
+                { id: 8, label: "German / Deutsch" },
+                { id: 9, label: "Italian / Italiano" },
+                { id: 10, label: "Portuguese / Português" },
+                { id: 11, label: "Russian / Русский" }
 
             ],
             selectedItems: [],
@@ -159,7 +159,6 @@ class Languages extends Component {
     render() {
         const { items, selectedItems } = this.state;
         return (
-            <div className="col-lg-8">
                 <Card>
                     <Card.Header>Languages</Card.Header>
                     <ListGroup>
@@ -180,7 +179,6 @@ class Languages extends Component {
                         <Button onClick={() => { this.UpdateAllLanguages() }}>Save</Button>
                     </div>
                 </Card>
-            </div>
         );
     }
 }
