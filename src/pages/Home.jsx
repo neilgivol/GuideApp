@@ -11,7 +11,6 @@ import '../Css/Home.css';
 const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
 const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
 const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
-const GuideLocal = JSON.parse(localStorage.getItem('Guide'));
 
 class Home extends Component {
     constructor(props) {
@@ -41,6 +40,9 @@ class Home extends Component {
     }
 
     GetGuideDetails = () => {
+        const GuideLocal = JSON.parse(localStorage.getItem('Guide'));
+        console.log(GuideLocal);
+        console.log(GuideLocal.Email);
         let logginUser = "";
         if (GuideLocal !== null) {
             for (let i = 0; i < this.state.allUsers.length; i++) {
@@ -78,6 +80,7 @@ class Home extends Component {
         }
     }
         console.log(logginUser);
+        localStorage.clear();
         localStorage.setItem('Guide', JSON.stringify(logginUser));
     }
 

@@ -51,7 +51,15 @@ class Facebook extends Component {
             facebookLogin:facebookLogin,
             googleLogin:googleLogin
         }
-        localStorage.setItem('FacebookUser',JSON.stringify(FacebookUser))
+        let guideTemp
+        for (let i = 0; i < this.props.Allusers.length; i++) {
+            const element = this.props.Allusers[i];
+            if (element.Email === FacebookUser.Email) {
+                guideTemp = element
+            }
+        }
+
+        localStorage.setItem('Guide',JSON.stringify(guideTemp))
         localStorage.removeItem('GoogleUser');
         localStorage.removeItem('SignUpUser');
 
@@ -66,6 +74,8 @@ class Facebook extends Component {
         }
         return<div> {this.props.PostGuideToSQLFromFacebook(gFacebook)}</div>;
     }
+
+
 
     render() {
         let fbContent;

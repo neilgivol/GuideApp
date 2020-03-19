@@ -37,6 +37,10 @@ class SignIn extends Component {
             faceLogin: [],
         }
     }
+    componentWillMount(){
+        localStorage.clear();
+
+    }
   
     HandelEmailInput = (e) => {
         this.setState({
@@ -75,7 +79,17 @@ class SignIn extends Component {
                 facebookLogin:facebookLogin,
                 googleLogin:googleLogin
             }
-            localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
+
+            let guideTemp
+            for (let i = 0; i < this.props.Allusers.length; i++) {
+              const element = this.props.Allusers[i];
+              if (element.Email === SignUpUser.Email) {
+                guideTemp = element
+              }
+            }
+          
+            localStorage.setItem('Guide', JSON.stringify(guideTemp))
+            //localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
             //localStorage.removeItem('GoogleUser');
             //localStorage.removeItem('FacebookUser');
                       this.props.history.push({
@@ -146,8 +160,8 @@ class SignIn extends Component {
                                 </div>
 
                                 <div className="text-center mb-3">
-                                    <Facebook PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
-                                    <Google PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
+                                    <Facebook Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+                                    <Google Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                 </div>
 
 
