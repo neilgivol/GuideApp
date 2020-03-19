@@ -8,9 +8,7 @@ import NavbarProfile from '../Components/NavbarProfile';
 import Languages from '../Screens/Languages';
 import '../Css/Home.css';
 
-const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
-const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
-const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
+
 
 class Home extends Component {
     constructor(props) {
@@ -35,54 +33,8 @@ class Home extends Component {
         this.setState({
             allUsers: tempArray
         })
-        //this.GetGuideDetails();
       this.GetLanguagesGuideList();
     }
-
-    // GetGuideDetails = () => {
-    //     const GuideLocal = JSON.parse(localStorage.getItem('Guide'));
-    //     console.log(GuideLocal);
-    //     console.log(GuideLocal.Email);
-    //     let logginUser = "";
-    //     if (GuideLocal !== null) {
-    //         for (let i = 0; i < this.state.allUsers.length; i++) {
-    //             const element = this.state.allUsers[i];
-    //             if (element.Email === GuideLocal.Email) {
-    //                 logginUser = element;
-    //             }
-    //         }
-    //     }
-    //     else{
-    //     if (FacebookUser !== null) {
-    //         for (let i = 0; i < this.state.allUsers.length; i++) {
-    //             const element = this.state.allUsers[i];
-    //             if (element.Email === FacebookUser.Email) {
-    //                 logginUser = element;
-    //             }
-    //         }
-    //     }
-    //     else if (GoogleUser !== null) {
-    //         for (let i = 0; i < this.state.allUsers.length; i++) {
-    //             const element = this.state.allUsers[i];
-    //             if (element.Email === GoogleUser.Email) {
-    //                 logginUser = element;
-    //             }
-    //         }
-    //     }
-    //     else if (SignUpUser !== null) {
-    //         for (let i = 0; i < this.state.allUsers.length; i++) {
-    //             const element = this.state.allUsers[i];
-    //             if (element.Email === SignUpUser.Email) {
-    //                 logginUser = element;
-    //             }
-    //         }
-
-    //     }
-    // }
-    //     console.log(logginUser);
-    //     localStorage.clear();
-    //     localStorage.setItem('Guide', JSON.stringify(logginUser));
-    // }
 
 
     ClickPage2 = (e) => {

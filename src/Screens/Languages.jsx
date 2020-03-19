@@ -31,9 +31,9 @@ class Languages extends Component {
             GuideListFromSQL:this.props.guideListLanguages
         };
         let local = true;
-        this.apiUrl = 'http://localhost:49948/api/Language';
+        this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Language';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
     componentWillMount(){
@@ -60,52 +60,23 @@ class Languages extends Component {
     }
 
     UpdateAllLanguages = () => {
-        let tempArray = [];
+        let tempArrayGuideLanguages = [];
         let GuideCode = Guide.gCode;
-        let Guide_Language;
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
-            tempArray.push(element.id)
+            const Guide_Language = {
+                Guide_Code:GuideCode,
+                Language_Code:element.id
+            }
+            tempArrayGuideLanguages.push(Guide_Language);
         }
-        let ifExist = this.GetGuideLanguageSQL();
-        let ifExistGuide = false;
-        if (!ifExist) {
-            for (let i = 0; i < tempArray.length; i++) {
-                const element = tempArray[i];
-                Guide_Language = {
-                    Guide_Code: GuideCode,
-                    Language_Code: element
-                }
-                this.PostLangGuideToSQL(Guide_Language);
-            }
-        } else {
-            for (let i = 0; i < this.state.ListFromSQL.length; i++) {
-                const element = this.state.ListFromSQL[i];
-                if (element.Guide_Code == Guide.gCode) {
-                    ifExistGuide = true;
-                }
-            }
-            if (ifExistGuide) {
-                console.log("Exist");
-            }
-            else {
-
-                for (let i = 0; i < tempArray.length; i++) {
-                    const element = tempArray[i];
-                    Guide_Language = {
-                        Guide_Code: GuideCode,
-                        Language_Code: element
-                    }
-                    this.PostLangGuideToSQL(Guide_Language);
-                }
-            }
-        }
-
-        //this.GetGuideLanguageSQL();
+     console.log(tempArrayGuideLanguages);
+        this.PostLangGuideToSQL(tempArrayGuideLanguages);
+        this.GetGuideLanguageSQL();
     }
     GetGuideLanguageSQL = () => {
         let ifExist = false;
-        fetch(this.apiUrl + "/GetGuideLanguages", {
+        fetch(this.apiUrl + "/Language/GetGuideLanguages", {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -130,17 +101,15 @@ class Languages extends Component {
 
         return ifExist;
     }
-    PostLangGuideToSQL = (Guide_Language) => {
+    PostLangGuideToSQL = (tempArrayGuideLanguages) => {
+        console.log(tempArrayGuideLanguages);
         fetch('http://localhost:49948/api/Guide/PostGuideLanguage', {
             method: 'POST',
-            body: JSON.stringify({
-               Guide_Code:Guide_Language.Guide_Code,
-               Language_Code:Guide_Language.Language_Code
-            }),
+            body: JSON.stringify(tempArrayGuideLanguages),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
-
+            
         })
             .then(res => {
                 console.log('res=', res);
