@@ -76,11 +76,11 @@ class ProfileDetails extends Component {
               ],
         };
         //this.handleChange = this.handleChange.bind(this);
-        this.onFormSubmit = this.onFormSubmit.bind(this);
-        let local = true;
+        //this.onFormSubmit = this.onFormSubmit.bind(this);
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/IsraVisor/ServerSide/api/Guide';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
     componentWillMount() {
@@ -102,16 +102,11 @@ class ProfileDetails extends Component {
                 (error) => {
                     console.log("err post=", error);
                 });
-        console.log(this.state.allUsers)
+
         this.CheckGuideFunction();
 
     }
-    componentDidMount() {
-
-      this.CheckGuideFunction();
-
-
-    }
+  
 CheckGuideFunction=()=>{
      let logginUser = "";
         for (let i = 0; i < this.state.allUsers.length; i++) {
@@ -144,10 +139,10 @@ CheckGuideFunction=()=>{
         });
     }
    
-    onFormSubmit(e) {
-        e.preventDefault();
-        console.log(this.state.startDate)
-    }
+    // onFormSubmit(e) {
+    //     e.preventDefault();
+    //     console.log(this.state.startDate)
+    // }
 
     onChangeFirstName = (e) => {
         this.setState({
@@ -224,12 +219,12 @@ CheckGuideFunction=()=>{
         console.log(this.state.user)
     }
     Addlinks = () => {
-        const fullLinkList = [];
-        let type = this.state.linkType;
-        let urlLink = this.state.linkURL;
-        let link = type + " - " + urlLink; 
-        fullLinkList.push(link);
-        console.log(fullLinkList);
+        // const fullLinkList = [];
+        // let type = this.state.linkType;
+        // let urlLink = this.state.linkURL;
+        // let link = type + " - " + urlLink; 
+        // fullLinkList.push(link);
+        console.log("fullLinkList");
     }
     handleOnChangeTypeList = (e) => {
         this.setState({
@@ -360,7 +355,7 @@ CheckGuideFunction=()=>{
                                         />
                                     </div>
                                     <div className="col-lg-2 Addlinks">
-                                        <button onClick={this.Addlinks}>+</button>
+                                        <Button onClick={() =>{this.Addlinks()}}>+</Button>
                                     </div>
                                     <div className="LinkList col-12">
 

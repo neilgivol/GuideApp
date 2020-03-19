@@ -11,6 +11,8 @@ import '../Css/Home.css';
 const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
 const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
 const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
+//const Guide = JSON.parse(localStorage.getItem('Guide'));
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -21,10 +23,10 @@ class Home extends Component {
             Guide: [],
             GuideLanguages: []
         };
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
-            this.apiUrl = '';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
 
     }
@@ -40,6 +42,9 @@ class Home extends Component {
 
     GetGuideDetails = () => {
         let logginUser = "";
+        if (condition) {
+            
+        }
         if (FacebookUser !== null) {
             for (let i = 0; i < this.state.allUsers.length; i++) {
                 const element = this.state.allUsers[i];

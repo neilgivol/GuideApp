@@ -33,7 +33,7 @@ class Languages extends Component {
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Language';
         if (!local) {
-            this.apiUrl = '';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Language';
         }
     }
     componentWillMount(){

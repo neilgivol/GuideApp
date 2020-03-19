@@ -49,10 +49,10 @@ class App extends Component {
       firstName: "",
       lastName: ""
     }
-    let local = true;
+    let local = false;
     this.apiUrl = 'http://localhost:49948/api/Guide';
     if (!local) {
-      this.apiUrl = '';
+      this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
     }
   }
   
