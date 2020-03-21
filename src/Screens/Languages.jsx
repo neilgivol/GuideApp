@@ -61,7 +61,8 @@ class Languages extends Component {
 
     UpdateAllLanguages = () => {
         let tempArrayGuideLanguages = [];
-        let GuideCode = Guide.gCode;
+        let GuideCode = this.props.GuideDetails.gCode;
+        console.log(Guide.gCode);
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
             const Guide_Language = {
