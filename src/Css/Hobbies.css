@@ -1,13 +1,17 @@
 .HobbiesList{
 float: left;
-border-right: 1px solid black;
+border: 1px solid black;
 height: 100%;
 }
 .HobbieAddedList{
     margin-left: 10px;
 
 }
+.HobbiesDiv{
+    border:1px solid
+}
 .HobbiesAdded{
+    border:1px solid;
 float: right;
 height: 100%;
 }

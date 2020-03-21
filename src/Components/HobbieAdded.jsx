@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Card } from 'react-bootstrap';
 import '../Css/Hobbies.css';
 class HobbieAdded extends Component {
     constructor(props) {

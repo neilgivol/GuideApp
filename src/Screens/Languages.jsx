@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import "@kenshooui/react-multi-select/dist/style.css"
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
-import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
+import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 
@@ -21,7 +20,14 @@ class Languages extends Component {
                 { id: 8, label: "German / Deutsch" },
                 { id: 9, label: "Italian / Italiano" },
                 { id: 10, label: "Portuguese / Português" },
-                { id: 11, label: "Russian / Русский" }
+                { id: 11, label: "Russian / Русский" },
+                { id: 12, label: "Polish / polski" },
+                { id: 13, label: "Hungarian / Magyar" },
+                { id: 14, label: "Swedish / Svenska" },
+                { id: 15, label: "Norwegian / Norsk" },
+                { id: 16, label: "Danish / Dansk" },
+                { id: 17, label: "Yiddish / יידיש" },
+                { id: 18, label: "Romanian / Română" }
 
             ],
             selectedItems: [],

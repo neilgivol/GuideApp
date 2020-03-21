@@ -4,8 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Css/Hobbies.css';
 import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
-import HobbieCard from '../Components/HobbieCard';
-import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
+
+import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 
 class Hobbies extends Component {
     constructor(props) {
@@ -66,33 +66,31 @@ class Hobbies extends Component {
             <Card>
                 <Card.Header>Hobbies</Card.Header>
                 <ListGroup>
-                <ListGroupItem>
-                            <div className="row title"><h2>Choose Hobbies:</h2></div>
-                        </ListGroupItem>
-                        <ListGroupItem>
+                    <ListGroupItem>
+                        <div className="row title"><h2>Choose Hobbies:</h2></div>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                            <div className='row HobbiesDiv'>
+                                <div className='col-6 HobbiesList'>
+                                    <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
+                                </div>
+                                <div className='col-lg-6 HobbiesAdded'>
+                                <div className="row titleAdded">selection: </div>
+                                    <div className="row HobbiesListSide HobbieAddedList">
+                                        {this.state.itemsInCart.map((item, key) =>
+                                            <HobbieAdded removeFromCart={this.removeFromCart} item={item} key={item.id} />)}
+                                    </div>
+                                </div>
+                            </div>
+                    </ListGroupItem>
 
-                        <div className='container-fluid'>
-                <div className='row'>
-                    <div className='col-6 HobbiesList'>
-                        <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
-                    </div>
-                    <div className='col-lg-5 HobbiesAdded'>
-                        <div className="row HobbiesListSide HobbieAddedList">
-                            {this.state.itemsInCart.map((item, key) =>
-                                <HobbieAdded removeFromCart={this.removeFromCart} item={item} key={item.id} />)}
-                        </div>
-                    </div>
-                </div>
-            </div>
-                        </ListGroupItem>
-
-                        <div>
-                        <Button onClick={() => {  }}>Save</Button>
+                    <div>
+                        <Button onClick={() => { }}>Save</Button>
                     </div>
                 </ListGroup>
             </Card>
 
-           
+
         );
     }
 }

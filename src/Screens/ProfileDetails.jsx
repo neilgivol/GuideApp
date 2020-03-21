@@ -8,13 +8,10 @@ import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
-//import { Dropdown } from 'semantic-ui-react';
 import '../Css/ProfileDetails.css';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
-const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
-const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
+
 
 const GreenRadio = withStyles({
     root: {
