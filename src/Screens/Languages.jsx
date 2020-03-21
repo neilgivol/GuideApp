@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import "@kenshooui/react-multi-select/dist/style.css"
-import '../Css/signUpNavBar.css';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";

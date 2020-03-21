@@ -43,6 +43,24 @@ class NavbarProfile extends Component {
                 classActiveHobbies:"noActive"
             })
         }
+        else if(e.target.text == "Hobbies"){
+            this.setState({
+                classActiveLang:"noActive",
+                classActiveArea:"noActive",
+                classActiveDetails:"noActive",
+                classActiveExpetise:"noActive",
+                classActiveHobbies:"active"
+            })
+        }
+        else if(e.target.text == "Expertise"){
+            this.setState({
+                classActiveLang:"noActive",
+                classActiveArea:"noActive",
+                classActiveDetails:"noActive",
+                classActiveExpetise:"active",
+                classActiveHobbies:"noActive"
+            })
+        }
     }
 
     render() {
@@ -51,8 +69,8 @@ class NavbarProfile extends Component {
                         <li className={this.state.classActiveDetails}><Link  onClick={this.ClickPage} to="/home">Profile Details</Link></li>
                         <li className={this.state.classActiveArea}><Link onClick={this.ClickPage} to="/home">Area Knowledge</Link></li>
                         <li className={this.state.classActiveLang}><Link onClick={this.ClickPage} to="/home">Languages</Link></li>
-                        <li><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
-                        <li><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
+                        <li className={this.state.classActiveExpetise}><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
+                        <li className={this.state.classActiveHobbies}><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
                     </ul>
         );
     }

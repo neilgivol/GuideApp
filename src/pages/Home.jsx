@@ -7,6 +7,7 @@ import ProfileCard from '../Components/ProfileCard.jsx';
 import NavbarProfile from '../Components/NavbarProfile';
 import Languages from '../Screens/Languages';
 import '../Css/Home.css';
+import Hobbies from '../Screens/Hobbies';
 
 
 
@@ -85,8 +86,12 @@ class Home extends Component {
         else if (namePage2 === "Area Knowledge") {
             return <Area guideListAreas={this.state.GuideAreas} GuideDetails={Guide} AreasArray = {this.state.AllAreas}/>
         }
-        else if (namePage2 === "Languages")
+        else if (namePage2 === "Languages"){
             return <Languages guideListLanguages={this.state.GuideLanguages} GuideDetails={Guide} />
+        }
+        else if (namePage2 === "Hobbies"){
+            return <Hobbies GuideDetails={Guide} />
+        }
     }
 
     GetAreasGuideList=(Guide)=>{

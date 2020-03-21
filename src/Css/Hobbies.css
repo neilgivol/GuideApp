@@ -1,0 +1,33 @@
+.HobbiesList{
+float: left;
+border-right: 1px solid black;
+height: 100%;
+}
+.HobbieAddedList{
+    margin-left: 10px;
+
+}
+.HobbiesAdded{
+float: right;
+height: 100%;
+}
+.CardImage{
+   
+    max-width: 100%;
+    max-height: 100%;
+}
+.CardItem img{
+    height: 70px;
+    width: 70px;
+}
+.CardItem{
+border:1px solid black;
+}
+.CardItem h4{
+    text-align: center;
+}
+
+.HobbiesListSide{
+    max-width: 100%;
+    max-height: 100%;
+}
