@@ -28,7 +28,6 @@ class Hobbies extends Component {
                 new ShopItem(14, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg")
             ],
             itemsInCart: [],
-            totalPrice: 0
         }
     }
 
@@ -43,7 +42,6 @@ class Hobbies extends Component {
         this.setState({
             itemsInCart: [...this.state.itemsInCart, newItem],
             itemsArray: tempArr,
-            totalPrice: this.state.totalPrice += newItem.price
         });
     }
 
@@ -58,7 +56,6 @@ class Hobbies extends Component {
         this.setState({
             itemsArray: [...this.state.itemsArray, newItem],
             itemsInCart: tempArr,
-            totalPrice: this.state.totalPrice -= newItem.price
         });
     }
     render() {

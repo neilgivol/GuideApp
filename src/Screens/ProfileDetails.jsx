@@ -29,7 +29,7 @@ class ProfileDetails extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            startDate: new Date(),
+            BirthDay: new Date(),
             gender: '',
             size: '',
             phone: "",
@@ -74,14 +74,14 @@ class ProfileDetails extends Component {
         };
         //this.handleChange = this.handleChange.bind(this);
         //this.onFormSubmit = this.onFormSubmit.bind(this);
-        let local = false;
+        let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-    componentWillMount() {
-
+   
+    componentDidMount() {
         fetch(this.apiUrl, {
             method: 'GET',
             headers: new Headers({
@@ -117,7 +117,7 @@ CheckGuideFunction=()=>{
         this.setState({
             user: logginUser,
             size: logginUser.Gender,
-            startDate: dateBirth,
+            BirthDay: dateBirth,
             phone: logginUser.Phone
         })
 }
@@ -173,7 +173,7 @@ CheckGuideFunction=()=>{
     UpdateDetails = () => {
         console.log(this.state.phone);
         let userGuide = this.state.user;
-        let startDate = this.state.startDate.toLocaleDateString('en-US');
+        let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
         //let startDate =  Date.parse(startDate);
         console.log(phoneGuide);
@@ -187,7 +187,7 @@ CheckGuideFunction=()=>{
                 License: userGuide.License,
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
-                BirthDay: startDate,
+                BirthDay: BirthDay,
                 Phone: phoneGuide
             }),
             headers: new Headers({
@@ -287,8 +287,8 @@ CheckGuideFunction=()=>{
                                 <div className="row labelInputs">
                                     <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
                                         <DatePicker
-                                            selected={this.state.startDate}
-                                            onChange={(newDate) => this.setState({ startDate: newDate })}
+                                            selected={this.state.BirthDay}
+                                            onChange={(newDate) => this.setState({ BirthDay: newDate })}
                                             name="birthDate"
                                             dateFormat="dd/MM/yyyy"
                                         />

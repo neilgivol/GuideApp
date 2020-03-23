@@ -27,11 +27,13 @@ class SignUp extends Component {
       password: "",
       confirmPassword: "",
       firstName:"",
-      lastName:""
+      lastName:"",
+      startDate: new Date()
     }
-
-
   }
+componentDidMount(){
+  console.log("DidMount_SignUp")
+}
   HandelEmail = (e) => {
     this.setState({
       email: e.target.value
@@ -77,45 +79,38 @@ class SignUp extends Component {
 
   }
   moveFunc = () =>{
-    const googleLogin = false;
-    const facebookLogin = false;
-    const SignUpUser = {
-      email:this.state.email,
-      picture:this.state.picture,
-      firstName:this.state.firstName,
-      lastName:this.state.lastName,
-      facebookLogin:facebookLogin,
-      googleLogin:googleLogin
-  }
-
-  let guideTemp
+  let CheckIfGuideExist = true;
   for (let i = 0; i < this.props.Allusers.length; i++) {
     const element = this.props.Allusers[i];
-    if (element.Email === SignUpUser.Email) {
-      guideTemp = element
+    if (element.Email === this.state.email) {
+      CheckIfGuideExist = false;
     }
   }
-
-  localStorage.setItem('Guide', JSON.stringify(guideTemp))
+  let gCodeGuide = parseInt(this.props.Allusers[this.props.Allusers.length-1].gCode);
+ gCodeGuide = parseInt(gCodeGuide + 1);
+  if (CheckIfGuideExist) {
+    let signDate = this.state.startDate.toLocaleDateString('en-US');
+    let GuideSignUp = {
+      Email: this.state.email,
+      FirstName:this.state.firstName,
+      LastName:this.state.lastName,
+      PasswordGuide:this.state.password,
+      SignDate:signDate,
+      gCode:gCodeGuide
+    }
+    localStorage.setItem('Guide', JSON.stringify(GuideSignUp))
+   
+   let check = this.props.PostGuideToSQL(GuideSignUp);
+   console.log(check);
   
-  //localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
-  localStorage.removeItem('GoogleUser');
-  localStorage.removeItem('FacebookUser');
-
-    this.props.history.push({
-      pathname: '/home/',
-
-  });
-    return <div>{this.props.PostGuideToSQL(this.guide)}</div>;
   }
+  else{
+    alert("Already Exist");
+  }
+  }
+
  
   render() {
-    this.guide = {
-      email: this.state.email,
-      password: this.state.password,
-      firstName:this.state.firstName,
-      lastName:this.state.lastName
-    }
     return (
       <MDBContainer>
         <MDBRow className="RowDivSignIn">
@@ -187,8 +182,8 @@ class SignUp extends Component {
                   <div className="text-center py-4 mt-3">
                     <MDBBtn gradient="blue"
                       rounded
-                      className="btn-block z-depth-1a" type="submit"
-                      onClick={this.CheckPasswordConfirm}>
+                      className="btn-block z-depth-1a" type="button"
+                      onClick={()=>{this.CheckPasswordConfirm()}}>
                       Register
                   </MDBBtn>
                   </div>

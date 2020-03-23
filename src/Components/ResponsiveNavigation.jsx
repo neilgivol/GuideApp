@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
  
 function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc }) {
     const [ navOpen, setNavOpen ] = useState(true)
     const [ hoverIndex, setHoverIndex ] = useState(-1)
     const [ clickIndex, setClickIndex ] = useState(-1)
+   
+    useEffect(() => {
+        const x = window.matchMedia("(max-width: 768px)")
+        function myFunction(e) {
+           if (e.matches) {
+            setNavOpen(!navOpen);
+            navbarCheckFunc(navOpen);
+           }
+           else{
+            setNavOpen(navOpen);
+            navbarCheckFunc(!navOpen);
+           }
+          
+        };
+        x.addListener(myFunction)
+        return () => x.removeListener(myFunction);
+      }, []);
+
+  
     return (
+      
         <nav
             className="responsive-toolbar"
             style={{ background:  background }}>
@@ -34,6 +54,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                     </li>
                 )}
             </ul>
+            <div className="col-sm hidden-md hidden-lg"></div>
         </nav>
     )
 }

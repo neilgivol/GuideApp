@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import SignIn from './Screens/SignIn';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter,Redirect  } from 'react-router-dom';
 import SignUp from './Screens/SignUp';
 import { Router } from '@reach/router'
 import About from './pages/About.jsx'
@@ -16,6 +16,9 @@ import ProfileDetails from './Screens/ProfileDetails';
 import Area from './Screens/Area';
 import Check from './Screens/Check';
 import SignInTemp from './Screens/SignInTemp';
+const w = window.innerWidth;
+const h = window.innerHeight;
+
 const navLinks = [
   {
     text: 'Profile',
@@ -47,7 +50,8 @@ class App extends Component {
       navbarCheckOpen: "open",
       email: "",
       firstName: "",
-      lastName: ""
+      lastName: "",
+      tempGuide:null
     }
     let local = true;
     this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -57,33 +61,23 @@ class App extends Component {
   }
   
 
-  componentWillMount() {
-
-    this.GetGuidesFromSQL();
+  componentDidMount() {
+    console.log("DidMount_App")
+       this.GetGuidesFromSQL();
   }
 
   PostGuideToSQL = (guide) => {
-    let isExist = false;
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email === guide.email) {
-        isExist = true;
-      }
-    }
-
-    if (isExist) {
-      alert("Already Exist");
-    }
-    else {
       //pay attention case sensitive!!!! should be exactly as the prop in C#!
+      let tar = null;
       fetch(this.apiUrl, {
         method: 'POST',
         body: JSON.stringify({
-          Email: guide.email,
-          PasswordGuide: guide.password,
-          FirstName: guide.firstName,
-          LastName: guide.lastName,
-          ProfilePic: ""
+          Email: guide.Email,
+          PasswordGuide: guide.PasswordGuide,
+          FirstName: guide.FirstName,
+          LastName: guide.LastName,
+          ProfilePic: "",
+          SignDate:guide.SignDate
         }),
         headers: new Headers({
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -96,16 +90,26 @@ class App extends Component {
         })
         .then(
           (result) => {
-            console.log("fetch POST= ", result);
+            if (result !== null) {
+              this.setState({
+                guides:result
+              });
+            }
             console.log(result);
+            console.log(this.state.guides);
+            this.props.history.push({
+              pathname: '/home/',
+            });  
           },
           (error) => {
             console.log("err post=", error);
           });
-    }
-
   }
+
+
   PostGuideToSQLFromFacebook = (guideFacebook) => {
+    let tempDate = new Date();
+    let StartDate = tempDate.toLocaleDateString('en-US');
     let isExist = false;
     this.GetGuidesFromSQL();
     for (let i = 0; i < this.state.guides.length; i++) {
@@ -123,10 +127,11 @@ class App extends Component {
         method: 'POST',
         body: JSON.stringify({
           Email: guideFacebook.email,
-          PasswordGuide: "No Password",
+          PasswordGuide: "NoPassword",
           FirstName: guideFacebook.firstName,
           LastName: guideFacebook.lastName,
-          ProfilePic: guideFacebook.picture
+          ProfilePic: guideFacebook.picture,
+          SignDate:StartDate
         }),
         headers: new Headers({
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -139,8 +144,16 @@ class App extends Component {
         })
         .then(
           (result) => {
-            console.log("fetch POST= ", result);
+            if (result !== null) {
+              this.setState({
+                guides:result
+              });
+            }
             console.log(result);
+            console.log(this.state.guides);
+            this.props.history.push({
+              pathname: '/home/',
+            });  
           },
           (error) => {
             console.log("err post=", error);
@@ -161,6 +174,8 @@ class App extends Component {
 
     }
     else {
+    let tempDate = new Date();
+      let StartDate = tempDate.toLocaleDateString('en-US');
       fetch(this.apiUrl, {
         method: 'POST',
         body: JSON.stringify({
@@ -168,7 +183,8 @@ class App extends Component {
           PasswordGuide: "No Password",
           FirstName: guideGoogle.givenName,
           LastName: guideGoogle.familyName,
-          ProfilePic: guideGoogle.imageUrl
+          ProfilePic: guideGoogle.imageUrl,
+          SignDate:StartDate
         }),
         headers: new Headers({
           'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -181,8 +197,16 @@ class App extends Component {
         })
         .then(
           (result) => {
-            console.log("fetch POST= ", result);
+            if (result !== null) {
+              this.setState({
+                guides:result
+              });
+            }
             console.log(result);
+            console.log(this.state.guides);
+            this.props.history.push({
+              pathname: '/home/',
+            });  
           },
           (error) => {
             console.log("err post=", error);
@@ -201,7 +225,6 @@ class App extends Component {
       })
     }
 
-    console.log(this.state.navbarCheckOpen);
   }
 
 
@@ -217,7 +240,9 @@ class App extends Component {
       })
       .then(
         (result) => {
-          this.setState({ guides: result })
+         this.setState({
+           guides:result
+         })
         },
         (error) => {
           console.log("err post=", error);
@@ -245,7 +270,7 @@ class App extends Component {
             <SignIn Allusers={this.state.guides} PostGuideToSQLFromFacebook={this.PostGuideToSQLFromFacebook} PostGuideToSQLFromGoogle={this.PostGuideToSQLFromGoogle} />
           </Route>
           <Route path="/signUp">
-            <SignUp PostGuideToSQL={this.PostGuideToSQL} CheckIfGuideExist={this.CheckIfGuideExist} />
+            <SignUp Allusers={this.state.guides} PostGuideToSQL={this.PostGuideToSQL} CheckIfGuideExist={this.CheckIfGuideExist} />
           </Route>
           <Route path="/home">
             <ResponsiveNavigation
@@ -330,5 +355,5 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
 

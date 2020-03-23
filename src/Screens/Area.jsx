@@ -12,7 +12,8 @@ class Area extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.state = {
             items: [],
-            selectedItems: []
+            selectedItems: [],
+            allAreasCities:[]
         };
 
         let local = true;
@@ -21,8 +22,10 @@ class Area extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
+  
 
-    componentWillMount(){
+
+    componentDidMount(){
         for (let i = 1; i < this.props.AreasArray.length; i++) {
             const element = {
                 id:i,

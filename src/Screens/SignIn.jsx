@@ -26,7 +26,6 @@ function Copyright() {
     );
 }
 
-
 class SignIn extends Component {
     constructor(props) {
         super(props)
@@ -35,11 +34,20 @@ class SignIn extends Component {
             password: "",
             users: this.props.Allusers,
             faceLogin: [],
+            checkBoxVal:"unCheck"
         }
     }
-    componentWillMount(){
-        localStorage.clear();
+    componentDidMount(){
+     localStorage.setItem('Guide',"");
+   let User = localStorage.getItem('UserName');
+   let Pass = localStorage.getItem('Password');
+        this.setState({
+            email:User,
+            password:Pass
+        })
+        //localStorage.clear();
 
+console.log("DidMount_SignIn")
     }
   
     HandelEmailInput = (e) => {
@@ -70,39 +78,36 @@ class SignIn extends Component {
 
         }
         if (ifExist) {
-            const facebookLogin = false;
-            const googleLogin = false;
-            const SignUpUser = {
-                Email:logginUser.Email,
-                FirstName:logginUser.FirstName,
-                LastName:logginUser.LastName,
-                facebookLogin:facebookLogin,
-                googleLogin:googleLogin
-            }
-
-            let guideTemp
-            for (let i = 0; i < this.props.Allusers.length; i++) {
-              const element = this.props.Allusers[i];
-              if (element.Email === SignUpUser.Email) {
-                guideTemp = element
-              }
-            }
-          
-            localStorage.setItem('Guide', JSON.stringify(guideTemp))
-            //localStorage.setItem('SignUpUser',JSON.stringify(SignUpUser))
-            //localStorage.removeItem('GoogleUser');
-            //localStorage.removeItem('FacebookUser');
+            localStorage.setItem('Guide', JSON.stringify(logginUser))
                       this.props.history.push({
                 pathname: '/home',
-
             });
         }
         else {
             alert("Email or Password is wrong")
         }
     }
+  
+    RememberMe = ()=>{
+           if (this.state.checkBoxVal === "unCheck") {
+               this.setState({
+                   checkBoxVal:"check"
+               })
+               localStorage.setItem('UserName',this.state.email)
+               localStorage.setItem('Password',this.state.password)
+           }
+           else{
+            this.setState({
+                checkBoxVal:"unCheck"
+            })
+            localStorage.setItem('UserName',"")
+            localStorage.setItem('Password',"")
+           }
+           console.log(this.state.checkBoxVal);
+    }
 
 
+ 
     render() {
         return (
             <MDBContainer>
@@ -141,6 +146,7 @@ class SignIn extends Component {
                                     <FormControlLabel
                                         control={<Checkbox value="remember" color="primary" />}
                                         label="Remember me"
+                                        onChange={this.RememberMe}
                                     />
                                 </div>
                                 <div className="text-center mb-3 btnSignIn">

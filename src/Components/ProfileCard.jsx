@@ -19,9 +19,8 @@ class ProfileCard extends Component {
         }
 
     }
-    componentWillMount() {
+    componentDidMount() {
         this.GetGuide();
-        console.log("Check")
     }
 
     GetGuide = () => {

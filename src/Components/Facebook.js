@@ -19,7 +19,6 @@ class Facebook extends Component {
 
   
     componentClicked = () =>{
-        console.log("clicked");
     }
     responseFacebook = (response) =>{
         if (response.status !== 'unknown')
@@ -60,8 +59,6 @@ class Facebook extends Component {
         }
 
         localStorage.setItem('Guide',JSON.stringify(guideTemp))
-        localStorage.removeItem('GoogleUser');
-        localStorage.removeItem('SignUpUser');
 
         this.props.history.push({
             pathname: '/home/',

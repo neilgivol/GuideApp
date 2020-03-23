@@ -36,12 +36,9 @@ class Google extends Component {
     }
 
     localStorage.setItem('Guide', JSON.stringify(guideTemp))
-    localStorage.removeItem('FacebookUser');
-    localStorage.removeItem('SignUpUser');
 
     this.props.history.push({
       pathname: '/home/',
-
     });
     return <div>{this.props.PostGuideToSQLFromGoogle(this.state.userDetails)}</div>
   };

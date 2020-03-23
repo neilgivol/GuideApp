@@ -41,9 +41,8 @@ class Languages extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         let array=[];
-        console.log(this.state.GuideListFromSQL);
         for (let i = 0; i < this.state.GuideListFromSQL.length; i++) {
             const SQLelement = this.state.GuideListFromSQL[i];
             for (let j = 0; j < this.state.items.length; j++) {
@@ -61,13 +60,11 @@ class Languages extends Component {
 
     handleChange(selectedItems) {
         this.setState({ selectedItems });
-        console.log(this.state.selectedItems);
     }
 
     UpdateAllLanguages = () => {
         let tempArrayGuideLanguages = [];
         let GuideCode = this.props.GuideDetails.gCode;
-        console.log(Guide.gCode);
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
             const Guide_Language = {
@@ -76,7 +73,6 @@ class Languages extends Component {
             }
             tempArrayGuideLanguages.push(Guide_Language);
         }
-     console.log(tempArrayGuideLanguages);
         this.PostLangGuideToSQL(tempArrayGuideLanguages);
         this.GetGuideLanguageSQL();
     }
@@ -108,7 +104,6 @@ class Languages extends Component {
         return ifExist;
     }
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
-        console.log(tempArrayGuideLanguages);
         fetch('http://localhost:49948/api/Guide/PostGuideLanguage', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideLanguages),

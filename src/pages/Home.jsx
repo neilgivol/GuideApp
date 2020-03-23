@@ -9,6 +9,7 @@ import Languages from '../Screens/Languages';
 import '../Css/Home.css';
 import Hobbies from '../Screens/Hobbies';
 
+const Guide = JSON.parse(localStorage.getItem('Guide'));
 
 
 class Home extends Component {
@@ -23,24 +24,71 @@ class Home extends Component {
             GuideAreas:[],
             AllAreas:[]
         };
-        let local = false;
+        let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
 
     }
+   componentDidUpdate(PrevProps,state){
+    if (PrevProps.Allusers != this.props.Allusers) {
 
-    componentWillMount() {
-        const Guide = JSON.parse(localStorage.getItem('Guide'));
-        let tempArray = this.props.GetGuidesFromSQL();
         this.setState({
-            allUsers: tempArray
-        });
-
-      this.GetLanguagesGuideList(Guide);
-      this.GetAreasGuideList(Guide);
+            allUsers:this.props.Allusers
+        })
+        let tempArray = this.props.Allusers;
+        let TempGuide;
+        for (let i = 0; i < tempArray.length; i++) {
+          const element = tempArray[i];
+          if (element.Email === Guide.Email) {
+              TempGuide = element;
+          }
+      }
+      this.GetLanguagesGuideList(TempGuide);
+    this.GetAreasGuideList(TempGuide);
       this.GetAllAreas();
+    }
+   }
+    componentDidMount() {
+        console.log(this.props.Allusers);
+      //const Guide = JSON.parse(localStorage.getItem('Guide'));
+      let TempGuide;
+      let tempArray = this.props.Allusers;
+      console.log(tempArray);
+      for (let i = 0; i < tempArray.length; i++) {
+          const element = tempArray[i];
+          if (element.Email === Guide.Email) {
+              TempGuide = element;
+          }
+      }
+      this.setState({
+          allUsers: tempArray
+      });
+    this.GetLanguagesGuideList(TempGuide);
+    this.GetAreasGuideList(TempGuide);
+      this.GetAllAreas();
+    }
+
+    GetGuides = ()=>{
+        fetch(this.apiUrl, {
+            method: 'GET',
+            headers: new Headers({
+              'Content-Type': 'application/json; charset=UTF-8',
+            })
+          })
+            .then(res => {
+              return res.json()
+            })
+            .then(
+              (result) => {
+                this.setState({ allUsers: result })
+              },
+              (error) => {
+                console.log("err post=", error);
+              });
+              let tempArray = this.state.allUsers;
+              return tempArray;
     }
     GetAllAreas =() =>{
         fetch("http://localhost:49948/api/Area", {
@@ -54,12 +102,13 @@ class Home extends Component {
             })
             .then(
                 (result) => {
-                  result.map(st => this.state.AllAreas.push(st));
+                 this.setState({
+                     AllAreas:result
+                 })
                 },
                 (error) => {
                   console.log("err post=", error);
                 });
-                console.log(this.state.AllAreas);
 
     }
 
@@ -94,8 +143,8 @@ class Home extends Component {
         }
     }
 
-    GetAreasGuideList=(Guide)=>{
-        fetch("http://localhost:49948/api/Area/" + Guide.gCode, {
+    GetAreasGuideList=(TempGuide)=>{
+        fetch("http://localhost:49948/api/Area/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -115,8 +164,8 @@ class Home extends Component {
     }
 
 
-    GetLanguagesGuideList = (Guide) => {
-        fetch("http://localhost:49948/api/Language/" + Guide.gCode, {
+    GetLanguagesGuideList = (TempGuide) => {
+        fetch("http://localhost:49948/api/Language/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
