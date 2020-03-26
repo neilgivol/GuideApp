@@ -13,7 +13,8 @@ class Area extends Component {
         this.state = {
             items: [],
             selectedItems: [],
-            allAreasCities:[]
+            allAreasCities:[],
+            guideList:this.props.guideListAreas
         };
 
         let local = true;
@@ -23,8 +24,23 @@ class Area extends Component {
         }
     }
   
-
-
+//     componentDidUpdate(PrevProps,state){
+//     if (PrevProps.Allusers != this.props.Allusers) {
+//         let array=[];
+//         for (let i = 0; i < this.props.guideListAreas.length; i++) {
+//             const SQLelement = this.props.guideListAreas[i];
+//             for (let j = 0; j < this.state.items.length; j++) {
+//                 const itemsElement = this.state.items[j];
+//                 if (SQLelement.Area_Code === itemsElement.id) {
+//                     array.push(itemsElement);
+//                 }
+//             }
+//         }
+//         this.setState({
+//             selectedItems:array
+//         })
+//     }
+// }
     componentDidMount(){
         for (let i = 1; i < this.props.AreasArray.length; i++) {
             const element = {
@@ -35,9 +51,8 @@ class Area extends Component {
         }
 
         let array=[];
-        console.log(this.props.guideListAreas);
-        for (let i = 0; i < this.props.guideListAreas.length; i++) {
-            const SQLelement = this.props.guideListAreas[i];
+        for (let i = 0; i < this.state.guideList.length; i++) {
+            const SQLelement = this.state.guideList[i];
             for (let j = 0; j < this.state.items.length; j++) {
                 const itemsElement = this.state.items[j];
                 if (SQLelement.Area_Code === itemsElement.id) {
@@ -63,7 +78,6 @@ class Area extends Component {
             }
             tempArrayGuideAreas.push(Guide_Area);
         }
-     console.log(tempArrayGuideAreas);
      this.PostAreaGuideToSQL(tempArrayGuideAreas);
     }
     PostAreaGuideToSQL = (tempArrayGuideAreas) => {
@@ -83,67 +97,32 @@ class Area extends Component {
             .then(
                 (result) => {
                     console.log("fetch POST= ", result);
-                    console.log(result);
+                    this.setState({
+                        guideList:result
+                    })
+                    this.UpdateNewAreas(this.state.guideList);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
     }
-
-
-
-    GetGuideAreasFromSQL = () => {
-        let ifExist = false;
-        fetch(this.apiUrl + "/Language/GetGuideLanguages", {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-            })
-        })
-            .then(res => {
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    this.setState({ ListFromSQL: result })
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
-        if (this.state.ListFromSQL === null) {
-            ifExist = false;
+    UpdateNewAreas=()=>{
+        let array=[];
+        for (let i = 0; i < this.state.guideList.length; i++) {
+            const SQLelement = this.state.guideList[i];
+            for (let j = 0; j < this.state.items.length; j++) {
+                const itemsElement = this.state.items[j];
+                if (SQLelement.Area_Code === itemsElement.id) {
+                    array.push(itemsElement);
+                }
+            }
         }
-        else {
-            ifExist = true;
-        }
-
-        return ifExist;
-    }
-
-
-    PostLangGuideToSQL = (tempArrayGuideLanguages) => {
-        console.log(tempArrayGuideLanguages);
-        fetch('http://localhost:49948/api/Guide/PostGuideLanguage', {
-            method: 'POST',
-            body: JSON.stringify(tempArrayGuideLanguages),
-            headers: new Headers({
-                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-            })
-            
+        console.log(array);
+        this.setState({
+            selectedItems:array
         })
-            .then(res => {
-                console.log('res=', res);
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    console.log("fetch POST= ", result);
-                    console.log(result);
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
     }
+
 
     handleChange(selectedItems) {
         this.setState({ selectedItems });

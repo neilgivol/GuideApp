@@ -28,7 +28,7 @@ class SignUp extends Component {
       confirmPassword: "",
       firstName:"",
       lastName:"",
-      startDate: new Date()
+      startDate: new Date(),
     }
   }
 componentDidMount(){
@@ -74,40 +74,25 @@ componentDidMount(){
       alert("Password not Match")
     }
     else {
-      return <div>{this.moveFunc()}</div>;
+      this.moveFunc();
     }
 
   }
-  moveFunc = () =>{
-  let CheckIfGuideExist = true;
-  for (let i = 0; i < this.props.Allusers.length; i++) {
-    const element = this.props.Allusers[i];
-    if (element.Email === this.state.email) {
-      CheckIfGuideExist = false;
-    }
-  }
-  let gCodeGuide = parseInt(this.props.Allusers[this.props.Allusers.length-1].gCode);
- gCodeGuide = parseInt(gCodeGuide + 1);
-  if (CheckIfGuideExist) {
+  moveFunc = () =>{ 
     let signDate = this.state.startDate.toLocaleDateString('en-US');
     let GuideSignUp = {
       Email: this.state.email,
       FirstName:this.state.firstName,
       LastName:this.state.lastName,
-      PasswordGuide:this.state.password,
+      Password:this.state.password,
+      picture:"",
       SignDate:signDate,
-      gCode:gCodeGuide
+      Birthday:signDate,
+      Gender:""
     }
-    localStorage.setItem('Guide', JSON.stringify(GuideSignUp))
+    this.props.checkIfExistAndSignUP(GuideSignUp);
+  }
    
-   let check = this.props.PostGuideToSQL(GuideSignUp);
-   console.log(check);
-  
-  }
-  else{
-    alert("Already Exist");
-  }
-  }
 
  
   render() {

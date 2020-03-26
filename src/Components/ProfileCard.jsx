@@ -1,43 +1,25 @@
 import React, { Component, useState } from 'react';
-import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
+import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '../Css/ProfileCard.css';
-
-const FacebookUser = JSON.parse(localStorage.getItem('FacebookUser'));
-const GoogleUser = JSON.parse(localStorage.getItem('GoogleUser'));
-const SignUpUser = JSON.parse(localStorage.getItem('SignUpUser'));
 
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: {
-                FirstName: "",
-                LastName: "",
-                Email: "",
-            },
-            allUsers: this.props.Allusers
+            user: this.props.GuideDetails
         }
 
     }
     componentDidMount() {
-        this.GetGuide();
     }
 
-    GetGuide = () => {
-        let logginUser = "";
-        for (let i = 0; i < this.state.allUsers.length; i++) {
-            const element = this.state.allUsers[i];
-            if (element.Email === this.props.email) {
-                logginUser = element;
-            }
-        }
-        this.setState({
-            user: logginUser
-        })
 
-    }
     funcPic = () => {
-        return <Card.Img variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
+        return <div className="imageClass">
+            <Card.Img variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
+            <span className="uploadPicIcon">
+                <i class="far fa-image"></i></span>
+        </div>
     }
     funcName = () => {
         return <h1>{this.state.user.FirstName} {this.state.user.LastName}</h1>

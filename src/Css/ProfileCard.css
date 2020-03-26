@@ -1,7 +1,21 @@
 .CardBodyDiv img{
-max-width: 80%;
-max-height: 80%;
+max-width: 99%;
+max-height: 99%;
+margin:0 auto;
+width: 99%;
+height: 99%;
 }
-.CardBodyDiv{
+.CardBodyDiv {
     max-height: 500px;
+    max-width: 280px;
+}
+.uploadPicIcon{
+    font-size: 40px;
+    position: absolute;
+    top:80%;
+    left:80%;
+    color:rgb(0, 100, 199);
+}
+.imageClass{
+    position: relative;
 }

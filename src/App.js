@@ -5,7 +5,7 @@ import { Switch, Route, withRouter,Redirect  } from 'react-router-dom';
 import SignUp from './Screens/SignUp';
 import { Router } from '@reach/router'
 import About from './pages/About.jsx'
-import Contact from './pages/Contact.jsx'
+import Chat from './pages/Chat.jsx'
 import Portfolio from './pages/Portfolio.jsx'
 import Blog from './pages/Blog.jsx'
 import Home from './pages/Home.jsx'
@@ -16,8 +16,7 @@ import ProfileDetails from './Screens/ProfileDetails';
 import Area from './Screens/Area';
 import Check from './Screens/Check';
 import SignInTemp from './Screens/SignInTemp';
-const w = window.innerWidth;
-const h = window.innerHeight;
+import menu from './Img/menu.png';
 
 const navLinks = [
   {
@@ -48,10 +47,7 @@ class App extends Component {
     this.state = {
       guides: [],
       navbarCheckOpen: "open",
-      email: "",
-      firstName: "",
-      lastName: "",
-      tempGuide:null
+      tempGuide:""
     }
     let local = true;
     this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -63,156 +59,9 @@ class App extends Component {
 
   componentDidMount() {
     console.log("DidMount_App")
-       this.GetGuidesFromSQL();
+      // this.GetGuidesFromSQL();
   }
 
-  PostGuideToSQL = (guide) => {
-      //pay attention case sensitive!!!! should be exactly as the prop in C#!
-      let tar = null;
-      fetch(this.apiUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          Email: guide.Email,
-          PasswordGuide: guide.PasswordGuide,
-          FirstName: guide.FirstName,
-          LastName: guide.LastName,
-          ProfilePic: "",
-          SignDate:guide.SignDate
-        }),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
-
-      })
-        .then(res => {
-          console.log('res=', res);
-          return res.json()
-        })
-        .then(
-          (result) => {
-            if (result !== null) {
-              this.setState({
-                guides:result
-              });
-            }
-            console.log(result);
-            console.log(this.state.guides);
-            this.props.history.push({
-              pathname: '/home/',
-            });  
-          },
-          (error) => {
-            console.log("err post=", error);
-          });
-  }
-
-
-  PostGuideToSQLFromFacebook = (guideFacebook) => {
-    let tempDate = new Date();
-    let StartDate = tempDate.toLocaleDateString('en-US');
-    let isExist = false;
-    this.GetGuidesFromSQL();
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email === guideFacebook.email) {
-        isExist = true;
-      }
-    }
-
-    if (isExist) {
-
-    }
-    else {
-      fetch(this.apiUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          Email: guideFacebook.email,
-          PasswordGuide: "NoPassword",
-          FirstName: guideFacebook.firstName,
-          LastName: guideFacebook.lastName,
-          ProfilePic: guideFacebook.picture,
-          SignDate:StartDate
-        }),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
-
-      })
-        .then(res => {
-          console.log('res=', res);
-          return res.json()
-        })
-        .then(
-          (result) => {
-            if (result !== null) {
-              this.setState({
-                guides:result
-              });
-            }
-            console.log(result);
-            console.log(this.state.guides);
-            this.props.history.push({
-              pathname: '/home/',
-            });  
-          },
-          (error) => {
-            console.log("err post=", error);
-          });
-    }
-  }
-  PostGuideToSQLFromGoogle = (guideGoogle) => {
-    let isExist = false;
-    this.GetGuidesFromSQL();
-    for (let i = 0; i < this.state.guides.length; i++) {
-      const g = this.state.guides[i];
-      if (g.Email === guideGoogle.email) {
-        isExist = true;
-      }
-    }
-
-    if (isExist) {
-
-    }
-    else {
-    let tempDate = new Date();
-      let StartDate = tempDate.toLocaleDateString('en-US');
-      fetch(this.apiUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          Email: guideGoogle.email,
-          PasswordGuide: "No Password",
-          FirstName: guideGoogle.givenName,
-          LastName: guideGoogle.familyName,
-          ProfilePic: guideGoogle.imageUrl,
-          SignDate:StartDate
-        }),
-        headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-        })
-
-      })
-        .then(res => {
-          console.log('res=', res);
-          return res.json()
-        })
-        .then(
-          (result) => {
-            if (result !== null) {
-              this.setState({
-                guides:result
-              });
-            }
-            console.log(result);
-            console.log(this.state.guides);
-            this.props.history.push({
-              pathname: '/home/',
-            });  
-          },
-          (error) => {
-            console.log("err post=", error);
-          });
-    }
-  }
   navbarCheck = (nav) => {
     if (nav) {
       this.setState({
@@ -226,7 +75,6 @@ class App extends Component {
     }
 
   }
-
 
   GetGuidesFromSQL = () => {
     fetch(this.apiUrl, {
@@ -251,6 +99,87 @@ class App extends Component {
         return tempArray;
 
   }
+
+
+  PostGuideToCheckSignUp=(userDetails)=>{
+    console.log("enter")
+    //pay attention case sensitive!!!! should be exactly as the prop in C#!
+    fetch(this.apiUrl + '/PostToCheck', {
+      method: 'POST',
+      body: JSON.stringify({
+        Email: userDetails.Email,
+        PasswordGuide: userDetails.Password,
+        ProfilePic:userDetails.picture,
+        FirstName:userDetails.FirstName,
+        LastName:userDetails.LastName,
+        SignDate:userDetails.SignDate,
+        Gender:userDetails.Gender,
+        BirthDay:userDetails.Birthday
+      }),
+      headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      })
+    })
+      .then(res => {
+        console.log('res=', res);
+        return res.json()
+      })
+      .then(
+        (result) => {
+            this.setState({
+              tempGuide:result
+            })
+          this.MoveToHomePage(this.state.tempGuide);
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
+}
+
+PostGuideToCheckSignIn=(signInUser)=>{
+  //pay attention case sensitive!!!! should be exactly as the prop in C#!
+  fetch(this.apiUrl + '/PostToCheck', {
+    method: 'POST',
+    body: JSON.stringify({
+      Email: signInUser.Email,
+      PasswordGuide: signInUser.Password
+    }),
+    headers: new Headers({
+      'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+    })
+  })
+    .then(res => {
+      console.log('res=', res);
+      return res.json()
+    })
+    .then(
+      (result) => {
+        this.setState({
+            tempGuide:result
+        })
+        this.MoveToHomePage(this.state.tempGuide);
+      },
+      (error) => {
+        console.log("err post=", error);
+      });
+      console.log(this.state.tempGuide);
+}
+
+MoveToHomePage=(e)=>{
+console.log(e)
+if (e!== null) {
+    console.log("enter3")
+    localStorage.setItem('Guide', JSON.stringify(e))
+    this.props.history.push({
+        pathname: '/home/',
+        state: {GuideTemp : e }
+        });
+}
+else{
+  console.log("not succeess")
+}
+}
+
   render() {
     return (
       <div className="app">
@@ -267,16 +196,16 @@ class App extends Component {
             <SignInTemp />
           </Route>
           <Route path="/signIn" >
-            <SignIn Allusers={this.state.guides} PostGuideToSQLFromFacebook={this.PostGuideToSQLFromFacebook} PostGuideToSQLFromGoogle={this.PostGuideToSQLFromGoogle} />
+            <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp}  />
           </Route>
           <Route path="/signUp">
-            <SignUp Allusers={this.state.guides} PostGuideToSQL={this.PostGuideToSQL} CheckIfGuideExist={this.CheckIfGuideExist} />
+            <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
           </Route>
           <Route path="/home">
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
@@ -287,18 +216,18 @@ class App extends Component {
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
             />
-            <Contact />
+            <Chat />
           </Route>
           <Route path="/area">
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
@@ -309,7 +238,7 @@ class App extends Component {
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
@@ -320,7 +249,7 @@ class App extends Component {
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
@@ -331,7 +260,7 @@ class App extends Component {
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"
@@ -342,7 +271,7 @@ class App extends Component {
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
-              logo={logo}
+              logo={menu}
               background="#0099cc"
               hoverBackground="#ddd"
               linkColor="#777"

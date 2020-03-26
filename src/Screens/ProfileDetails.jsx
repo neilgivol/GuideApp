@@ -44,84 +44,51 @@ class ProfileDetails extends Component {
                 Gender: "",
                 DescriptionGuide: ""
             },
-            allUsers: this.props.Allusers,
+            //allUsers: this.props.Allusers,
             options: [
                 {
-                  name: 'Select…',
-                  value: null,
+                    name: 'Select…',
+                    value: null,
                 },
                 {
-                  name: 'Instegram',
-                  value: 'Instegram',
+                    name: 'Instegram',
+                    value: 'Instegram',
                 },
                 {
-                  name: 'Facebook',
-                  value: 'Facebook',
+                    name: 'Facebook',
+                    value: 'Facebook',
                 },
                 {
-                  name: 'Twitter',
-                  value: 'Twitter',
+                    name: 'Twitter',
+                    value: 'Twitter',
                 },
                 {
                     name: 'Linkdin',
                     value: 'Linkdin',
-                  },
-                  {
+                },
+                {
                     name: 'Website',
                     value: 'Website',
-                  },
-              ],
+                },
+            ],
         };
-        //this.handleChange = this.handleChange.bind(this);
-        //this.onFormSubmit = this.onFormSubmit.bind(this);
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-   
+
     componentDidMount() {
-        fetch(this.apiUrl, {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-            })
+        let dateBirth = new Date(this.props.GuideDetails.BirthDay);
+        this.setState({
+            user: this.props.GuideDetails,
+            size: this.props.GuideDetails.Gender,
+            BirthDay: dateBirth,
+            phone: this.props.GuideDetails.Phone
         })
-            .then(res => {
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    this.setState({ allUsers: result })
-
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
-
-        this.CheckGuideFunction();
 
     }
-  
-CheckGuideFunction=()=>{
-     let logginUser = "";
-        for (let i = 0; i < this.state.allUsers.length; i++) {
-            const element = this.state.allUsers[i];
-            if (element.Email === this.props.GuideDetails.Email) {
-                logginUser = element;
-            }
-        }
-        let dateBirth = new Date(logginUser.BirthDay);
-        
-        this.setState({
-            user: logginUser,
-            size: logginUser.Gender,
-            BirthDay: dateBirth,
-            phone: logginUser.Phone
-        })
-}
-
     handleOnChange3 = value => {
         console.log(value);
         this.setState({ phone: value }, () => {
@@ -135,7 +102,7 @@ CheckGuideFunction=()=>{
 
         });
     }
-   
+
     // onFormSubmit(e) {
     //     e.preventDefault();
     //     console.log(this.state.startDate)
@@ -169,7 +136,7 @@ CheckGuideFunction=()=>{
     handleChangeListType = (event) => {
         this.setState({ linkType: event.target.value });
         console.log(this.state.value)
-      }
+    }
     UpdateDetails = () => {
         console.log(this.state.phone);
         let userGuide = this.state.user;
@@ -193,7 +160,6 @@ CheckGuideFunction=()=>{
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
-
         })
             .then(res => {
                 console.log('res=', res);
@@ -202,18 +168,13 @@ CheckGuideFunction=()=>{
             .then(
                 (result) => {
                     console.log("fetch PUT= ", result);
-                    console.log(result);
+                    this.uploadNewDetails(result);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
 
         alert("Success");
-        this.setState({
-            user: userGuide
-        })
-        //window.location.reload(false);
-        console.log(this.state.user)
     }
     Addlinks = () => {
         // const fullLinkList = [];
@@ -238,143 +199,157 @@ CheckGuideFunction=()=>{
 
     }
 
+    uploadNewDetails = (guideUpdate) => {
+        console.log(guideUpdate);
+        if (guideUpdate !== null) {
+            let dateBirth = new Date(guideUpdate.BirthDay);
+            this.setState({
+                user: guideUpdate,
+                size: guideUpdate.Gender,
+                //BirthDay: dateBirth,
+                phone: guideUpdate.Phone
+            })
+            this.forceUpdate()
+            localStorage.setItem('Guide', JSON.stringify(this.state.user))
+        }
 
+    }
     render() {
         return (
-                <Card small className="mb-4">
-                    <Card.Header className="border-bottom">
-                        <h6 className="m-0">Profile Details</h6>
-                    </Card.Header>
-                    <ListGroup flush>
-                        <ListGroupItem className="p-3">
-                            <Form>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feFirstName">First Name</label><br />
-                                        <input
-                                            id="feFirstName"
-                                            placeholder="First Name"
-                                            value={this.state.user.FirstName}
-                                            onChange={this.onChangeFirstName}
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLastName">Last Name</label><br />
-                                        <input
-                                            id="feLastName"
-                                            placeholder="Last Name"
-                                            value={this.state.user.LastName}
-                                            onChange={this.onChangeLastName}
-                                        />
-                                    </div>
+            <Card small className="mb-4">
+                <Card.Header className="border-bottom">
+                    <h6 className="m-0">Profile Details</h6>
+                </Card.Header>
+                <ListGroup flush>
+                    <ListGroupItem className="p-3">
+                        <Form>
+                            <div className="row labelInputs">
+                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feFirstName">First Name</label><br />
+                                    <input
+                                        id="feFirstName"
+                                        placeholder="First Name"
+                                        value={this.state.user.FirstName}
+                                        onChange={this.onChangeFirstName}
+                                    />
                                 </div>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feEmail">Email</label><br />
-                                        <input
-                                            id="feEmail"
-                                            placeholder="Email"
-                                            value={this.state.user.Email}
-                                        //onChange={() => { }}
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
-                                        <input
-                                            id="feLicense"
-                                            placeholder="License Number"
-                                            value={this.state.user.License}
-                                            onChange={this.onChangeLicense}
-                                        />
-                                    </div>
+                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLastName">Last Name</label><br />
+                                    <input
+                                        id="feLastName"
+                                        placeholder="Last Name"
+                                        value={this.state.user.LastName}
+                                        onChange={this.onChangeLastName}
+                                    />
                                 </div>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
-                                        <DatePicker
-                                            selected={this.state.BirthDay}
-                                            onChange={(newDate) => this.setState({ BirthDay: newDate })}
-                                            name="birthDate"
-                                            dateFormat="dd/MM/yyyy"
-                                        />
-                                    </div>
-                                    <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
-                                        <Radio
-                                            checked={this.state.size === "female"}
-                                            onChange={this.handleChangeGender}
-                                            value="female"
-                                            name="radio-button-demo"
-                                            color="default"
-                                        />
-                                        <label>Female</label>
-                                        <Radio
-                                            checked={this.state.size === "male"}
-                                            onChange={this.handleChangeGender}
-                                            value="male"
-                                            name="radio-button-demo"
-                                            color="default"
-                                        />
-                                        <label>Male</label>
-                                    </div>
+                            </div>
+                            <div className="row labelInputs">
+                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feEmail">Email</label><br />
+                                    <input
+                                        id="feEmail"
+                                        placeholder="Email"
+                                        value={this.state.user.Email}
+                                    //onChange={() => { }}
+                                    />
                                 </div>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="fephone">Phone </label><br />
-                                        <ReactPhoneInput
-                                            inputExtraProps={{
-                                                name: "phone",
-                                                required: true,
-                                                autoFocus: true
-                                            }}
-                                            country={'il'}
-                                            value={this.state.phone}
-                                            onChange={this.handleOnChange3}
-                                        />
-                                    </div>
-
+                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
+                                    <input
+                                        id="feLicense"
+                                        placeholder="License Number"
+                                        value={this.state.user.License}
+                                        onChange={this.onChangeLicense}
+                                    />
                                 </div>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-12 form-group">
-                                        <label htmlFor="feLinks">Link Type</label><br />
-                                    </div>
+                            </div>
+                            <div className="row labelInputs">
+                                <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
+                                    <DatePicker
+                                        selected={this.state.BirthDay}
+                                        onChange={(newDate) => this.setState({ BirthDay: newDate })}
+                                        name="birthDate"
+                                        dateFormat="dd/MM/yyyy"
+                                    />
                                 </div>
-                                <div className="row labelInputs">
-                                    <div className="col-lg-3">
-                                        <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
-                                            {this.state.options.map(item => (
-                                                <option key={item.value} value={item.value}>
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                        </select>
-
-                                    </div>
-                                    <div className="col-lg-7 chooseLink">
-                                        <input
-                                            id="feFirstName"
-                                            placeholder="First Name"
-                                            value={this.state.linkURL}
-                                            onChange={this.handleChangeLinkUrl}
-                                        />
-                                    </div>
-                                    <div className="col-lg-2 Addlinks">
-                                        <Button onClick={() =>{this.Addlinks()}}>+</Button>
-                                    </div>
-                                    <div className="LinkList col-12">
-
-                                    </div>
+                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
+                                    <Radio
+                                        checked={this.state.size === "female"}
+                                        onChange={this.handleChangeGender}
+                                        value="female"
+                                        name="radio-button-demo"
+                                        color="default"
+                                    />
+                                    <label>Female</label>
+                                    <Radio
+                                        checked={this.state.size === "male"}
+                                        onChange={this.handleChangeGender}
+                                        value="male"
+                                        name="radio-button-demo"
+                                        color="default"
+                                    />
+                                    <label>Male</label>
                                 </div>
-                                <div>
-                                    <Form.Group controlId="exampleForm.ControlTextarea1">
-                                        <Form.Label>Short Description</Form.Label>
-                                        <Form.Control as="textarea" rows="3"
-                                            value={this.state.user.DescriptionGuide}
-                                            onChange={this.onChangeDescriptionGuide}
-                                        />
-                                    </Form.Group>
-                                </div>
-                                <div>
-                                    <Button onClick={() => { this.UpdateDetails(); this.props.GetGuidesFromSQL(); }}>Save</Button>
+                            </div>
+                            <div className="row labelInputs">
+                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="fephone">Phone </label><br />
+                                    <ReactPhoneInput
+                                        inputExtraProps={{
+                                            name: "phone",
+                                            required: true,
+                                            autoFocus: true
+                                        }}
+                                        country={'il'}
+                                        value={this.state.phone}
+                                        onChange={this.handleOnChange3}
+                                    />
                                 </div>
 
-                            </Form>
-                        </ListGroupItem>
-                    </ListGroup>
-                </Card>
+                            </div>
+                            <div className="row labelInputs">
+                                <div className="col-lg-12 form-group">
+                                    <label htmlFor="feLinks">Link Type</label><br />
+                                </div>
+                            </div>
+                            <div className="row labelInputs">
+                                <div className="col-lg-3">
+                                    <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
+                                        {this.state.options.map(item => (
+                                            <option key={item.value} value={item.value}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                </div>
+                                <div className="col-lg-7 chooseLink">
+                                    <input
+                                        id="feFirstName"
+                                        placeholder="First Name"
+                                        value={this.state.linkURL}
+                                        onChange={this.handleChangeLinkUrl}
+                                    />
+                                </div>
+                                <div className="col-lg-2 Addlinks">
+                                    <Button onClick={() => { this.Addlinks() }}>+</Button>
+                                </div>
+                                <div className="LinkList col-12">
+
+                                </div>
+                            </div>
+                            <div>
+                                <Form.Group controlId="exampleForm.ControlTextarea1">
+                                    <Form.Label>Short Description</Form.Label>
+                                    <Form.Control as="textarea" rows="3"
+                                        value={this.state.user.DescriptionGuide}
+                                        onChange={this.onChangeDescriptionGuide}
+                                    />
+                                </Form.Group>
+                            </div>
+                            <div>
+                                <Button onClick={() => { this.UpdateDetails(); }}>Save</Button>
+                            </div>
+
+                        </Form>
+                    </ListGroupItem>
+                </ListGroup>
+            </Card>
         );
     }
 }

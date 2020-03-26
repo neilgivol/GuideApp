@@ -32,24 +32,24 @@ class SignIn extends Component {
         this.state = {
             email: "",
             password: "",
-            users: this.props.Allusers,
-            faceLogin: [],
-            checkBoxVal:"unCheck"
+            checkBoxVal: "unCheck",
         }
+    
     }
-    componentDidMount(){
-     localStorage.setItem('Guide',"");
-   let User = localStorage.getItem('UserName');
-   let Pass = localStorage.getItem('Password');
-        this.setState({
-            email:User,
-            password:Pass
-        })
-        //localStorage.clear();
+    componentWillMount() {
+        if (localStorage.username !== "" && localStorage.checkbox !== "") {
+            this.setState({
+                email: localStorage.username.value
+            })
+        } else {
+            this.setState({
+                email: ""
+            })
+        }
 
-console.log("DidMount_SignIn")
+        console.log("DidMount_SignIn")
     }
-  
+
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
@@ -64,50 +64,25 @@ console.log("DidMount_SignIn")
         )
     }
 
-    UserExists = () => {
-        const tempUsers = this.state.users;
-        let logginUser = "";
-        let ifExist = false;
-        for (let i = 0; i < tempUsers.length; i++) {
-            const element = tempUsers[i];
-            console.log(element)
-            if (element.Email === this.state.email && element.PasswordGuide === this.state.password) {
-                ifExist = true;
-                logginUser = element;
-            }
-
-        }
-        if (ifExist) {
-            localStorage.setItem('Guide', JSON.stringify(logginUser))
-                      this.props.history.push({
-                pathname: '/home',
-            });
-        }
-        else {
-            alert("Email or Password is wrong")
+    RememberMe = () => {
+        let rmCheck = document.getElementById("rememberMe");
+        if (rmCheck.checked && this.state.email !== "") {
+            localStorage.username = this.state.email;
+            localStorage.checkbox = rmCheck.value;
+        } else {
+            localStorage.username = "";
+            localStorage.checkbox = "";
         }
     }
-  
-    RememberMe = ()=>{
-           if (this.state.checkBoxVal === "unCheck") {
-               this.setState({
-                   checkBoxVal:"check"
-               })
-               localStorage.setItem('UserName',this.state.email)
-               localStorage.setItem('Password',this.state.password)
-           }
-           else{
-            this.setState({
-                checkBoxVal:"unCheck"
-            })
-            localStorage.setItem('UserName',"")
-            localStorage.setItem('Password',"")
-           }
-           console.log(this.state.checkBoxVal);
+
+    SignInFunc = () => {
+        let signInUser = {
+            Email: this.state.email,
+            Password: this.state.password
+        }
+        this.props.checkSignIn(signInUser);
     }
 
-
- 
     render() {
         return (
             <MDBContainer>
@@ -144,7 +119,7 @@ console.log("DidMount_SignIn")
 
                                 <div className="divRemember">
                                     <FormControlLabel
-                                        control={<Checkbox value="remember" color="primary" />}
+                                        control={<Checkbox id="rememberMe" value="lsRememberMe" color="primary" />}
                                         label="Remember me"
                                         onChange={this.RememberMe}
                                     />
@@ -155,7 +130,7 @@ console.log("DidMount_SignIn")
                                         gradient="blue"
                                         rounded
                                         className="btn-block z-depth-1a"
-                                        onClick={this.UserExists}
+                                        onClick={this.SignInFunc}
                                     >
                                         Sign in
                 </MDBBtn>
@@ -166,8 +141,8 @@ console.log("DidMount_SignIn")
                                 </div>
 
                                 <div className="text-center mb-3">
-                                    <Facebook Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
-                                    <Google Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
+                                    <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+                                    <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                 </div>
 
 

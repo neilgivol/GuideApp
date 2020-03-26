@@ -71,8 +71,9 @@ class Hobbies extends Component {
                                 <div className='col-6 HobbiesList'>
                                     <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
                                 </div>
-                                <div className='col-lg-6 HobbiesAdded'>
-                                <div className="row titleAdded">selection: </div>
+                                <span className="middleLine col-lg-1"></span>
+                                <div className='col-lg-5 HobbiesAdded'>
+                                <div className="row titleAdded"><span>selection:</span> </div>
                                     <div className="row HobbiesListSide HobbieAddedList">
                                         {this.state.itemsInCart.map((item, key) =>
                                             <HobbieAdded removeFromCart={this.removeFromCart} item={item} key={item.id} />)}

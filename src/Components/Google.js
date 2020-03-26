@@ -9,38 +9,24 @@ class Google extends Component {
     this.state = {
       userDetails: {},
       isUserLoggedIn: false,
-      email: '',
-      picture: '',
-      firstName: '',
-      lastName: ""
+      guide:"",
+      startDate: new Date()
     };
   }
   responseGoogle = response => {
     this.setState({ userDetails: response.profileObj, isUserLoggedIn: true });
-    const googleLogin = true;
-    const facebookLogin = false;
+    let signDate = this.state.startDate.toLocaleDateString('en-US');
     const GoogleUser = {
+      SignDate:signDate,
       Email: this.state.userDetails.email,
       FirstName: this.state.userDetails.givenName,
-      LastName: this.state.familyName,
-      facebookLogin: facebookLogin,
-      googleLogin: googleLogin
+      LastName: this.state.userDetails.familyName,
+      picture:"",
+      Password:"NoPassword",
+      Birthday:signDate,
+      Gender:""
     }
-
-    let guideTemp
-    for (let i = 0; i < this.props.Allusers.length; i++) {
-      const element = this.props.Allusers[i];
-      if (element.Email === GoogleUser.Email) {
-        guideTemp = element
-      }
-    }
-
-    localStorage.setItem('Guide', JSON.stringify(guideTemp))
-
-    this.props.history.push({
-      pathname: '/home/',
-    });
-    return <div>{this.props.PostGuideToSQLFromGoogle(this.state.userDetails)}</div>
+    this.props.checkifExistFunc(GoogleUser);
   };
   logout = () => {
     this.setState({ isUserLoggedIn: false })

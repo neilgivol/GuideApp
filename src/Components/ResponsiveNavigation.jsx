@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
- 
+import { Switch, Route, Link, withRouter } from 'react-router-dom'; 
 function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc }) {
     const [ navOpen, setNavOpen ] = useState(true)
     const [ hoverIndex, setHoverIndex ] = useState(-1)

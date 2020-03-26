@@ -33,7 +33,7 @@ class Languages extends Component {
             selectedItems: [],
             ListFromSQL: [],
             tempList: [],
-            GuideListFromSQL:this.props.guideListLanguages
+            GuideListFromSQL: this.props.guideListLanguages
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api';
@@ -41,8 +41,27 @@ class Languages extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-    componentDidMount(){
-        let array=[];
+    // componentDidUpdate(PrevProps, state) {
+    //     if (PrevProps.Allusers !== this.props.Allusers) {
+    //         let array = [];
+    //         for (let i = 0; i < this.state.GuideListFromSQL.length; i++) {
+    //             const SQLelement = this.state.GuideListFromSQL[i];
+    //             for (let j = 0; j < this.state.items.length; j++) {
+    //                 const itemsElement = this.state.items[j];
+    //                 if (SQLelement.Language_Code === itemsElement.id) {
+    //                     array.push(itemsElement);
+    //                 }
+    //             }
+    //         }
+    //         console.log(array);
+    //         this.setState({
+    //             selectedItems: array
+    //         })
+    //     }
+    // }
+
+    componentDidMount() {
+        let array = [];
         for (let i = 0; i < this.state.GuideListFromSQL.length; i++) {
             const SQLelement = this.state.GuideListFromSQL[i];
             for (let j = 0; j < this.state.items.length; j++) {
@@ -54,7 +73,7 @@ class Languages extends Component {
         }
         console.log(array);
         this.setState({
-            selectedItems:array
+            selectedItems: array
         })
     }
 
@@ -68,41 +87,14 @@ class Languages extends Component {
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
             const Guide_Language = {
-                Guide_Code:GuideCode,
-                Language_Code:element.id
+                Guide_Code: GuideCode,
+                Language_Code: element.id
             }
             tempArrayGuideLanguages.push(Guide_Language);
         }
         this.PostLangGuideToSQL(tempArrayGuideLanguages);
-        this.GetGuideLanguageSQL();
     }
-    GetGuideLanguageSQL = () => {
-        let ifExist = false;
-        fetch(this.apiUrl + "/Language/GetGuideLanguages", {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-            })
-        })
-            .then(res => {
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    this.setState({ ListFromSQL: result })
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
-        if (this.state.ListFromSQL === null) {
-            ifExist = false;
-        }
-        else {
-            ifExist = true;
-        }
 
-        return ifExist;
-    }
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
         fetch('http://localhost:49948/api/Guide/PostGuideLanguage', {
             method: 'POST',
@@ -110,7 +102,7 @@ class Languages extends Component {
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
-            
+
         })
             .then(res => {
                 console.log('res=', res);
@@ -120,35 +112,55 @@ class Languages extends Component {
                 (result) => {
                     console.log("fetch POST= ", result);
                     console.log(result);
+                    this.setState({
+                        ListFromSQL: result
+                    });
+                    this.UpdateList(this.state.ListFromSQL);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
     }
-
+    UpdateList = (e) => {
+        console.log(e);
+        let array = [];
+        for (let i = 0; i < e.length; i++) {
+            const SQLelement = e[i];
+            for (let j = 0; j < this.state.items.length; j++) {
+                const itemsElement = this.state.items[j];
+                if (SQLelement.Language_Code === itemsElement.id) {
+                    array.push(itemsElement);
+                }
+            }
+        }
+        console.log(array);
+        this.setState({
+            selectedItems: array
+        });
+    }
     render() {
         const { items, selectedItems } = this.state;
         return (
-                <Card>
-                    <Card.Header>Languages</Card.Header>
-                    <ListGroup>
-                        <ListGroupItem>
-                            <div className="row title"><h2>Choose Language:</h2></div>
-                        </ListGroupItem>
-                        <ListGroupItem>
-                            <MultiSelect
-                                items={items}
-                                selectedItems={selectedItems}
-                                onChange={this.handleChange}
-                                showSearch={true}
-                                showSelectAll={false}
-                            />
-                        </ListGroupItem>
-                    </ListGroup>
-                    <div>
-                        <Button onClick={() => { this.UpdateAllLanguages() }}>Save</Button>
-                    </div>
-                </Card>
+            <Card>
+                <Card.Header>Languages</Card.Header>
+                <ListGroup>
+                    <ListGroupItem>
+                        <div className="row title"><h2>Choose Language:</h2></div>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <MultiSelect
+                            items={items}
+                            selectedItems={selectedItems}
+                            onChange={this.handleChange}
+                            showSearch={true}
+                            showSelectAll={false}
+                        />
+                    </ListGroupItem>
+                </ListGroup>
+                <div>
+                    <Button onClick={() => { this.UpdateAllLanguages() }}>Save</Button>
+                </div>
+            </Card>
         );
     }
 }

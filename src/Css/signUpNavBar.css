@@ -3,8 +3,9 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color:  #66c2ff;
+    background-color:  #e7e7e7;
     border-top-left-radius: 8px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
   }
   
  .ulSign li {
@@ -25,5 +26,5 @@
   }
 
   .active {
-    background-color: rgb(20, 131, 243);
+    background-color: rgba(57, 163, 255, 0.4);
   }
