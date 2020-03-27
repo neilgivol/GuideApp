@@ -36,19 +36,7 @@ class SignIn extends Component {
         }
     
     }
-    componentWillMount() {
-        if (localStorage.username !== "" && localStorage.checkbox !== "") {
-            this.setState({
-                email: localStorage.username.value
-            })
-        } else {
-            this.setState({
-                email: ""
-            })
-        }
-
-        console.log("DidMount_SignIn")
-    }
+    
 
     HandelEmailInput = (e) => {
         this.setState({
