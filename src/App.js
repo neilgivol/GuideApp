@@ -27,20 +27,19 @@ const navLinks = [
   {
     text: 'Chat',
     path: '/chat',
-    icon: 'ion-ios-megaphone'
+    icon: 'ion-ios-chatbubbles'
   },
   {
     text: 'Trips',
     path: '/about',
-    icon: 'ion-ios-business'
+    icon: 'ion-ios-map'
   },
   {
     text: 'Tourist Lists',
     path: '/blog',
-    icon: 'ion-ios-bonfire'
+    icon: 'ion-ios-people'
   }
 ]
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -55,8 +54,6 @@ class App extends Component {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
     }
   }
-  
-
   componentDidMount() {
     console.log("DidMount_App")
       // this.GetGuidesFromSQL();
@@ -184,7 +181,7 @@ else{
     return (
       <div className="app">
         <Switch>
-          <Route exact path="/" >
+          <Route  path="/check" >
             <Check
               color="#008ae6"
               type="spin" />
@@ -195,7 +192,7 @@ else{
           <Route exact path="/temp" >
             <SignInTemp />
           </Route>
-          <Route path="/signIn" >
+          <Route exact path="/" >
             <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp}  />
           </Route>
           <Route path="/signUp">

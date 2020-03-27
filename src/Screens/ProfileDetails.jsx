@@ -9,8 +9,13 @@ import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
 import '../Css/ProfileDetails.css';
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import Select from 'react-select';
+import facebook from '../Img/facebook.png';
+import twitter from '../Img/twitter.png';
+import website from '../Img/website.png';
+import linkdin from '../Img/linkedin.png';
+import instegram from '../Img/The_Instagram_Logo.jpg';
 
 
 const GreenRadio = withStyles({
@@ -34,7 +39,7 @@ class ProfileDetails extends Component {
             size: '',
             phone: "",
             linkURL: "",
-            linkType: "",
+            fulllink: [],
             user: {
                 FirstName: "",
                 LastName: "",
@@ -44,33 +49,39 @@ class ProfileDetails extends Component {
                 Gender: "",
                 DescriptionGuide: ""
             },
-            //allUsers: this.props.Allusers,
             options: [
                 {
                     name: 'Select…',
                     value: null,
+                    label: null
                 },
                 {
                     name: 'Instegram',
                     value: 'Instegram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
                 },
                 {
                     name: 'Facebook',
                     value: 'Facebook',
+                    label: <div><img className="imageicons" src={facebook} /><span>Facebook</span></div>
                 },
                 {
                     name: 'Twitter',
                     value: 'Twitter',
+                    label: <div><img className="imageicons" src={twitter} /><span>Twitter</span></div>
                 },
                 {
                     name: 'Linkdin',
                     value: 'Linkdin',
+                    label: <div><img className="imageicons" src={linkdin} /><span>Linkdin</span></div>
                 },
                 {
                     name: 'Website',
                     value: 'Website',
+                    label: <div><img className="imageicons" src={website} /><span>Website</span></div>
                 },
             ],
+            selectedOption: null
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -90,7 +101,6 @@ class ProfileDetails extends Component {
 
     }
     handleOnChange3 = value => {
-        console.log(value);
         this.setState({ phone: value }, () => {
         });
     };
@@ -133,17 +143,20 @@ class ProfileDetails extends Component {
             user: { ...this.state.user, DescriptionGuide: e.target.value }
         });
     }
-    handleChangeListType = (event) => {
-        this.setState({ linkType: event.target.value });
-        console.log(this.state.value)
+    handleChangeList = (selectedOption) => {
+        this.setState({ selectedOption });
     }
+    handleChangeLinkUrl = (e) => {
+        this.setState({
+            linkURL: e.target.value
+        })
+    }
+
     UpdateDetails = () => {
-        console.log(this.state.phone);
         let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
         //let startDate =  Date.parse(startDate);
-        console.log(phoneGuide);
         fetch(this.apiUrl, {
             method: 'PUT',
             body: JSON.stringify({
@@ -177,27 +190,25 @@ class ProfileDetails extends Component {
         alert("Success");
     }
     Addlinks = () => {
-        // const fullLinkList = [];
-        // let type = this.state.linkType;
-        // let urlLink = this.state.linkURL;
-        // let link = type + " - " + urlLink; 
-        // fullLinkList.push(link);
-        console.log("fullLinkList");
-    }
-    handleOnChangeTypeList = (e) => {
+        const fullLinkList = [];
+        for (let i = 0; i < this.state.fulllink.length; i++) {
+            const element = this.state.fulllink[i];
+            fullLinkList.push(element);
+        }
+        let type = this.state.selectedOption.value;
+        let urlLink = this.state.linkURL;
+        let link = {
+            type: type,
+            url: urlLink
+        }
+        let temppp = type + ' - ' + urlLink;
+        fullLinkList.push(temppp);
         this.setState({
-            linkType: e.target.value
+            fulllink: fullLinkList
         })
-        console.log(this.state.linkType);
-
+        console.log(this.state.fulllink);
     }
-    handleChangeLinkUrl = (e) => {
-        this.setState({
-            linkURL: e.target.value
-        })
-        console.log(this.state.linkURL);
 
-    }
 
     uploadNewDetails = (guideUpdate) => {
         console.log(guideUpdate);
@@ -206,7 +217,6 @@ class ProfileDetails extends Component {
             this.setState({
                 user: guideUpdate,
                 size: guideUpdate.Gender,
-                //BirthDay: dateBirth,
                 phone: guideUpdate.Phone
             })
             this.forceUpdate()
@@ -214,6 +224,24 @@ class ProfileDetails extends Component {
         }
 
     }
+    funarray = () => {
+        return this.state.fulllink ? null : this.state.fulllink.map(item => <div>{item}</div>)
+    }
+    delUrl=(e)=>{
+        console.log("ff");
+        console.log(e);
+        let temparray = [];
+        for (let i = 0; i < this.state.fulllink.length; i++) {
+            const element = this.state.fulllink[i];
+            if (element !== e) {
+                temparray.push(element);
+            }
+        }
+        this.setState({
+            fulllink:temparray
+        })
+    }
+
     render() {
         return (
             <Card small className="mb-4">
@@ -247,7 +275,6 @@ class ProfileDetails extends Component {
                                         id="feEmail"
                                         placeholder="Email"
                                         value={this.state.user.Email}
-                                    //onChange={() => { }}
                                     />
                                 </div>
                                 <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
@@ -309,13 +336,18 @@ class ProfileDetails extends Component {
                             </div>
                             <div className="row labelInputs">
                                 <div className="col-lg-3">
-                                    <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
+                                    <Select
+                                        values={this.state.selectedOption}
+                                        onChange={this.handleChangeList}
+                                        options={this.state.options} >
+                                    </Select>
+                                    {/* <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
                                         {this.state.options.map(item => (
-                                            <option key={item.value} value={item.value}>
+                                            <option data-img_src={item.image} key={item.value} value={item.value}>
                                                 {item.name}
                                             </option>
                                         ))}
-                                    </select>
+                                    </select> */}
 
                                 </div>
                                 <div className="col-lg-7 chooseLink">
@@ -330,6 +362,9 @@ class ProfileDetails extends Component {
                                     <Button onClick={() => { this.Addlinks() }}>+</Button>
                                 </div>
                                 <div className="LinkList col-12">
+                                    <ul>
+                                        {this.state.fulllink.map(item => <li onClick={()=>{this.delUrl(item)}} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
+                                    </ul>
 
                                 </div>
                             </div>

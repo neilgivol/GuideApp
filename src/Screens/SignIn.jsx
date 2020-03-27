@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBIcon, MDBModalFooter } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Swal from 'sweetalert2'
 
 function Copyright() {
     return (
@@ -25,7 +26,6 @@ function Copyright() {
         </Typography>
     );
 }
-
 class SignIn extends Component {
     constructor(props) {
         super(props)
@@ -33,49 +33,59 @@ class SignIn extends Component {
             email: "",
             password: "",
             checkBoxVal: "unCheck",
+            rememberMe: false
         }
-    
-    }
-    componentWillMount() {
-        if (localStorage.username !== "" && localStorage.checkbox !== "") {
-            this.setState({
-                email: localStorage.username.value
-            })
-        } else {
-            this.setState({
-                email: ""
-            })
-        }
-
-        console.log("DidMount_SignIn")
     }
 
+    componentDidMount() {
+        const rememberMe = localStorage.getItem('rememberMe') === 'true';
+        const usernameEntered = rememberMe ? localStorage.getItem('usernameEntered') : '';
+        const PasswordEntered = rememberMe ? localStorage.getItem('PasswordEntered') : '';
+        this.setState({
+            email: usernameEntered,
+            password: PasswordEntered,
+            rememberMe: rememberMe
+        });
+    }
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
         }
         )
     }
-
     HandelPasswordInput = (e) => {
         this.setState({
             password: e.target.value
         }
         )
     }
-
     RememberMe = () => {
-        let rmCheck = document.getElementById("rememberMe");
-        if (rmCheck.checked && this.state.email !== "") {
-            localStorage.username = this.state.email;
-            localStorage.checkbox = rmCheck.value;
-        } else {
-            localStorage.username = "";
-            localStorage.checkbox = "";
+        if (!this.state.rememberMe) {
+            this.setState({ rememberMe: true });
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'מעתה פרטי המשתמש ישמרו לכניסות הבאות',
+                showConfirmButton: false,
+                timer: 1200
+            })
+        }
+        else {
+            this.setState({ rememberMe: false });
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'מעתה פרטי המשתמש אינם ישמרו לכניסות הבאות',
+                showConfirmButton: false,
+                timer: 1200
+            })
         }
     }
 
     SignInFunc = () => {
+        localStorage.setItem('rememberMe', this.state.rememberMe);
+        localStorage.setItem('usernameEntered', this.state.rememberMe ? this.state.email : '');
+        localStorage.setItem('PasswordEntered', this.state.rememberMe ? this.state.password : '');
         let signInUser = {
             Email: this.state.email,
             Password: this.state.password
@@ -99,6 +109,7 @@ class SignIn extends Component {
                                 <div className="text-center mb-3">
                                     <MDBInput
                                         label="Your email"
+                                        value={this.state.email}
                                         group
                                         type="email"
                                         validate
@@ -108,6 +119,7 @@ class SignIn extends Component {
                                     />
                                     <MDBInput
                                         label="Your password"
+                                        value={this.state.password}
                                         group
                                         type="password"
                                         validate
@@ -119,7 +131,7 @@ class SignIn extends Component {
 
                                 <div className="divRemember">
                                     <FormControlLabel
-                                        control={<Checkbox id="rememberMe" value="lsRememberMe" color="primary" />}
+                                        control={<Checkbox id="rememberMe" value="lsRememberMe" checked={this.state.rememberMe} color="primary" />}
                                         label="Remember me"
                                         onChange={this.RememberMe}
                                     />

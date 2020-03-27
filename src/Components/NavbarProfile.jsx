@@ -16,7 +16,7 @@ class NavbarProfile extends Component {
             name: e.target.text
         });
         this.props.ClickPage2(e.target.text);
-        if (e.target.text == "Profile Details") {
+        if (e.target.text === "Profile Details") {
            this.setState({
             classActiveDetails:"active",
             classActiveArea:"noActive",
@@ -25,7 +25,7 @@ class NavbarProfile extends Component {
             classActiveHobbies:"noActive"
            }) 
         }
-        else if(e.target.text == "Area Knowledge"){
+        else if(e.target.text === "Area Knowledge"){
             this.setState({
                 classActiveArea:"active", 
                 classActiveDetails:"noActive",
@@ -34,7 +34,7 @@ class NavbarProfile extends Component {
                 classActiveHobbies:"noActive"
             })
         }
-        else if(e.target.text == "Languages"){
+        else if(e.target.text === "Languages"){
             this.setState({
                 classActiveLang:"active",
                 classActiveArea:"noActive",
@@ -43,7 +43,7 @@ class NavbarProfile extends Component {
                 classActiveHobbies:"noActive"
             })
         }
-        else if(e.target.text == "Hobbies"){
+        else if(e.target.text === "Hobbies"){
             this.setState({
                 classActiveLang:"noActive",
                 classActiveArea:"noActive",
@@ -52,7 +52,7 @@ class NavbarProfile extends Component {
                 classActiveHobbies:"active"
             })
         }
-        else if(e.target.text == "Expertise"){
+        else if(e.target.text === "Expertise"){
             this.setState({
                 classActiveLang:"noActive",
                 classActiveArea:"noActive",
@@ -62,7 +62,6 @@ class NavbarProfile extends Component {
             })
         }
     }
-
     render() {
         return (
             <ul className="ulSign">
