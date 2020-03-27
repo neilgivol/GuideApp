@@ -6,11 +6,44 @@ class ProfileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.GuideDetails
+            user: this.props.GuideDetails,
+            languages:this.props.languages,
+            areas:this.props.areas,
+            sum:0
         }
-
     }
     componentDidMount() {
+        let tempSum = 0;
+        let userBirth = this.state.user.BirthDay;
+        let userPhone = this.state.user.Phone;
+        let userDescription = this.state.user.DescriptionGuide
+        let userPicture = this.state.user.ProfilePic;
+        let userAreas = this.state.areas;
+        let userLanguages = this.state.languages;
+        if (userBirth !== "") {
+            tempSum=tempSum+10;
+        }
+        else if(userPhone !== ""){
+            tempSum=tempSum+10;
+        }
+        else if(userDescription !== ""){
+            tempSum=tempSum+10;
+        }
+        else if(userPicture !== ""){
+            tempSum=tempSum+10;
+        }
+        else if(userAreas !== ""){
+            tempSum=tempSum+10;
+        }
+        else if(userLanguages !== ""){
+            tempSum=tempSum+10;
+        }
+
+        this.setState({
+            sum:tempSum
+        })
+        console.log(this.state.sum);
+        console.log(tempSum);
     }
 
 

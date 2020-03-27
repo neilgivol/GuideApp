@@ -35,7 +35,8 @@ class Home extends Component {
             Guide: '',
             GuideLanguages: [],
             GuideAreas: [],
-            AllAreas: []
+            AllAreas: [],
+            GuideLinks:[]
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -58,12 +59,32 @@ class Home extends Component {
                 Guide: this.props.location.state.GuideTemp
             })
         }
+        this.getLinksFromSQL(Guidetemp);
     }
     componentDidMount(){
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
+        //this.getLinksFromSQL(this.state.Guide);
         this.GetAllAreas();
     }
+    getLinksFromSQL=(TempGuide)=>{
+        fetch('http://localhost:49948/api/Link/'+TempGuide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+              'Content-Type': 'application/json; charset=UTF-8',
+            })
+          })
+            .then(res => {
+              return res.json()
+            })
+            .then(
+              (result) => {
+                result.map(st => this.state.GuideLinks.push(st));},
+              (error) => {
+                console.log("err post=", error);
+              });
+    }
+   
 
     GetAllAreas = () => {
         fetch("http://localhost:49948/api/Area", {
@@ -92,13 +113,13 @@ class Home extends Component {
         });
     }
     funcGoogleFacebook = () => {
-        return <ProfileCard GuideDetails={this.state.Guide} />
+        return <ProfileCard GuideDetails={this.state.Guide} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} />
     }
 
     func1 = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails GuideDetails={this.state.Guide} />
+            return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.GuideLinks} />
         }
         else if (namePage2 === "Area Knowledge") {
             return <Area guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />

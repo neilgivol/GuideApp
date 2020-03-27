@@ -3,8 +3,8 @@ import { Card, ListGroup, ListGroupItem, Form, Button } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+//import { withStyles } from '@material-ui/core/styles';
+//import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
@@ -17,16 +17,15 @@ import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
 
-
-const GreenRadio = withStyles({
-    root: {
-        color: green[400],
-        '&$checked': {
-            color: green[600],
-        },
-    },
-    checked: {},
-})(props => <Radio color="default" {...props} />);
+// const GreenRadio = withStyles({
+//     root: {
+//         color: green[400],
+//         '&$checked': {
+//             color: green[600],
+//         },
+//     },
+//     checked: {},
+// })(props => <Radio color="default" {...props} />);
 
 
 
@@ -51,37 +50,44 @@ class ProfileDetails extends Component {
             },
             options: [
                 {
+                    id: 0,
                     name: 'Select…',
                     value: null,
                     label: null
                 },
                 {
+                    id: 1,
                     name: 'Instegram',
                     value: 'Instegram',
                     label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
                 },
                 {
+                    id: 2,
                     name: 'Facebook',
                     value: 'Facebook',
                     label: <div><img className="imageicons" src={facebook} /><span>Facebook</span></div>
                 },
                 {
+                    id: 3,
                     name: 'Twitter',
                     value: 'Twitter',
                     label: <div><img className="imageicons" src={twitter} /><span>Twitter</span></div>
                 },
                 {
+                    id: 4,
                     name: 'Linkdin',
                     value: 'Linkdin',
                     label: <div><img className="imageicons" src={linkdin} /><span>Linkdin</span></div>
                 },
                 {
+                    id: 5,
                     name: 'Website',
                     value: 'Website',
                     label: <div><img className="imageicons" src={website} /><span>Website</span></div>
                 },
             ],
-            selectedOption: null
+            selectedOption: null,
+            linksfromSQL: []
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -99,7 +105,13 @@ class ProfileDetails extends Component {
             phone: this.props.GuideDetails.Phone
         })
 
+
     }
+    componentWillMount(){ 
+               this.uploadLinks(this.props.GuideLinks);
+               console.log(this.props.GuideLinks)
+    }
+  
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
         });
@@ -156,7 +168,6 @@ class ProfileDetails extends Component {
         let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
-        //let startDate =  Date.parse(startDate);
         fetch(this.apiUrl, {
             method: 'PUT',
             body: JSON.stringify({
@@ -191,22 +202,33 @@ class ProfileDetails extends Component {
     }
     Addlinks = () => {
         const fullLinkList = [];
+        const linksToSQL = [];
         for (let i = 0; i < this.state.fulllink.length; i++) {
             const element = this.state.fulllink[i];
             fullLinkList.push(element);
         }
-        let type = this.state.selectedOption.value;
+        let type = this.state.selectedOption;
         let urlLink = this.state.linkURL;
-        let link = {
-            type: type,
-            url: urlLink
-        }
-        let temppp = type + ' - ' + urlLink;
+        let temppp = type.value + ' - ' + urlLink;
         fullLinkList.push(temppp);
         this.setState({
             fulllink: fullLinkList
         })
         console.log(this.state.fulllink);
+
+        let link = {
+            LinksCategoryLCode: type.id,
+            linkPath: urlLink,
+            guidegCode: this.state.user.gCode
+        }
+        for (let i = 0; i < this.state.linksfromSQL.length; i++) {
+            const element = this.state.linksfromSQL[i];
+            linksToSQL.push(element);
+        }
+        linksToSQL.push(link);
+        this.setState({
+            linksfromSQL: linksToSQL
+        })
     }
 
 
@@ -223,11 +245,33 @@ class ProfileDetails extends Component {
             localStorage.setItem('Guide', JSON.stringify(this.state.user))
         }
 
+
+        let codetype = "";
+        let Link = "";
+        let arraylinks = [];
+        for (let i = 0; i < this.state.fulllink.length; i++) {
+            const element = this.state.fulllink[i];
+           let t =  element.split(" - ");
+           let namelink = t[0];
+           for (let j = 0; j < this.state.options.length; j++) {
+               const element2 = this.state.options[j];
+               if (element2.value == namelink) {
+                   Link = {
+                    guidegCode:this.state.user.gCode,
+                    linkPath:t[1],
+                    LinksCategoryLCode:element2.id
+                   }
+                   arraylinks.push(Link);
+               }
+           }
+        }
+        this.postLinksToSQL(arraylinks);
+
     }
     funarray = () => {
         return this.state.fulllink ? null : this.state.fulllink.map(item => <div>{item}</div>)
     }
-    delUrl=(e)=>{
+    delUrl = (e) => {
         console.log("ff");
         console.log(e);
         let temparray = [];
@@ -238,9 +282,53 @@ class ProfileDetails extends Component {
             }
         }
         this.setState({
-            fulllink:temparray
+            fulllink: temparray
         })
     }
+    uploadLinks = (links) => {
+       let templink ="";
+       let temparraylinks = [];
+        for (let j = 0; j < links.length; j++) {
+            console.log(links[j]);
+            const link = links[j].LinksCategoryLCode;
+            for (let i = 0; i < this.state.options.length; i++) {
+                const element = this.state.options[i];
+                if (element.id == link) {
+                    temparraylinks.push(element.value + " - " + links[j].linkPath)
+                    console.log(link);
+                    console.log(links[j].linkPath);
+                }
+            }
+        }
+       this.setState({
+           fulllink:temparraylinks
+       })
+       console.log(temparraylinks);
+    }
+
+    postLinksToSQL = (links) => {
+        fetch('http://localhost:49948/api/Link/UpdateLinks', {
+            method: 'PUT',
+            body: JSON.stringify(links),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log("fetch PUT= ", result);
+                    this.uploadLinks(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+
+  
 
     render() {
         return (
@@ -341,13 +429,7 @@ class ProfileDetails extends Component {
                                         onChange={this.handleChangeList}
                                         options={this.state.options} >
                                     </Select>
-                                    {/* <select id="listLinks" onChange={this.handleChangeListType} value={this.state.linkType}>
-                                        {this.state.options.map(item => (
-                                            <option data-img_src={item.image} key={item.value} value={item.value}>
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select> */}
+                                  
 
                                 </div>
                                 <div className="col-lg-7 chooseLink">
@@ -363,7 +445,7 @@ class ProfileDetails extends Component {
                                 </div>
                                 <div className="LinkList col-12">
                                     <ul>
-                                        {this.state.fulllink.map(item => <li onClick={()=>{this.delUrl(item)}} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
+                                        {this.state.fulllink.map(item => <li onClick={() => { this.delUrl(item) }} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
                                     </ul>
 
                                 </div>
