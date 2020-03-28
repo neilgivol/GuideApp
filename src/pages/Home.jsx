@@ -11,6 +11,11 @@ import Hobbies from '../Screens/Hobbies';
 import Expertise from '../Screens/Expertise';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import facebook from '../Img/facebook.png';
+import twitter from '../Img/twitter.png';
+import website from '../Img/website.png';
+import linkdin from '../Img/linkedin.png';
+import instegram from '../Img/The_Instagram_Logo.jpg';
 
 function Copyright() {
     return (
@@ -36,7 +41,46 @@ class Home extends Component {
             GuideLanguages: [],
             GuideAreas: [],
             AllAreas: [],
-            GuideLinks:[]
+            GuideLinks:[],
+            fulllink:[],
+            options: [
+                {
+                    id: 0,
+                    name: 'Select…',
+                    value: null,
+                    label: null
+                },
+                {
+                    id: 1,
+                    name: 'Instegram',
+                    value: 'Instegram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
+                },
+                {
+                    id: 2,
+                    name: 'Facebook',
+                    value: 'Facebook',
+                    label: <div><img className="imageicons" src={facebook} /><span>Facebook</span></div>
+                },
+                {
+                    id: 3,
+                    name: 'Twitter',
+                    value: 'Twitter',
+                    label: <div><img className="imageicons" src={twitter} /><span>Twitter</span></div>
+                },
+                {
+                    id: 4,
+                    name: 'Linkdin',
+                    value: 'Linkdin',
+                    label: <div><img className="imageicons" src={linkdin} /><span>Linkdin</span></div>
+                },
+                {
+                    id: 5,
+                    name: 'Website',
+                    value: 'Website',
+                    label: <div><img className="imageicons" src={website} /><span>Website</span></div>
+                },
+            ],
         };
         let local = true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -79,10 +123,31 @@ class Home extends Component {
             })
             .then(
               (result) => {
-                result.map(st => this.state.GuideLinks.push(st));},
+              this.setState({
+                  GuideLinks:result
+              })
+              this.orgenzie(result);
+            },
               (error) => {
                 console.log("err post=", error);
               });
+    }
+
+    orgenzie=(links)=>{
+        let templink ="";
+        let temparraylinks = [];
+         for (let j = 0; j < links.length; j++) {
+             const link = links[j].LinksCategoryLCode;
+             for (let i = 0; i < this.state.options.length; i++) {
+                 const element = this.state.options[i];
+                 if (element.id == link) {
+                     temparraylinks.push(element.value + " - " + links[j].linkPath)
+                 }
+             }
+         }
+        this.setState({
+            fulllink:temparraylinks
+        })
     }
    
 
@@ -119,7 +184,7 @@ class Home extends Component {
     func1 = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.GuideLinks} />
+            return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
         }
         else if (namePage2 === "Area Knowledge") {
             return <Area guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
@@ -152,7 +217,6 @@ class Home extends Component {
                 (error) => {
                     console.log("err post=", error);
                 });
-        console.log(this.state.GuideAreas)
     }
 
 
@@ -173,7 +237,6 @@ class Home extends Component {
                 (error) => {
                     console.log("err post=", error);
                 });
-        console.log(this.state.GuideLanguages)
     }
 
     render() {

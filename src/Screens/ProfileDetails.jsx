@@ -102,15 +102,12 @@ class ProfileDetails extends Component {
             user: this.props.GuideDetails,
             size: this.props.GuideDetails.Gender,
             BirthDay: dateBirth,
-            phone: this.props.GuideDetails.Phone
+            phone: this.props.GuideDetails.Phone,
+            fulllink:this.props.GuideLinks
         })
 
-
     }
-    componentWillMount(){ 
-               this.uploadLinks(this.props.GuideLinks);
-               console.log(this.props.GuideLinks)
-    }
+   
   
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
@@ -178,8 +175,8 @@ class ProfileDetails extends Component {
                 License: userGuide.License,
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
-                BirthDay: BirthDay,
-                Phone: phoneGuide
+                BirthDay: BirthDay
+               // Phone: phoneGuide
             }),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -289,21 +286,17 @@ class ProfileDetails extends Component {
        let templink ="";
        let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {
-            console.log(links[j]);
             const link = links[j].LinksCategoryLCode;
             for (let i = 0; i < this.state.options.length; i++) {
                 const element = this.state.options[i];
                 if (element.id == link) {
                     temparraylinks.push(element.value + " - " + links[j].linkPath)
-                    console.log(link);
-                    console.log(links[j].linkPath);
                 }
             }
         }
        this.setState({
            fulllink:temparraylinks
        })
-       console.log(temparraylinks);
     }
 
     postLinksToSQL = (links) => {
