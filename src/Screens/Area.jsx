@@ -60,7 +60,6 @@ class Area extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems:array
         })
@@ -69,7 +68,6 @@ class Area extends Component {
     UpdateGuideAreas = () =>{
         let tempArrayGuideAreas = [];
         let GuideCode = this.props.GuideDetails.gCode;
-        console.log(GuideCode);
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
             const Guide_Area = {
@@ -81,7 +79,6 @@ class Area extends Component {
      this.PostAreaGuideToSQL(tempArrayGuideAreas);
     }
     PostAreaGuideToSQL = (tempArrayGuideAreas) => {
-        console.log(tempArrayGuideAreas);
         fetch('http://localhost:49948/api/Area/PostGuideAreas', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideAreas),
@@ -117,7 +114,6 @@ class Area extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems:array
         })

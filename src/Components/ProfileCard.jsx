@@ -13,7 +13,7 @@ class ProfileCard extends Component {
         }
     }
     componentDidMount() {
-        let tempSum = 0;
+        let tempSum = 20;
         let userBirth = this.state.user.BirthDay;
         let userPhone = this.state.user.Phone;
         let userDescription = this.state.user.DescriptionGuide
@@ -21,22 +21,22 @@ class ProfileCard extends Component {
         let userAreas = this.state.areas;
         let userLanguages = this.state.languages;
         if (userBirth !== "") {
-            tempSum=tempSum+10;
+            tempSum=parseInt(tempSum)+10;
         }
-        else if(userPhone !== ""){
-            tempSum=tempSum+10;
+         if(userPhone !== ""){
+            tempSum=parseInt(tempSum)+10;
         }
-        else if(userDescription !== ""){
-            tempSum=tempSum+10;
+         if(userDescription !== ""){
+            tempSum=parseInt(tempSum)+10;
         }
-        else if(userPicture !== ""){
-            tempSum=tempSum+10;
+         if(userPicture !== ""){
+            tempSum=parseInt(tempSum)+10;
         }
-        else if(userAreas !== ""){
-            tempSum=tempSum+10;
+         if(userAreas !== ""){
+            tempSum=parseInt(tempSum)+10;
         }
-        else if(userLanguages !== ""){
-            tempSum=tempSum+10;
+         if(userLanguages !== ""){
+            tempSum=parseInt(tempSum)+10;
         }
 
         this.setState({
@@ -64,8 +64,7 @@ class ProfileCard extends Component {
                 <Card.Body>
                     <Card.Title>{this.funcName()}</Card.Title>
                     <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.
+                       <h1>{this.state.sum}%</h1>
                                       </Card.Text>
                 </Card.Body>
                 <ListGroup className="list-group-flush">

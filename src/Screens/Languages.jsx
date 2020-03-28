@@ -71,7 +71,6 @@ class Languages extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems: array
         })
