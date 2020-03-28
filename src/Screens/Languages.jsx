@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import "@kenshooui/react-multi-select/dist/style.css"
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
+import '../Css/globalhome.css';
+
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 
 class Languages extends Component {
@@ -91,7 +93,33 @@ class Languages extends Component {
             }
             tempArrayGuideLanguages.push(Guide_Language);
         }
-        this.PostLangGuideToSQL(tempArrayGuideLanguages);
+        if (tempArrayGuideLanguages.length === 0) {
+            console.log("del")
+            fetch(this.apiUrl + '/Language/' + GuideCode, {
+                method: 'DELETE',
+                //body: JSON.stringify({id:7}),
+                headers: new Headers({
+                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                })
+                })
+                .then(res => {
+                console.log('res=', res);
+                return res.json()
+                })
+                .then(
+                (result) => {
+                    this.setState({
+                        ListFromSQL: result
+                    });
+                    this.UpdateList(this.state.ListFromSQL);
+                },
+                (error) => {
+                console.log("err post=", error);
+                });
+                
+        }else{
+            this.PostLangGuideToSQL(tempArrayGuideLanguages);
+        }
     }
 
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {

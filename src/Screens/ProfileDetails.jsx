@@ -10,6 +10,8 @@ import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
 import '../Css/ProfileDetails.css';
 import 'react-dropdown/style.css';
+import '../Css/globalhome.css';
+
 import Select from 'react-select';
 import facebook from '../Img/facebook.png';
 import twitter from '../Img/twitter.png';

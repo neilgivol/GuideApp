@@ -5,7 +5,7 @@ import '../Css/Hobbies.css';
 import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
-
+import '../Css/globalhome.css';
 import art from '../Img/Hobbies/artMuseums.jpg';
 import camping from '../Img/Hobbies/camping.jfif';
 import classicMusic from '../Img/Hobbies/classicMusic.jpg';
@@ -74,6 +74,19 @@ class Hobbies extends Component {
             itemsInCart: tempArr,
         });
     }
+
+    updateHobbies=()=>{
+        let tempArray = [];
+        for (let i = 0; i < this.state.itemsInCart.length; i++) {
+            const element = this.state.itemsInCart[i].id;
+            let Guide_Hobby = {
+                guidegCode:this.props.GuideDetails.gCode,
+                HobbyHCode:element
+            }
+            tempArray.push(Guide_Hobby);
+        }
+        console.log(tempArray)
+    }
     render() {
         return (
             <Card>
@@ -99,7 +112,7 @@ class Hobbies extends Component {
                     </ListGroupItem>
 
                     <div>
-                        <Button onClick={() => { }}>Save</Button>
+                        <Button onClick={() => {this.updateHobbies()}}>Save</Button>
                     </div>
                 </ListGroup>
             </Card>

@@ -148,6 +148,7 @@ class Home extends Component {
         this.setState({
             fulllink:temparraylinks
         })
+        localStorage.setItem('links', JSON.stringify(temparraylinks));
     }
    
 
@@ -178,7 +179,7 @@ class Home extends Component {
         });
     }
     funcGoogleFacebook = () => {
-        return <ProfileCard GuideDetails={this.state.Guide} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} />
+        return <ProfileCard GuideDetails={this.state.Guide} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
     }
 
     func1 = () => {
@@ -213,6 +214,7 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({ GuideAreas: result })
+                    localStorage.setItem('areas', JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -233,6 +235,7 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({ GuideLanguages: result })
+                    localStorage.setItem('languages',JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);

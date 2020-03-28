@@ -12,8 +12,26 @@ class ProfileCard extends Component {
             sum:0
         }
     }
+    componentWillMount(){
+    }
     componentDidMount() {
-        let tempSum = 20;
+        console.log(this.props.GuideLinks)
+        const areas = JSON.parse(localStorage.getItem('areas'));
+        const languages = JSON.parse(localStorage.getItem('languages'));
+        const links = JSON.parse(localStorage.getItem('links'));
+        console.log(links)
+
+      if (this.state.areas.length === 0) {
+        this.setState({
+            areas:areas
+        })
+      }
+      if (this.state.languages.length === 0) {
+        this.setState({
+            languages:languages
+        })
+      }
+        let tempSum = 10;
         let userBirth = this.state.user.BirthDay;
         let userPhone = this.state.user.Phone;
         let userDescription = this.state.user.DescriptionGuide
@@ -32,18 +50,19 @@ class ProfileCard extends Component {
          if(userPicture !== ""){
             tempSum=parseInt(tempSum)+10;
         }
-         if(userAreas !== ""){
+         if(areas.length !== 0){
             tempSum=parseInt(tempSum)+10;
         }
-         if(userLanguages !== ""){
+         if(languages.length !== 0){
+            tempSum=parseInt(tempSum)+10;
+        }
+        if(links.length !== 0){
             tempSum=parseInt(tempSum)+10;
         }
 
         this.setState({
             sum:tempSum
         })
-        console.log(this.state.sum);
-        console.log(tempSum);
     }
 
 
