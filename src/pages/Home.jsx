@@ -88,9 +88,9 @@ class Home extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-    componentDidUpdate(PrevProps, state) {
-        console.log(PrevProps);
-    }
+    // componentDidUpdate(PrevProps, state) {
+    //     console.log(PrevProps);
+    // }
     componentWillMount() {
         const Guidetemp = JSON.parse(localStorage.getItem('Guide'));
         if (this.props.location.state === undefined) {
@@ -173,6 +173,14 @@ class Home extends Component {
                 });
     }
 
+    updateAreasGuides=(areas)=>{
+        this.GetAreasGuideList(this.state.Guide);
+
+    }
+    updateLanguageGuides=()=>{
+        this.GetLanguagesGuideList(this.state.Guide);
+    }
+
     ClickPage2 = (e) => {
         this.setState({
             namePage: e
@@ -188,10 +196,10 @@ class Home extends Component {
             return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
         }
         else if (namePage2 === "Area Knowledge") {
-            return <Area guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
+            return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
         }
         else if (namePage2 === "Languages") {
-            return <Languages guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
+            return <Languages updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
         }
         else if (namePage2 === "Hobbies") {
             return <Hobbies GuideDetails={this.state.Guide} />
@@ -247,10 +255,10 @@ class Home extends Component {
             <div id={this.props.navbarOpenCheck} className="container-fluid HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
                 <div className="row homePage">
-                    <div className="cardDiv col-lg-4 col-md-2 hidden-xs hidden-sm">
+                    <div className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm">
                         {this.funcGoogleFacebook()}
                     </div>
-                    <div className="col-lg-8 col-md-10 col-sm-12 ">
+                    <div className="col-lg-9 col-md-10 col-sm-12 ">
                         {this.func1()}
 
                     </div>

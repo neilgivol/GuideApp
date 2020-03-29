@@ -107,7 +107,13 @@ class ProfileDetails extends Component {
             phone: this.props.GuideDetails.Phone,
             fulllink:this.props.GuideLinks
         })
-
+    }
+    componentDidUpdate(PrevProps, state) {
+        if (PrevProps.GuideLinks !== this.props.GuideLinks) {
+            this.setState({
+                fulllink:this.props.GuideLinks
+            })
+        }
     }
    
   
@@ -244,10 +250,9 @@ class ProfileDetails extends Component {
             localStorage.setItem('Guide', JSON.stringify(this.state.user))
         }
 
-
         let codetype = "";
         let Link = "";
-        let arraylinks = [];
+        const arraylinks = [];
         for (let i = 0; i < this.state.fulllink.length; i++) {
             const element = this.state.fulllink[i];
            let t =  element.split(" - ");
@@ -264,15 +269,37 @@ class ProfileDetails extends Component {
                }
            }
         }
-        this.postLinksToSQL(arraylinks);
+        console.log(arraylinks);
+        if (arraylinks.length === 0) {
+            console.log("del")
+            fetch('http://localhost:49948/api/Links/' + this.state.user.gCode, {
+                method: 'DELETE',
+                //body: JSON.stringify({id:7}),
+                headers: new Headers({
+                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                })
+                })
+                .then(res => {
+                console.log('res=', res);
+                return res.json()
+                })
+                .then(
+                (result) => {
+                    this.uploadLinks(result);
+                },
+                (error) => {
+                console.log("err post=", error);
+                });
+        }
+        else{
+            this.postLinksToSQL(arraylinks);
+        }
 
     }
     funarray = () => {
         return this.state.fulllink ? null : this.state.fulllink.map(item => <div>{item}</div>)
     }
     delUrl = (e) => {
-        console.log("ff");
-        console.log(e);
         let temparray = [];
         for (let i = 0; i < this.state.fulllink.length; i++) {
             const element = this.state.fulllink[i];
@@ -326,6 +353,7 @@ class ProfileDetails extends Component {
   
 
     render() {
+        console.log("render")
         return (
             <Card small className="mb-4">
                 <Card.Header className="border-bottom">

@@ -149,6 +149,7 @@ class Languages extends Component {
                 });
     }
     UpdateList = (e) => {
+        this.props.updateLanguage();
         console.log(e);
         let array = [];
         for (let i = 0; i < e.length; i++) {

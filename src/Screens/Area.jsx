@@ -25,23 +25,16 @@ class Area extends Component {
         }
     }
   
-//     componentDidUpdate(PrevProps,state){
-//     if (PrevProps.Allusers != this.props.Allusers) {
-//         let array=[];
-//         for (let i = 0; i < this.props.guideListAreas.length; i++) {
-//             const SQLelement = this.props.guideListAreas[i];
-//             for (let j = 0; j < this.state.items.length; j++) {
-//                 const itemsElement = this.state.items[j];
-//                 if (SQLelement.Area_Code === itemsElement.id) {
-//                     array.push(itemsElement);
-//                 }
-//             }
-//         }
-//         this.setState({
-//             selectedItems:array
-//         })
-//     }
-// }
+    componentDidUpdate(PrevProps,state){
+    if (PrevProps.guideListAreas !== this.props.guideListAreas) {
+        this.setState({
+            guideList:this.props.guideListAreas
+        })
+    }
+    console.log(PrevProps.guideListAreas);
+    console.log(this.props.guideListAreas);
+
+}
     componentDidMount(){
         for (let i = 1; i < this.props.AreasArray.length; i++) {
             const element = {
@@ -132,6 +125,7 @@ class Area extends Component {
                 });
     }
     UpdateNewAreas=()=>{
+        this.props.updateArea(this.state.guideList);
         let array=[];
         for (let i = 0; i < this.state.guideList.length; i++) {
             const SQLelement = this.state.guideList[i];
