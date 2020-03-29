@@ -6,6 +6,10 @@ border-bottom-left-radius: 0px;
 border-bottom-right-radius: 0px;
 height: 30px;
 }
+.imageicons{
+    width: 20px;
+    height: 20px;
+}
 
 .LinkList{
     margin:auto;

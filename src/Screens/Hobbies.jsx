@@ -4,30 +4,46 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Css/Hobbies.css';
 import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
-
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+
+import art from '../Img/Hobbies/artMuseums.jpg';
+import camping from '../Img/Hobbies/camping.jfif';
+import classicMusic from '../Img/Hobbies/classicMusic.jpg';
+import computerGamer from '../Img/Hobbies/computerGamer.jpg';
+import cooking from '../Img/Hobbies/cooking.jpg';
+import drawing from '../Img/Hobbies/drawing.jfif';
+import diving from '../Img/Hobbies/diving.jpg';
+import geopolitics from '../Img/Hobbies/geopolitics.jpg';
+import paintball from '../Img/Hobbies/paintball.jpg';
+import rafting from '../Img/Hobbies/rafting.jpg';
+import rappelling from '../Img/Hobbies/rappelling.jpg';
+import Sports2 from '../Img/Hobbies/Sports2.png';
+import theater from '../Img/Hobbies/theater.jpg';
+import photography from '../Img/Hobbies/photography.jfif';
+import hiking from '../Img/Hobbies/hiking.jfif';
 
 class Hobbies extends Component {
     constructor(props) {
         super(props);
         this.state = {
             itemsArray: [
-                new ShopItem(1, "Hat", 10, "https://d3m9l0v76dty0.cloudfront.net/system/photos/4141217/large/8f61421b9b9c5b933c55ed11c6a04061.jpg"),
-                new ShopItem(2, "Pants", 20, "https://images.thenorthface.com/is/image/TheNorthFace/NF0A2TCT_T5C_hero?$638x745$"),
-                new ShopItem(3, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg"),
-                new ShopItem(4, "Hat", 10, "https://d3m9l0v76dty0.cloudfront.net/system/photos/4141217/large/8f61421b9b9c5b933c55ed11c6a04061.jpg"),
-                new ShopItem(5, "Pants", 20, "https://images.thenorthface.com/is/image/TheNorthFace/NF0A2TCT_T5C_hero?$638x745$"),
-                new ShopItem(6, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg"),
-                new ShopItem(7, "Hat", 10, "https://d3m9l0v76dty0.cloudfront.net/system/photos/4141217/large/8f61421b9b9c5b933c55ed11c6a04061.jpg"),
-                new ShopItem(8, "Pants", 20, "https://images.thenorthface.com/is/image/TheNorthFace/NF0A2TCT_T5C_hero?$638x745$"),
-                new ShopItem(9, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg"),
-                new ShopItem(10, "Pants", 20, "https://images.thenorthface.com/is/image/TheNorthFace/NF0A2TCT_T5C_hero?$638x745$"),
-                new ShopItem(11, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg"),
-                new ShopItem(12, "Hat", 10, "https://d3m9l0v76dty0.cloudfront.net/system/photos/4141217/large/8f61421b9b9c5b933c55ed11c6a04061.jpg"),
-                new ShopItem(13, "Pants", 20, "https://images.thenorthface.com/is/image/TheNorthFace/NF0A2TCT_T5C_hero?$638x745$"),
-                new ShopItem(14, "T-shirt", 30, "https://bprint.co.il/wp-content/uploads/2017/10/136-1-262x262.jpg")
+             new ShopItem(1,"art Museums",art),
+             new ShopItem(2,"camping",camping),
+             new ShopItem(3,"classic Music",classicMusic),
+             new ShopItem(4,"computer Gamer",computerGamer),
+             new ShopItem(5,"cooking",cooking),
+             new ShopItem(6,"diving",diving),
+             new ShopItem(7,"drawing",drawing),
+             new ShopItem(8,"geopolitics",geopolitics),
+             new ShopItem(9,"paintball",paintball),
+             new ShopItem(10,"theater",theater),
+             new ShopItem(11,"rafting",rafting),
+             new ShopItem(12,"rappelling",rappelling),
+             new ShopItem(13,"Sports",Sports2),
+             new ShopItem(14,"photography",photography),
+             new ShopItem(15,"hiking",hiking)
             ],
-            itemsInCart: [],
+            itemsInCart: []
         }
     }
 
@@ -35,7 +51,7 @@ class Hobbies extends Component {
         const tempArr = [];
         for (let i = 0; i < this.state.itemsArray.length; i++) {
             const element = this.state.itemsArray[i];
-            if (newItem.id != element.id) {
+            if (newItem.id !== element.id) {
                 tempArr.push(element);
             }
         }
@@ -49,7 +65,7 @@ class Hobbies extends Component {
         const tempArr = [];
         for (let i = 0; i < this.state.itemsInCart.length; i++) {
             const element = this.state.itemsInCart[i];
-            if (newItem.id != element.id) {
+            if (newItem.id !== element.id) {
                 tempArr.push(element);
             }
         }
@@ -68,11 +84,11 @@ class Hobbies extends Component {
                     </ListGroupItem>
                     <ListGroupItem>
                             <div className='row HobbiesDiv'>
-                                <div className='col-6 HobbiesList'>
+                                <div className='col HobbiesList'>
                                     <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
                                 </div>
-                                <span className="middleLine col-lg-1"></span>
-                                <div className='col-lg-5 HobbiesAdded'>
+                                <span className="middleLine col-1"></span>
+                                <div className='col HobbiesAdded'>
                                 <div className="row titleAdded"><span>selection:</span> </div>
                                     <div className="row HobbiesListSide HobbieAddedList">
                                         {this.state.itemsInCart.map((item, key) =>

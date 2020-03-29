@@ -8,6 +8,7 @@ import NavbarProfile from '../Components/NavbarProfile';
 import Languages from '../Screens/Languages';
 import '../Css/Home.css';
 import Hobbies from '../Screens/Hobbies';
+import Expertise from '../Screens/Expertise';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
@@ -107,6 +108,9 @@ class Home extends Component {
         }
         else if (namePage2 === "Hobbies") {
             return <Hobbies GuideDetails={this.state.Guide} />
+        }
+        else if (namePage2 === "Expertise") {
+            return <Expertise GuideDetails={this.state.Guide} />
         }
     }
 
