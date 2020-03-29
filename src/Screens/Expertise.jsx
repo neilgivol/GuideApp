@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Css/Hobbies.css';
 import HobbiesList from '../Components/HobbiesList';
 import HobbieAdded from '../Components/HobbieAdded';
-
+import '../Css/globalhome.css';
 import beach from '../Img/Expertise/beach.jpg';
 import bible from '../Img/Expertise/bible.jpg';
 import christianity from '../Img/Expertise/christianity.jpg';
@@ -74,6 +74,18 @@ class Expertise extends Component {
             itemsInCart: tempArr,
         });
     }
+    UpdateExpertise = ()=>{
+        let tempArray = [];
+        for (let i = 0; i < this.state.itemsInCart.length; i++) {
+            const element = this.state.itemsInCart[i].id;
+            let Guide_Expertise = {
+                guidegCode:this.props.GuideDetails.gCode,
+                ExpertiseCode:element
+            }
+            tempArray.push(Guide_Expertise);
+        }
+        console.log(tempArray)
+    }
     render() {
         return (
             <Card>
@@ -99,7 +111,7 @@ class Expertise extends Component {
                     </ListGroupItem>
 
                     <div>
-                        <Button onClick={() => { }}>Save</Button>
+                        <Button onClick={() => {this.UpdateExpertise() }}>Save</Button>
                     </div>
                 </ListGroup>
             </Card>

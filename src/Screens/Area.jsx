@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import "@kenshooui/react-multi-select/dist/style.css"
 import '../Css/signUpNavBar.css';
+import '../Css/globalhome.css';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
 import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
@@ -24,23 +25,16 @@ class Area extends Component {
         }
     }
   
-//     componentDidUpdate(PrevProps,state){
-//     if (PrevProps.Allusers != this.props.Allusers) {
-//         let array=[];
-//         for (let i = 0; i < this.props.guideListAreas.length; i++) {
-//             const SQLelement = this.props.guideListAreas[i];
-//             for (let j = 0; j < this.state.items.length; j++) {
-//                 const itemsElement = this.state.items[j];
-//                 if (SQLelement.Area_Code === itemsElement.id) {
-//                     array.push(itemsElement);
-//                 }
-//             }
-//         }
-//         this.setState({
-//             selectedItems:array
-//         })
-//     }
-// }
+    componentDidUpdate(PrevProps,state){
+    if (PrevProps.guideListAreas !== this.props.guideListAreas) {
+        this.setState({
+            guideList:this.props.guideListAreas
+        })
+    }
+    console.log(PrevProps.guideListAreas);
+    console.log(this.props.guideListAreas);
+
+}
     componentDidMount(){
         for (let i = 1; i < this.props.AreasArray.length; i++) {
             const element = {
@@ -60,7 +54,6 @@ class Area extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems:array
         })
@@ -69,7 +62,6 @@ class Area extends Component {
     UpdateGuideAreas = () =>{
         let tempArrayGuideAreas = [];
         let GuideCode = this.props.GuideDetails.gCode;
-        console.log(GuideCode);
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
             const Guide_Area = {
@@ -78,10 +70,36 @@ class Area extends Component {
             }
             tempArrayGuideAreas.push(Guide_Area);
         }
-     this.PostAreaGuideToSQL(tempArrayGuideAreas);
+
+        if (tempArrayGuideAreas.length === 0) {
+            console.log("del")
+            fetch(this.apiUrl + '/Area/' + GuideCode, {
+                method: 'DELETE',
+                //body: JSON.stringify({id:7}),
+                headers: new Headers({
+                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                })
+                })
+                .then(res => {
+                console.log('res=', res);
+                return res.json()
+                })
+                .then(
+                (result) => {
+                    this.setState({
+                        guideList:result
+                    })
+                    this.UpdateNewAreas(this.state.guideList);
+                },
+                (error) => {
+                console.log("err post=", error);
+                });
+                
+        }else{
+            this.PostAreaGuideToSQL(tempArrayGuideAreas);
+        }
     }
     PostAreaGuideToSQL = (tempArrayGuideAreas) => {
-        console.log(tempArrayGuideAreas);
         fetch('http://localhost:49948/api/Area/PostGuideAreas', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideAreas),
@@ -107,6 +125,7 @@ class Area extends Component {
                 });
     }
     UpdateNewAreas=()=>{
+        this.props.updateArea(this.state.guideList);
         let array=[];
         for (let i = 0; i < this.state.guideList.length; i++) {
             const SQLelement = this.state.guideList[i];
@@ -117,7 +136,6 @@ class Area extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems:array
         })

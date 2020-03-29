@@ -6,11 +6,63 @@ class ProfileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: this.props.GuideDetails
+            user: this.props.GuideDetails,
+            languages:this.props.languages,
+            areas:this.props.areas,
+            sum:0
         }
-
+    }
+    componentWillMount(){
     }
     componentDidMount() {
+        console.log(this.props.GuideLinks)
+        const areas = JSON.parse(localStorage.getItem('areas'));
+        const languages = JSON.parse(localStorage.getItem('languages'));
+        const links = JSON.parse(localStorage.getItem('links'));
+        console.log(links)
+
+      if (this.state.areas.length === 0) {
+        this.setState({
+            areas:areas
+        })
+      }
+      if (this.state.languages.length === 0) {
+        this.setState({
+            languages:languages
+        })
+      }
+        let tempSum = 10;
+        let userBirth = this.state.user.BirthDay;
+        let userPhone = this.state.user.Phone;
+        let userDescription = this.state.user.DescriptionGuide
+        let userPicture = this.state.user.ProfilePic;
+        let userAreas = this.state.areas;
+        let userLanguages = this.state.languages;
+        if (userBirth !== "") {
+            tempSum=parseInt(tempSum)+10;
+        }
+         if(userPhone !== ""){
+            tempSum=parseInt(tempSum)+10;
+        }
+         if(userDescription !== ""){
+            tempSum=parseInt(tempSum)+10;
+        }
+         if(userPicture !== ""){
+            tempSum=parseInt(tempSum)+10;
+        }
+         if(areas.length !== 0){
+            tempSum=parseInt(tempSum)+10;
+        }
+         if(languages.length !== 0){
+            tempSum=parseInt(tempSum)+10;
+        }
+        if(links.length !== 0){
+            tempSum=parseInt(tempSum)+10;
+        }
+
+        this.setState({
+            sum:tempSum
+        })
     }
 
 
@@ -31,8 +83,7 @@ class ProfileCard extends Component {
                 <Card.Body>
                     <Card.Title>{this.funcName()}</Card.Title>
                     <Card.Text>
-                        Some quick example text to build on the card title and make up the bulk of
-                        the card's content.
+                       <h1>{this.state.sum}%</h1>
                                       </Card.Text>
                 </Card.Body>
                 <ListGroup className="list-group-flush">
