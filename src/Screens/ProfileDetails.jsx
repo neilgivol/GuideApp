@@ -11,7 +11,6 @@ import 'react-phone-input-2/lib/style.css';
 import '../Css/ProfileDetails.css';
 import 'react-dropdown/style.css';
 import '../Css/globalhome.css';
-
 import Select from 'react-select';
 import facebook from '../Img/facebook.png';
 import twitter from '../Img/twitter.png';
@@ -105,18 +104,18 @@ class ProfileDetails extends Component {
             size: this.props.GuideDetails.Gender,
             BirthDay: dateBirth,
             phone: this.props.GuideDetails.Phone,
-            fulllink:this.props.GuideLinks
+            fulllink: this.props.GuideLinks
         })
     }
     componentDidUpdate(PrevProps, state) {
         if (PrevProps.GuideLinks !== this.props.GuideLinks) {
             this.setState({
-                fulllink:this.props.GuideLinks
+                fulllink: this.props.GuideLinks
             })
         }
     }
-   
-  
+
+
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
         });
@@ -184,7 +183,7 @@ class ProfileDetails extends Component {
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
                 BirthDay: BirthDay
-               // Phone: phoneGuide
+                // Phone: phoneGuide
             }),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -255,19 +254,19 @@ class ProfileDetails extends Component {
         const arraylinks = [];
         for (let i = 0; i < this.state.fulllink.length; i++) {
             const element = this.state.fulllink[i];
-           let t =  element.split(" - ");
-           let namelink = t[0];
-           for (let j = 0; j < this.state.options.length; j++) {
-               const element2 = this.state.options[j];
-               if (element2.value == namelink) {
-                   Link = {
-                    guidegCode:this.state.user.gCode,
-                    linkPath:t[1],
-                    LinksCategoryLCode:element2.id
-                   }
-                   arraylinks.push(Link);
-               }
-           }
+            let t = element.split(" - ");
+            let namelink = t[0];
+            for (let j = 0; j < this.state.options.length; j++) {
+                const element2 = this.state.options[j];
+                if (element2.value == namelink) {
+                    Link = {
+                        guidegCode: this.state.user.gCode,
+                        linkPath: t[1],
+                        LinksCategoryLCode: element2.id
+                    }
+                    arraylinks.push(Link);
+                }
+            }
         }
         console.log(arraylinks);
         if (arraylinks.length === 0) {
@@ -276,22 +275,22 @@ class ProfileDetails extends Component {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
-                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
                 })
-                })
+            })
                 .then(res => {
-                console.log('res=', res);
-                return res.json()
+                    console.log('res=', res);
+                    return res.json()
                 })
                 .then(
-                (result) => {
-                    this.uploadLinks(result);
-                },
-                (error) => {
-                console.log("err post=", error);
-                });
+                    (result) => {
+                        this.uploadLinks(result);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
         }
-        else{
+        else {
             this.postLinksToSQL(arraylinks);
         }
 
@@ -312,8 +311,8 @@ class ProfileDetails extends Component {
         })
     }
     uploadLinks = (links) => {
-       let templink ="";
-       let temparraylinks = [];
+        let templink = "";
+        let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {
             const link = links[j].LinksCategoryLCode;
             for (let i = 0; i < this.state.options.length; i++) {
@@ -323,9 +322,9 @@ class ProfileDetails extends Component {
                 }
             }
         }
-       this.setState({
-           fulllink:temparraylinks
-       })
+        this.setState({
+            fulllink: temparraylinks
+        })
     }
 
     postLinksToSQL = (links) => {
@@ -350,12 +349,12 @@ class ProfileDetails extends Component {
                 });
     }
 
-  
+
 
     render() {
         console.log("render")
         return (
-            <Card small className="mb-4">
+            <Card small className="mb-4 profileDetails">
                 <Card.Header className="border-bottom">
                     <h6 className="m-0">Profile Details</h6>
                 </Card.Header>
@@ -452,7 +451,7 @@ class ProfileDetails extends Component {
                                         onChange={this.handleChangeList}
                                         options={this.state.options} >
                                     </Select>
-                                  
+
 
                                 </div>
                                 <div className="col-lg-7 chooseLink">
