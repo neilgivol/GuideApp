@@ -68,7 +68,10 @@ class Facebook extends Component {
                     autoLoad={false}
                     fields="first_name,last_name,email,picture.width(280).height(280),location,gender,birthday"
                     onClick={this.componentClicked}
-                    callback={this.responseFacebook} />
+                    callback={this.responseFacebook} 
+                    cssClass="loginBtn loginBtn--facebook"
+                    />
+                   
             );
 
         return (

@@ -28,20 +28,20 @@ class Expertise extends Component {
         this.state = {
             itemsInCart: [],
             itemsArray: [
-                { id: 1, name: "zionism", image:zionism},
-                { id: 2, name: "wine Tours", image:wineTours},
-                { id: 3, name: "shopping In Markets", image:shoppingInMarket},
-                { id: 4, name: "shopping In Malls", image:shopping},
-                { id: 5, name: "parties", image:parties},
-                { id: 6, name: "kabbalah", image:kabbalah},
-                { id: 7, name: "judaism", image:judaism},
-                { id: 8, name: "islam", image:islam},
-                { id: 9, name: "history places", image:historyplaces},
-                { id: 10, name: "desert", image:desert},
-                { id: 11, name: "culinary", image:culinary},
-                { id: 12, name: "christianity", image:christianity},
-                { id: 13, name: "bible", image:bible},
-                { id: 14, name: "beach", image:beach}
+                { id: 1, name: "Zionism", image:zionism},
+                { id: 2, name: "Wine Tours", image:wineTours},
+                { id: 3, name: "Market Shopping", image:shoppingInMarket},
+                { id: 4, name: "Malls Shopping", image:shopping},
+                { id: 5, name: "Parties", image:parties},
+                { id: 6, name: "Kabbalah", image:kabbalah},
+                { id: 7, name: "Judaism", image:judaism},
+                { id: 8, name: "Islam", image:islam},
+                { id: 9, name: "History places", image:historyplaces},
+                { id: 10, name: "Desert", image:desert},
+                { id: 11, name: "Culinary", image:culinary},
+                { id: 12, name: "Christianity", image:christianity},
+                { id: 13, name: "Bible", image:bible},
+                { id: 14, name: "Beach", image:beach}
             ]
         }
     }

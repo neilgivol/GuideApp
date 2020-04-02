@@ -33,7 +33,8 @@ class SignIn extends Component {
             email: "",
             password: "",
             checkBoxVal: "unCheck",
-            rememberMe: false
+            rememberMe: false,
+         
         }
     }
 
@@ -95,11 +96,13 @@ class SignIn extends Component {
 
     render() {
         return (
-            <MDBContainer>
-                <MDBRow className="RowDivSignIn">
-                    <MDBCol md="6" className="LogoDiv"><img src={logo} /></MDBCol>
+            <div className="Cont">
+            <MDBContainer >
+                <MDBRow className="RowDivSignIn text-center">
+                <img className="LogoDiv" src={logo}/>
                     <MDBCol className="ColDivSignIn" md="6">
                         <MDBCard className="CardDivSignIn">
+                      
                             <MDBCardBody className="mx-4">
                                 <div className="text-center">
                                     <h3 className="dark-grey-text mb-5">
@@ -107,7 +110,7 @@ class SignIn extends Component {
                                     </h3>
                                 </div>
                                 <div className="text-center mb-3">
-                                    <MDBInput
+                                    <MDBInput  size="lg"
                                         label="Your email"
                                         value={this.state.email}
                                         group
@@ -117,7 +120,7 @@ class SignIn extends Component {
                                         success="right"
                                         onChange={this.HandelEmailInput}
                                     />
-                                    <MDBInput
+                                    <MDBInput size="lg"
                                         label="Your password"
                                         value={this.state.password}
                                         group
@@ -151,11 +154,18 @@ class SignIn extends Component {
                                     <div className="or-seperator"><i>or</i></div>
 
                                 </div>
+                                <MDBRow>
+                                    <MDBCol md="6">
+                                        <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
 
-                                <div className="text-center mb-3">
-                                    <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+                                    </MDBCol>
+                                    <MDBCol md="6">
                                     <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
-                                </div>
+
+                                    </MDBCol>
+                                </MDBRow>
+
+                              
 
 
                             </MDBCardBody>
@@ -179,6 +189,7 @@ class SignIn extends Component {
                     <Copyright />
                 </Box>
             </MDBContainer>
+            </div>
         );
     }
 }

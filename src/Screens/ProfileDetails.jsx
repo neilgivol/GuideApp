@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
-import { Card, ListGroup, ListGroupItem, Form, Button } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
+import { Card, ListGroup, ListGroupItem, Form, Button, Row, Col,InputGroup } from 'react-bootstrap';
+//import DatePicker from 'react-datepicker';
+import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import { withStyles } from '@material-ui/core/styles';
@@ -11,13 +12,14 @@ import 'react-phone-input-2/lib/style.css';
 import '../Css/ProfileDetails.css';
 import 'react-dropdown/style.css';
 import '../Css/globalhome.css';
-
 import Select from 'react-select';
 import facebook from '../Img/facebook.png';
 import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
+import {Card,Col} from 'shards-react';
+
 
 // const GreenRadio = withStyles({
 //     root: {
@@ -59,9 +61,9 @@ class ProfileDetails extends Component {
                 },
                 {
                     id: 1,
-                    name: 'Instegram',
-                    value: 'Instegram',
-                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
+                    name: 'Instagram',
+                    value: 'Instagram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instagram</span></div>
                 },
                 {
                     id: 2,
@@ -105,18 +107,18 @@ class ProfileDetails extends Component {
             size: this.props.GuideDetails.Gender,
             BirthDay: dateBirth,
             phone: this.props.GuideDetails.Phone,
-            fulllink:this.props.GuideLinks
+            fulllink: this.props.GuideLinks
         })
     }
     componentDidUpdate(PrevProps, state) {
         if (PrevProps.GuideLinks !== this.props.GuideLinks) {
             this.setState({
-                fulllink:this.props.GuideLinks
+                fulllink: this.props.GuideLinks
             })
         }
     }
-   
-  
+
+
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
         });
@@ -184,7 +186,7 @@ class ProfileDetails extends Component {
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
                 BirthDay: BirthDay
-               // Phone: phoneGuide
+                // Phone: phoneGuide
             }),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -255,19 +257,19 @@ class ProfileDetails extends Component {
         const arraylinks = [];
         for (let i = 0; i < this.state.fulllink.length; i++) {
             const element = this.state.fulllink[i];
-           let t =  element.split(" - ");
-           let namelink = t[0];
-           for (let j = 0; j < this.state.options.length; j++) {
-               const element2 = this.state.options[j];
-               if (element2.value == namelink) {
-                   Link = {
-                    guidegCode:this.state.user.gCode,
-                    linkPath:t[1],
-                    LinksCategoryLCode:element2.id
-                   }
-                   arraylinks.push(Link);
-               }
-           }
+            let t = element.split(" - ");
+            let namelink = t[0];
+            for (let j = 0; j < this.state.options.length; j++) {
+                const element2 = this.state.options[j];
+                if (element2.value == namelink) {
+                    Link = {
+                        guidegCode: this.state.user.gCode,
+                        linkPath: t[1],
+                        LinksCategoryLCode: element2.id
+                    }
+                    arraylinks.push(Link);
+                }
+            }
         }
         console.log(arraylinks);
         if (arraylinks.length === 0) {
@@ -276,22 +278,22 @@ class ProfileDetails extends Component {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
-                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
                 })
-                })
+            })
                 .then(res => {
-                console.log('res=', res);
-                return res.json()
+                    console.log('res=', res);
+                    return res.json()
                 })
                 .then(
-                (result) => {
-                    this.uploadLinks(result);
-                },
-                (error) => {
-                console.log("err post=", error);
-                });
+                    (result) => {
+                        this.uploadLinks(result);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
         }
-        else{
+        else {
             this.postLinksToSQL(arraylinks);
         }
 
@@ -312,8 +314,8 @@ class ProfileDetails extends Component {
         })
     }
     uploadLinks = (links) => {
-       let templink ="";
-       let temparraylinks = [];
+        let templink = "";
+        let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {
             const link = links[j].LinksCategoryLCode;
             for (let i = 0; i < this.state.options.length; i++) {
@@ -323,9 +325,9 @@ class ProfileDetails extends Component {
                 }
             }
         }
-       this.setState({
-           fulllink:temparraylinks
-       })
+        this.setState({
+            fulllink: temparraylinks
+        })
     }
 
     postLinksToSQL = (links) => {
@@ -350,143 +352,166 @@ class ProfileDetails extends Component {
                 });
     }
 
-  
+
 
     render() {
         console.log("render")
         return (
-            <Card small className="mb-4">
+            <Card small className="mb-4 ">
                 <Card.Header className="border-bottom">
-                    <h6 className="m-0">Profile Details</h6>
+                    <h5 className="m-0">Profile Details</h5>
                 </Card.Header>
                 <ListGroup flush>
                     <ListGroupItem className="p-3">
-                        <Form>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feFirstName">First Name</label><br />
-                                    <input
-                                        id="feFirstName"
-                                        placeholder="First Name"
-                                        value={this.state.user.FirstName}
-                                        onChange={this.onChangeFirstName}
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLastName">Last Name</label><br />
-                                    <input
-                                        id="feLastName"
-                                        placeholder="Last Name"
-                                        value={this.state.user.LastName}
-                                        onChange={this.onChangeLastName}
-                                    />
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feEmail">Email</label><br />
-                                    <input
-                                        id="feEmail"
-                                        placeholder="Email"
-                                        value={this.state.user.Email}
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
-                                    <input
-                                        id="feLicense"
-                                        placeholder="License Number"
-                                        value={this.state.user.License}
-                                        onChange={this.onChangeLicense}
-                                    />
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
-                                    <DatePicker
-                                        selected={this.state.BirthDay}
-                                        onChange={(newDate) => this.setState({ BirthDay: newDate })}
-                                        name="birthDate"
-                                        dateFormat="dd/MM/yyyy"
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
-                                    <Radio
-                                        checked={this.state.size === "female"}
-                                        onChange={this.handleChangeGender}
-                                        value="female"
-                                        name="radio-button-demo"
-                                        color="default"
-                                    />
-                                    <label>Female</label>
-                                    <Radio
-                                        checked={this.state.size === "male"}
-                                        onChange={this.handleChangeGender}
-                                        value="male"
-                                        name="radio-button-demo"
-                                        color="default"
-                                    />
-                                    <label>Male</label>
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="fephone">Phone </label><br />
-                                    <ReactPhoneInput
-                                        inputExtraProps={{
-                                            name: "phone",
-                                            required: true,
-                                            autoFocus: true
-                                        }}
-                                        country={'il'}
-                                        value={this.state.phone}
-                                        onChange={this.handleOnChange3}
-                                    />
-                                </div>
+                        <Row>
+                            <Col>
+                                <Form className="myForm">
+                                    <Row form>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feFirstName">First Name</label>
+                                            <input
+                                                id="feFirstName"
+                                                placeholder="First Name"
+                                                value={this.state.user.FirstName}
+                                                onChange={this.onChangeFirstName}
+                                            />
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLastName">Last Name</label>
+                                            <input
+                                                id="feLastName"
+                                                placeholder="Last Name"
+                                                value={this.state.user.LastName}
+                                                onChange={this.onChangeLastName}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feEmail">Email</label>
+                                            <input
 
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-12 form-group">
-                                    <label htmlFor="feLinks">Link Type</label><br />
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-3">
-                                    <Select
-                                        values={this.state.selectedOption}
-                                        onChange={this.handleChangeList}
-                                        options={this.state.options} >
-                                    </Select>
-                                  
+                                                id="feEmail"
+                                                placeholder="Email Address"
+                                                value={this.state.user.Email}
+                                            />
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLicense">License Number</label>
+                                            <input
 
-                                </div>
-                                <div className="col-lg-7 chooseLink">
-                                    <input
-                                        id="feFirstName"
-                                        placeholder="First Name"
-                                        value={this.state.linkURL}
-                                        onChange={this.handleChangeLinkUrl}
-                                    />
-                                </div>
-                                <div className="col-lg-2 Addlinks">
-                                    <Button onClick={() => { this.Addlinks() }}>+</Button>
-                                </div>
-                                <div className="LinkList col-12">
-                                    <ul>
-                                        {this.state.fulllink.map(item => <li onClick={() => { this.delUrl(item) }} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
-                                    </ul>
+                                                id="feLicense"
+                                                placeholder="License Number"
+                                                value={this.state.user.License}
+                                                onChange={this.onChangeLicense}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feBirth">Birthday</label><br/>
+                                            
+                                                <DatePicker
+                                                    selected={this.state.BirthDay}
+                                                    value={this.state.BirthDay}
+                                                    onChange={(newDate) => this.setState({ BirthDay: newDate })}
+                                                    name="birthDate"
+                                                    dateFormat="dd/MM/yyyy"
+                                                />
+                                            
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feGender">Gender</label>
+                                            <br/>
+                                            <Radio
+                                                    checked={this.state.size === "female"}
+                                                    onChange={this.handleChangeGender}
+                                                    value="female"
+                                                    name="radio-button-demo"
+                                                    color="default"
+                                                />
+                                                <label>Female</label>
+                                                <Radio
+                                                    checked={this.state.size === "male"}
+                                                    onChange={this.handleChangeGender}
+                                                    value="male"
+                                                    name="radio-button-demo"
+                                                    color="default"
+                                                />
+                                                <label>Male</label>
+                                            
+                                               
+                                           
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="fephone">Phone</label>
+                                                <ReactPhoneInput
+                                                    inputExtraProps={{
+                                                        name: "phone",
+                                                        required: true,
+                                                        autoFocus: true
+                                                    }}
+                                                    country={'il'}
+                                                    value={this.state.phone}
+                                                    onChange={this.handleOnChange3}
+                                                />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLinks">Link Type</label><br />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="3" className="form-group">
+                                            <Select
+                                                values={this.state.selectedOption}
+                                                onChange={this.handleChangeList}
+                                                options={this.state.options} >
+                                            </Select>
+                                        </Col>
+                                        <Col md="7" className="form-group chooseLink">
+                                            <input
+                                                id="feInsertYourLink"
+                                                placeholder="Insert Your Link"
+                                                value={this.state.linkURL}
+                                                onChange={this.handleChangeLinkUrl}
+                                            />
+                                        </Col>
+                                        <Col md="2" className="form-group Addlinks">
+                                            <Button onClick={() => { this.Addlinks() }}>+</Button>
+                                        </Col>
+                                        <Col md="12" className="form-group LinkList">
+                                            <ul>
+                                                {this.state.fulllink.map(item => <li onClick={() => { this.delUrl(item) }} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
+                                            </ul>
+                                        </Col>
 
-                                </div>
-                            </div>
-                            <div>
-                                <Form.Group controlId="exampleForm.ControlTextarea1">
-                                    <Form.Label>Short Description</Form.Label>
-                                    <Form.Control as="textarea" rows="3"
-                                        value={this.state.user.DescriptionGuide}
-                                        onChange={this.onChangeDescriptionGuide}
-                                    />
-                                </Form.Group>
-                            </div>
-                            <div>
-                                <Button onClick={() => { this.UpdateDetails(); }}>Save</Button>
-                            </div>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Form.Group controlId="exampleForm.ControlTextarea1">
+                                                <Form.Label>Short Description</Form.Label>
+                                                <Form.Control as="textarea" rows="3"
+                                                    value={this.state.user.DescriptionGuide}
+                                                    onChange={this.onChangeDescriptionGuide}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button variant="primary" onClick={() => { this.UpdateDetails(); }}>Update Your Account</Button>
+                                            
 
-                        </Form>
+                                        </Col>
+
+                                    </Row>
+                                </Form>
+                            </Col>
+                        </Row>
                     </ListGroupItem>
                 </ListGroup>
             </Card>
