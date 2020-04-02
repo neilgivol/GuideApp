@@ -17,6 +17,9 @@ import Area from './Screens/Area';
 import Check from './Screens/Check';
 import SignInTemp from './Screens/SignInTemp';
 import menu from './Img/menu.png';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import MainFooter from './Components/MainFooter';
 
 const navLinks = [
   {
@@ -206,11 +209,12 @@ else{
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
               logo={menu}
-              background="#0099cc"
+              background="#fff"
               hoverBackground="#ddd"
               linkColor="#777"
             />
             <Home Allusers={this.state.guides} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <MainFooter/>
           </Route>
           <Route path="/chat">
             <ResponsiveNavigation

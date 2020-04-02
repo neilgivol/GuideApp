@@ -28,6 +28,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
         <nav
             className="responsive-toolbar"
             style={{ background:  background }}>
+           
             <ul
                 style={{ background: "#fff" }}
                 className={ navOpen ? 'active' : '' }
@@ -53,7 +54,6 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                     </li>
                 )}
             </ul>
-            <div className="col-sm hidden-md hidden-lg"></div>
         </nav>
     )
 }

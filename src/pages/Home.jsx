@@ -16,6 +16,11 @@ import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
+import MainFooter from '../Components/MainFooter';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css";
+import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import { Container, Row, Col } from "shards-react";
 
 function Copyright() {
     return (
@@ -41,8 +46,8 @@ class Home extends Component {
             GuideLanguages: [],
             GuideAreas: [],
             AllAreas: [],
-            GuideLinks:[],
-            fulllink:[],
+            GuideLinks: [],
+            fulllink: [],
             options: [
                 {
                     id: 0,
@@ -105,52 +110,52 @@ class Home extends Component {
         }
         this.getLinksFromSQL(Guidetemp);
     }
-    componentDidMount(){
+    componentDidMount() {
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
         //this.getLinksFromSQL(this.state.Guide);
         this.GetAllAreas();
     }
-    getLinksFromSQL=(TempGuide)=>{
-        fetch('http://localhost:49948/api/Link/'+TempGuide.gCode, {
+    getLinksFromSQL = (TempGuide) => {
+        fetch('http://localhost:49948/api/Link/' + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
-              'Content-Type': 'application/json; charset=UTF-8',
+                'Content-Type': 'application/json; charset=UTF-8',
             })
-          })
+        })
             .then(res => {
-              return res.json()
+                return res.json()
             })
             .then(
-              (result) => {
-              this.setState({
-                  GuideLinks:result
-              })
-              this.orgenzie(result);
-            },
-              (error) => {
-                console.log("err post=", error);
-              });
+                (result) => {
+                    this.setState({
+                        GuideLinks: result
+                    })
+                    this.orgenzie(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
 
-    orgenzie=(links)=>{
-        let templink ="";
+    orgenzie = (links) => {
+        let templink = "";
         let temparraylinks = [];
-         for (let j = 0; j < links.length; j++) {
-             const link = links[j].LinksCategoryLCode;
-             for (let i = 0; i < this.state.options.length; i++) {
-                 const element = this.state.options[i];
-                 if (element.id == link) {
-                     temparraylinks.push(element.value + " - " + links[j].linkPath)
-                 }
-             }
-         }
+        for (let j = 0; j < links.length; j++) {
+            const link = links[j].LinksCategoryLCode;
+            for (let i = 0; i < this.state.options.length; i++) {
+                const element = this.state.options[i];
+                if (element.id == link) {
+                    temparraylinks.push(element.value + " - " + links[j].linkPath)
+                }
+            }
+        }
         this.setState({
-            fulllink:temparraylinks
+            fulllink: temparraylinks
         })
         localStorage.setItem('links', JSON.stringify(temparraylinks));
     }
-   
+
 
     GetAllAreas = () => {
         fetch("http://localhost:49948/api/Area", {
@@ -173,11 +178,11 @@ class Home extends Component {
                 });
     }
 
-    updateAreasGuides=(areas)=>{
+    updateAreasGuides = (areas) => {
         this.GetAreasGuideList(this.state.Guide);
 
     }
-    updateLanguageGuides=()=>{
+    updateLanguageGuides = () => {
         this.GetLanguagesGuideList(this.state.Guide);
     }
 
@@ -243,7 +248,7 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({ GuideLanguages: result })
-                    localStorage.setItem('languages',JSON.stringify(result));
+                    localStorage.setItem('languages', JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -252,22 +257,17 @@ class Home extends Component {
 
     render() {
         return (
-            <div id={this.props.navbarOpenCheck} className="container-fluid HomePageContainer">
+            <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
-                <div className="row homePage">
-                    <div className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm">
+                <Row className="homePage">
+                    <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
                         {this.funcGoogleFacebook()}
-                    </div>
-                    <div className="col-lg-9 col-md-10 col-sm-12 ">
+                    </Col>
+                    <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0">
                         {this.func1()}
-
-                    </div>
-
-                </div>
-                <Box mt={8}>
-                    <Copyright />
-                </Box>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }
