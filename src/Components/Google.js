@@ -34,7 +34,7 @@ class Google extends Component {
 
   render() {
     return (
-      <div className="App GoogleBTN">
+      <div>
         {!this.state.isUserLoggedIn && (
           <GoogleLogin
             clientId="383883505141-igdv29benmn8rp60edikg4j8ed5t20rs.apps.googleusercontent.com" //CLIENTID NOT CREATED YET

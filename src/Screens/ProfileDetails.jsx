@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
-import { Card, ListGroup, ListGroupItem, Form, Button } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
+import { Card, ListGroup, ListGroupItem, Form, Button, Row, Col,InputGroup } from 'react-bootstrap';
+//import DatePicker from 'react-datepicker';
+import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import { withStyles } from '@material-ui/core/styles';
@@ -17,6 +18,8 @@ import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
+import {Card,Col} from 'shards-react';
+
 
 // const GreenRadio = withStyles({
 //     root: {
@@ -58,9 +61,9 @@ class ProfileDetails extends Component {
                 },
                 {
                     id: 1,
-                    name: 'Instegram',
-                    value: 'Instegram',
-                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
+                    name: 'Instagram',
+                    value: 'Instagram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instagram</span></div>
                 },
                 {
                     id: 2,
@@ -354,90 +357,54 @@ class ProfileDetails extends Component {
     render() {
         console.log("render")
         return (
+<<<<<<< HEAD
             <Card small className="mb-4 profileDetails">
+=======
+            <Card small className="mb-4 ">
+>>>>>>> 24f6138776f479d83818ad038d73a455e568752c
                 <Card.Header className="border-bottom">
-                    <h6 className="m-0">Profile Details</h6>
+                    <h5 className="m-0">Profile Details</h5>
                 </Card.Header>
                 <ListGroup flush>
                     <ListGroupItem className="p-3">
-                        <Form>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feFirstName">First Name</label><br />
-                                    <input
-                                        id="feFirstName"
-                                        placeholder="First Name"
-                                        value={this.state.user.FirstName}
-                                        onChange={this.onChangeFirstName}
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLastName">Last Name</label><br />
-                                    <input
-                                        id="feLastName"
-                                        placeholder="Last Name"
-                                        value={this.state.user.LastName}
-                                        onChange={this.onChangeLastName}
-                                    />
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="feEmail">Email</label><br />
-                                    <input
-                                        id="feEmail"
-                                        placeholder="Email"
-                                        value={this.state.user.Email}
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feLicense">License Number</label><br />
-                                    <input
-                                        id="feLicense"
-                                        placeholder="License Number"
-                                        value={this.state.user.License}
-                                        onChange={this.onChangeLicense}
-                                    />
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6  col-sm-12form-group"><label htmlFor="feBirth">Birthday</label><br />
-                                    <DatePicker
-                                        selected={this.state.BirthDay}
-                                        onChange={(newDate) => this.setState({ BirthDay: newDate })}
-                                        name="birthDate"
-                                        dateFormat="dd/MM/yyyy"
-                                    />
-                                </div>
-                                <div className="col-lg-6 col-sm-12 form-group" ><label htmlFor="feGender">Gender</label><br />
-                                    <Radio
-                                        checked={this.state.size === "female"}
-                                        onChange={this.handleChangeGender}
-                                        value="female"
-                                        name="radio-button-demo"
-                                        color="default"
-                                    />
-                                    <label>Female</label>
-                                    <Radio
-                                        checked={this.state.size === "male"}
-                                        onChange={this.handleChangeGender}
-                                        value="male"
-                                        name="radio-button-demo"
-                                        color="default"
-                                    />
-                                    <label>Male</label>
-                                </div>
-                            </div>
-                            <div className="row labelInputs">
-                                <div className="col-lg-6 col-sm-12 form-group"><label htmlFor="fephone">Phone </label><br />
-                                    <ReactPhoneInput
-                                        inputExtraProps={{
-                                            name: "phone",
-                                            required: true,
-                                            autoFocus: true
-                                        }}
-                                        country={'il'}
-                                        value={this.state.phone}
-                                        onChange={this.handleOnChange3}
-                                    />
-                                </div>
+                        <Row>
+                            <Col>
+                                <Form className="myForm">
+                                    <Row form>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feFirstName">First Name</label>
+                                            <input
+                                                id="feFirstName"
+                                                placeholder="First Name"
+                                                value={this.state.user.FirstName}
+                                                onChange={this.onChangeFirstName}
+                                            />
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLastName">Last Name</label>
+                                            <input
+                                                id="feLastName"
+                                                placeholder="Last Name"
+                                                value={this.state.user.LastName}
+                                                onChange={this.onChangeLastName}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feEmail">Email</label>
+                                            <input
 
+                                                id="feEmail"
+                                                placeholder="Email Address"
+                                                value={this.state.user.Email}
+                                            />
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLicense">License Number</label>
+                                            <input
+
+<<<<<<< HEAD
                             </div>
                             <div className="row labelInputs">
                                 <div className="col-lg-12 form-group">
@@ -452,40 +419,120 @@ class ProfileDetails extends Component {
                                         options={this.state.options} >
                                     </Select>
 
+=======
+                                                id="feLicense"
+                                                placeholder="License Number"
+                                                value={this.state.user.License}
+                                                onChange={this.onChangeLicense}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feBirth">Birthday</label><br/>
+                                            
+                                                <DatePicker
+                                                    selected={this.state.BirthDay}
+                                                    value={this.state.BirthDay}
+                                                    onChange={(newDate) => this.setState({ BirthDay: newDate })}
+                                                    name="birthDate"
+                                                    dateFormat="dd/MM/yyyy"
+                                                />
+                                            
+                                        </Col>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feGender">Gender</label>
+                                            <br/>
+                                            <Radio
+                                                    checked={this.state.size === "female"}
+                                                    onChange={this.handleChangeGender}
+                                                    value="female"
+                                                    name="radio-button-demo"
+                                                    color="default"
+                                                />
+                                                <label>Female</label>
+                                                <Radio
+                                                    checked={this.state.size === "male"}
+                                                    onChange={this.handleChangeGender}
+                                                    value="male"
+                                                    name="radio-button-demo"
+                                                    color="default"
+                                                />
+                                                <label>Male</label>
+                                            
+                                               
+                                           
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="fephone">Phone</label>
+                                                <ReactPhoneInput
+                                                    inputExtraProps={{
+                                                        name: "phone",
+                                                        required: true,
+                                                        autoFocus: true
+                                                    }}
+                                                    country={'il'}
+                                                    value={this.state.phone}
+                                                    onChange={this.handleOnChange3}
+                                                />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="6" className="form-group">
+                                            <label htmlFor="feLinks">Link Type</label><br />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md="3" className="form-group">
+                                            <Select
+                                                values={this.state.selectedOption}
+                                                onChange={this.handleChangeList}
+                                                options={this.state.options} >
+                                            </Select>
+                                        </Col>
+                                        <Col md="7" className="form-group chooseLink">
+                                            <input
+                                                id="feInsertYourLink"
+                                                placeholder="Insert Your Link"
+                                                value={this.state.linkURL}
+                                                onChange={this.handleChangeLinkUrl}
+                                            />
+                                        </Col>
+                                        <Col md="2" className="form-group Addlinks">
+                                            <Button onClick={() => { this.Addlinks() }}>+</Button>
+                                        </Col>
+                                        <Col md="12" className="form-group LinkList">
+                                            <ul>
+                                                {this.state.fulllink.map(item => <li onClick={() => { this.delUrl(item) }} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
+                                            </ul>
+                                        </Col>
+>>>>>>> 24f6138776f479d83818ad038d73a455e568752c
 
-                                </div>
-                                <div className="col-lg-7 chooseLink">
-                                    <input
-                                        id="feFirstName"
-                                        placeholder="First Name"
-                                        value={this.state.linkURL}
-                                        onChange={this.handleChangeLinkUrl}
-                                    />
-                                </div>
-                                <div className="col-lg-2 Addlinks">
-                                    <Button onClick={() => { this.Addlinks() }}>+</Button>
-                                </div>
-                                <div className="LinkList col-12">
-                                    <ul>
-                                        {this.state.fulllink.map(item => <li onClick={() => { this.delUrl(item) }} value={item} className="urlAndType">{item} <i value={item} class="fas fa-backspace" ></i></li>)}
-                                    </ul>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Form.Group controlId="exampleForm.ControlTextarea1">
+                                                <Form.Label>Short Description</Form.Label>
+                                                <Form.Control as="textarea" rows="3"
+                                                    value={this.state.user.DescriptionGuide}
+                                                    onChange={this.onChangeDescriptionGuide}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <Button variant="primary" onClick={() => { this.UpdateDetails(); }}>Update Your Account</Button>
+                                            
 
-                                </div>
-                            </div>
-                            <div>
-                                <Form.Group controlId="exampleForm.ControlTextarea1">
-                                    <Form.Label>Short Description</Form.Label>
-                                    <Form.Control as="textarea" rows="3"
-                                        value={this.state.user.DescriptionGuide}
-                                        onChange={this.onChangeDescriptionGuide}
-                                    />
-                                </Form.Group>
-                            </div>
-                            <div>
-                                <Button onClick={() => { this.UpdateDetails(); }}>Save</Button>
-                            </div>
+                                        </Col>
 
-                        </Form>
+                                    </Row>
+                                </Form>
+                            </Col>
+                        </Row>
                     </ListGroupItem>
                 </ListGroup>
             </Card>

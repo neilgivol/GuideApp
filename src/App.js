@@ -46,7 +46,8 @@ class App extends Component {
     this.state = {
       guides: [],
       navbarCheckOpen: "open",
-      tempGuide:""
+      tempGuide:"",
+    
     }
     let local = true;
     this.apiUrl = 'http://localhost:49948/api/Guide';
@@ -124,7 +125,9 @@ class App extends Component {
       .then(
         (result) => {
             this.setState({
-              tempGuide:result
+              tempGuide:result,
+              
+              
             })
           this.MoveToHomePage(this.state.tempGuide);
         },
@@ -173,7 +176,7 @@ if (e!== null) {
         });
 }
 else{
-  console.log("not succeess")
+  alert("incorrect login information");
 }
 }
 
