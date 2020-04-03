@@ -1,7 +1,7 @@
 #close{
     height: 100%;
     left: 100px;
-    position: fixed;
+    position: relative;
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
@@ -17,22 +17,37 @@
 
 #open{
     height: 100%;
-    left: 300px;
-    position: fixed;
+    left: 160px;
+    position: relative;
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
     width: 80%;
 }
-.HomePageContainer{
-    margin-right: 100px;
-    margin-top:10px;
+body{
     overflow-y: scroll;
+  }
+.HomePageContainer{
+    position: relative;
+    margin-top:40px;
+    margin-bottom: 50px;
 }
 .homePage{
-    border:1px solid #999;
     margin:0 auto;
-
+    max-height: 100%;
+    padding: 10px;
+}
+.foot{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    border:1px solid;
+}
+.copyright{
+    position: absolute;
+    border:1px solid #999;
+    width: 100%;
+    bottom:15px;
 }
 @media only screen and (max-width: 600px) {
    #close{

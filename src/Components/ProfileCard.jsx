@@ -1,6 +1,10 @@
 import React, { Component, useState } from 'react';
-import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+import {  Button } from 'react-bootstrap';
 import '../Css/ProfileCard.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css";
+import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import {Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem,ListGroup} from 'shards-react';
 
 class ProfileCard extends Component {
     constructor(props) {
@@ -68,33 +72,32 @@ class ProfileCard extends Component {
 
     funcPic = () => {
         return <div className="imageClass">
-            <Card.Img variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
+            <CardImg variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
             <span className="uploadPicIcon">
                 <i class="far fa-image"></i></span>
         </div>
     }
     funcName = () => {
-        return <h1>{this.state.user.FirstName} {this.state.user.LastName}</h1>
+        return <h2>{this.state.user.FirstName} {this.state.user.LastName}</h2>
     }
     render() {
         return (
             <Card className="CardBodyDiv">
                 {this.funcPic()}
-                <Card.Body>
-                    <Card.Title>{this.funcName()}</Card.Title>
-                    <Card.Text>
+                <CardBody>
+                    <CardTitle>{this.funcName()}</CardTitle>
+                    <CardText>
                        <h1>{this.state.sum}%</h1>
-                                      </Card.Text>
-                </Card.Body>
+                                      </CardText>
+                </CardBody>
                 <ListGroup className="list-group-flush">
                     <ListGroupItem>Cras justo odio</ListGroupItem>
                     <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
                     <ListGroupItem>Vestibulum at eros</ListGroupItem>
                 </ListGroup>
-                <Card.Body>
-                    <Card.Link href="#">Card Link</Card.Link>
-                    <Card.Link href="#">Another Link</Card.Link>
-                </Card.Body>
+                <CardBody>
+                    <CardLink href="/">Logout</CardLink>
+                </CardBody>
             </Card>
         );
     }

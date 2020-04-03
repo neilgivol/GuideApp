@@ -1,0 +1,16 @@
+.main-footer{
+    width: 100%;
+    position: fixed;
+    bottom: 0px;
+    margin-top:10px
+}
+.copy span{
+    position: absolute;
+    left:18%;
+    bottom: 10%;
+    border: none;
+}
+.copyright{
+}
+.nav{
+}

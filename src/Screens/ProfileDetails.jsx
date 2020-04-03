@@ -1,9 +1,8 @@
 import React, { Component, useState } from 'react';
-import { Card, ListGroup, ListGroupItem, Form, Button, Row, Col,InputGroup } from 'react-bootstrap';
+import {Button,Col,Row, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
 //import DatePicker from 'react-datepicker';
 import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
 //import { withStyles } from '@material-ui/core/styles';
 //import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
@@ -18,21 +17,10 @@ import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
-
-
-
-// const GreenRadio = withStyles({
-//     root: {
-//         color: green[400],
-//         '&$checked': {
-//             color: green[600],
-//         },
-//     },
-//     checked: {},
-// })(props => <Radio color="default" {...props} />);
-
-
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css";
+import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
         super(props)
@@ -357,10 +345,10 @@ class ProfileDetails extends Component {
     render() {
         console.log("render")
         return (
-            <Card small className="mb-4 ">
-                <Card.Header className="border-bottom">
-                    <h5 className="m-0">Profile Details</h5>
-                </Card.Header>
+            <Card small className="mb-4 profileDetails">
+                <CardHeader className="border-bottom">
+                    <h6 className="m-0">Profile Details</h6>
+                </CardHeader>
                 <ListGroup flush>
                     <ListGroupItem className="p-3">
                         <Row>
@@ -514,6 +502,7 @@ class ProfileDetails extends Component {
                         </Row>
                     </ListGroupItem>
                 </ListGroup>
+                
             </Card>
         );
     }

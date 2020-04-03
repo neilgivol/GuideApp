@@ -17,6 +17,9 @@ import Area from './Screens/Area';
 import Check from './Screens/Check';
 import SignInTemp from './Screens/SignInTemp';
 import menu from './Img/menu.png';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import MainFooter from './Components/MainFooter';
 
 const navLinks = [
   {
@@ -47,6 +50,9 @@ class App extends Component {
       guides: [],
       navbarCheckOpen: "open",
       tempGuide:"",
+      AllAreas:[],
+      AllHobbies:[],
+      AllExpertises:[]
     
     }
     let local = true;
@@ -56,7 +62,10 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    console.log("DidMount_App")
+    console.log("DidMount_App");
+    this.GetAllAreas();
+    this.GetAllHobbies();
+    this.GetAllExpertises();
       // this.GetGuidesFromSQL();
   }
 
@@ -180,6 +189,96 @@ else{
 }
 }
 
+GetAllHobbies=()=>{
+  fetch("http://localhost:49948/api/Hobby", {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.OrgenizeHobbies(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+}
+OrgenizeHobbies=(result)=>{
+  let temp = [];
+  console.log(result);
+        for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            let hobby = {
+                id:element.HCode,
+                name: element.HName,
+                image:element.Picture
+            }
+            temp.push(hobby);
+        }
+        this.setState({
+          AllHobbies:temp
+        })
+}
+GetAllExpertises=()=>{
+  fetch("http://localhost:49948/api/Expertise", {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.OrgenizeExpertises(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+}
+OrgenizeExpertises=(result)=>{
+  let temp = [];
+  console.log(result);
+        for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            let expertise = {
+                id:element.Code,
+                name: element.NameE,
+                image:element.Picture
+            }
+            temp.push(expertise);
+        }
+        this.setState({
+          AllExpertises:temp
+        })
+}
+
+GetAllAreas=()=>{
+  fetch("http://localhost:49948/api/Area", {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        AllAreas: result
+                    })
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+}
+
   render() {
     return (
       <div className="app">
@@ -206,11 +305,12 @@ else{
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
               logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
+              background="#fff"
+              hoverBackground="#A2D4FF"
+              linkColor="#1988ff"
             />
-            <Home Allusers={this.state.guides} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <Home ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <MainFooter/>
           </Route>
           <Route path="/chat">
             <ResponsiveNavigation

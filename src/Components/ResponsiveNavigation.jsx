@@ -28,6 +28,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
         <nav
             className="responsive-toolbar"
             style={{ background:  background }}>
+           
             <ul
                 style={{ background: "#fff" }}
                 className={ navOpen ? 'active' : '' }
@@ -42,7 +43,8 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                         onMouseEnter={ () => { setHoverIndex(index) } }
                         onMouseLeave={ () => { setHoverIndex(-1) } }
                         onClick={ () => { setClickIndex(index)} }
-                        style={{ background: hoverIndex === index ? (hoverBackground || '#D7D7D7') : '' }}
+                        style={{ background: hoverIndex === index ? (hoverBackground || '#D7D7D7') : ''}}
+
                     >
                         <Link
                             to={link.path}
@@ -53,7 +55,6 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                     </li>
                 )}
             </ul>
-            <div className="col-sm hidden-md hidden-lg"></div>
         </nav>
     )
 }

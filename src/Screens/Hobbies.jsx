@@ -6,49 +6,46 @@ import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '../Css/globalhome.css';
-import art from '../Img/Hobbies/artMuseums.jpg';
-import camping from '../Img/Hobbies/camping.jfif';
-import classicMusic from '../Img/Hobbies/classicMusic.jpg';
-import computerGamer from '../Img/Hobbies/computerGamer.jpg';
-import cooking from '../Img/Hobbies/cooking.jpg';
-import drawing from '../Img/Hobbies/drawing.jfif';
-import diving from '../Img/Hobbies/diving.jpg';
-import geopolitics from '../Img/Hobbies/geopolitics.jpg';
-import paintball from '../Img/Hobbies/paintball.jpg';
-import rafting from '../Img/Hobbies/rafting.jpg';
-import rappelling from '../Img/Hobbies/rappelling.jpg';
-import Sports2 from '../Img/Hobbies/Sports2.png';
-import theater from '../Img/Hobbies/theater.jpg';
-import photography from '../Img/Hobbies/photography.jfif';
-import hiking from '../Img/Hobbies/hiking.jfif';
+// import art from '../Img/Hobbies/artMuseums.jpg';
+// import camping from '../Img/Hobbies/camping.jfif';
+// import classicMusic from '../Img/Hobbies/classicMusic.jpg';
+// import computerGamer from '../Img/Hobbies/computerGamer.jpg';
+// import cooking from '../Img/Hobbies/cooking.jpg';
+// import drawing from '../Img/Hobbies/drawing.jfif';
+// import diving from '../Img/Hobbies/diving.jpg';
+// import geopolitics from '../Img/Hobbies/geopolitics.jpg';
+// import paintball from '../Img/Hobbies/paintball.jpg';
+// import rafting from '../Img/Hobbies/rafting.jpg';
+// import rappelling from '../Img/Hobbies/rappelling.jpg';
+// import Sports2 from '../Img/Hobbies/Sports2.png';
+// import theater from '../Img/Hobbies/theater.jpg';
+// import photography from '../Img/Hobbies/photography.jfif';
+// import hiking from '../Img/Hobbies/hiking.jfif';
 
 class Hobbies extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            itemsArray: [
-             new ShopItem(1,"art Museums",art),
-             new ShopItem(2,"camping",camping),
-             new ShopItem(3,"classic Music",classicMusic),
-             new ShopItem(4,"computer Gamer",computerGamer),
-             new ShopItem(5,"cooking",cooking),
-             new ShopItem(6,"diving",diving),
-             new ShopItem(7,"drawing",drawing),
-             new ShopItem(8,"geopolitics",geopolitics),
-             new ShopItem(9,"paintball",paintball),
-             new ShopItem(10,"theater",theater),
-             new ShopItem(11,"rafting",rafting),
-             new ShopItem(12,"rappelling",rappelling),
-             new ShopItem(13,"Sports",Sports2),
-             new ShopItem(14,"photography",photography),
-             new ShopItem(15,"hiking",hiking)
-            ],
-            itemsInCart: []
+            itemsArray: this.props.AllHobbies,
+            itemsInCart: [],
+            ListFromSQL:[]
         }
+        let local = true;
+        this.apiUrl = 'http://localhost:49948/api';
+        if (!local) {
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
+        }
+    }
+    componentDidMount(){
+      if(this.props.guideListHobbies.length !== 0){
+          this.UpdateList(this.props.guideListHobbies);
+      }
+    
     }
 
     addToCart = (newItem) => {
         const tempArr = [];
+        console.log(newItem);
         for (let i = 0; i < this.state.itemsArray.length; i++) {
             const element = this.state.itemsArray[i];
             if (newItem.id !== element.id) {
@@ -85,7 +82,100 @@ class Hobbies extends Component {
             }
             tempArray.push(Guide_Hobby);
         }
-        console.log(tempArray)
+
+        if (tempArray.length === 0) {
+            console.log("del")
+            fetch(this.apiUrl + '/Hobby/' + this.props.GuideDetails.gCode, {
+                method: 'DELETE',
+                //body: JSON.stringify({id:7}),
+                headers: new Headers({
+                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                })
+                })
+                .then(res => {
+                console.log('res=', res);
+                return res.json()
+                })
+                .then(
+                (result) => {
+                    this.setState({
+                        ListFromSQL: result
+                    });
+                    this.UpdateList(this.state.ListFromSQL);
+                },
+                (error) => {
+                console.log("err post=", error);
+                });
+                
+        }else{
+            this.PostLangGuideToSQL(tempArray);
+        }    }
+
+    PostLangGuideToSQL = (tempArray) => {
+        fetch(this.apiUrl + '/Hobby', {
+            method: 'POST',
+            body: JSON.stringify(tempArray),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log("fetch POST= ", result);
+                    console.log(result);
+                    this.setState({
+                        ListFromSQL: result
+                    });
+                    this.UpdateList(this.state.ListFromSQL);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+    UpdateList=(result)=>{
+        let temp = [];
+        console.log(result);
+              for (let i = 0; i < result.length; i++) {
+                  const element = result[i];
+                  let hobby = {
+                      id:element.HCode,
+                      name: element.HName,
+                      image:element.Picture
+                  }
+                  temp.push(hobby);
+              }
+              this.setState({
+                itemsInCart:temp
+              })
+
+
+              let tempArray = [];
+              let boolifExist = false;
+              for(let i = 0; i < this.state.itemsArray.length; i++){
+                boolifExist = false;
+                 let elementArray = this.state.itemsArray[i];
+                 console.log(elementArray);
+                  for(let j = 0; j < temp.length; j++){
+                      let elementCart = temp[j];
+                      console.log(elementCart);
+                      if(elementArray.id === elementCart.id){
+                          console.log("WHAT???");
+                        boolifExist = true;
+                      }
+                  }
+                  if(!boolifExist){
+                      tempArray.push(elementArray);
+                  }
+              }
+              this.setState({
+                  itemsArray:tempArray
+              })
+              console.log(tempArray);
     }
     render() {
         return (

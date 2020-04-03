@@ -16,6 +16,11 @@ import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
+import MainFooter from '../Components/MainFooter';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "shards-ui/dist/css/shards.min.css";
+import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
+import { Container, Row, Col } from "shards-react";
 
 function Copyright() {
     return (
@@ -40,9 +45,13 @@ class Home extends Component {
             Guide: '',
             GuideLanguages: [],
             GuideAreas: [],
-            AllAreas: [],
-            GuideLinks:[],
-            fulllink:[],
+            GuideHobbies:[],
+            GuideExpertises:[],
+            AllAreas: this.props.AllAreas,
+            AllHobbies:this.props.AllHobbies,
+            AllExpertises:this.props.AllExpertises,
+            GuideLinks: [],
+            fulllink: [],
             options: [
                 {
                     id: 0,
@@ -88,9 +97,24 @@ class Home extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-    // componentDidUpdate(PrevProps, state) {
-    //     console.log(PrevProps);
-    // }
+    componentDidUpdate(PrevProps, state) {
+        if(PrevProps.AllExpertises !== this.props.AllExpertises){
+            this.props.ReloadHobbies();
+           this.setState({
+            AllExpertises:this.props.AllExpertises
+           })
+        }
+        if(PrevProps.AllHobbies !== this.props.AllHobbies){
+            this.setState({
+                AllHobbies:this.props.AllHobbies
+            })
+        }
+        if(PrevProps.AllAreas !== this.props.AllAreas){
+            this.setState({
+                AllAreas:this.props.AllAreas
+            })
+        }
+    }
     componentWillMount() {
         const Guidetemp = JSON.parse(localStorage.getItem('Guide'));
         if (this.props.location.state === undefined) {
@@ -105,55 +129,15 @@ class Home extends Component {
         }
         this.getLinksFromSQL(Guidetemp);
     }
-    componentDidMount(){
+    componentDidMount() {
+        this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
+        this.GetExpertisesGuides(this.state.Guide);
         //this.getLinksFromSQL(this.state.Guide);
-        this.GetAllAreas();
     }
-    getLinksFromSQL=(TempGuide)=>{
-        fetch('http://localhost:49948/api/Link/'+TempGuide.gCode, {
-            method: 'GET',
-            headers: new Headers({
-              'Content-Type': 'application/json; charset=UTF-8',
-            })
-          })
-            .then(res => {
-              return res.json()
-            })
-            .then(
-              (result) => {
-              this.setState({
-                  GuideLinks:result
-              })
-              this.orgenzie(result);
-            },
-              (error) => {
-                console.log("err post=", error);
-              });
-    }
-
-    orgenzie=(links)=>{
-        let templink ="";
-        let temparraylinks = [];
-         for (let j = 0; j < links.length; j++) {
-             const link = links[j].LinksCategoryLCode;
-             for (let i = 0; i < this.state.options.length; i++) {
-                 const element = this.state.options[i];
-                 if (element.id == link) {
-                     temparraylinks.push(element.value + " - " + links[j].linkPath)
-                 }
-             }
-         }
-        this.setState({
-            fulllink:temparraylinks
-        })
-        localStorage.setItem('links', JSON.stringify(temparraylinks));
-    }
-   
-
-    GetAllAreas = () => {
-        fetch("http://localhost:49948/api/Area", {
+    getLinksFromSQL = (TempGuide) => {
+        fetch('http://localhost:49948/api/Link/' + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -165,20 +149,67 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({
-                        AllAreas: result
+                        GuideLinks: result
                     })
+                    this.orgenzie(result);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
     }
 
-    updateAreasGuides=(areas)=>{
+    orgenzie = (links) => {
+        let templink = "";
+        let temparraylinks = [];
+        for (let j = 0; j < links.length; j++) {
+            const link = links[j].LinksCategoryLCode;
+            for (let i = 0; i < this.state.options.length; i++) {
+                const element = this.state.options[i];
+                if (element.id == link) {
+                    temparraylinks.push(element.value + " - " + links[j].linkPath)
+                }
+            }
+        }
+        this.setState({
+            fulllink: temparraylinks
+        })
+        localStorage.setItem('links', JSON.stringify(temparraylinks));
+    }
+
+
+    // GetAllAreas = () => {
+    //     fetch("http://localhost:49948/api/Area", {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json; charset=UTF-8',
+    //         })
+    //     })
+    //         .then(res => {
+    //             return res.json()
+    //         })
+    //         .then(
+    //             (result) => {
+    //                 this.setState({
+    //                     AllAreas: result
+    //                 })
+    //             },
+    //             (error) => {
+    //                 console.log("err post=", error);
+    //             });
+    // }
+    
+    updateAreasGuides = (areas) => {
         this.GetAreasGuideList(this.state.Guide);
 
     }
-    updateLanguageGuides=()=>{
+    updateLanguageGuides = () => {
         this.GetLanguagesGuideList(this.state.Guide);
+    }
+    updateHobbiesGuides = () => {
+        this.GetHobbiesGuideList(this.state.Guide);
+    }
+    updateExpertisesGuides = () => {
+        this.GetExpertisesGuides(this.state.Guide);
     }
 
     ClickPage2 = (e) => {
@@ -202,10 +233,10 @@ class Home extends Component {
             return <Languages updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
         }
         else if (namePage2 === "Hobbies") {
-            return <Hobbies GuideDetails={this.state.Guide} />
+            return <Hobbies GuideDetails={this.state.Guide} AllHobbies={this.state.AllHobbies} guideListHobbies={this.state.GuideHobbies} updateHobbies={this.updateHobbiesGuides} />
         }
         else if (namePage2 === "Expertise") {
-            return <Expertise GuideDetails={this.state.Guide} />
+            return <Expertise GuideDetails={this.state.Guide} AllExpertises={this.state.AllExpertises} GuideExpertises={this.state.GuideExpertises} updateExpertises={this.updateExpertisesGuides} />
         }
     }
 
@@ -228,6 +259,45 @@ class Home extends Component {
                     console.log("err post=", error);
                 });
     }
+    GetHobbiesGuideList=(TempGuide)=>{
+        fetch("http://localhost:49948/api/Hobby/" + TempGuide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ GuideHobbies: result })
+                    localStorage.setItem('Hobby', JSON.stringify(result));
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+
+    GetExpertisesGuides=(TempGuide)=>{
+        fetch("http://localhost:49948/api/Expertise/" + TempGuide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ GuideExpertises: result })
+                    localStorage.setItem('Expertise', JSON.stringify(result));
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
 
 
     GetLanguagesGuideList = (TempGuide) => {
@@ -243,7 +313,7 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({ GuideLanguages: result })
-                    localStorage.setItem('languages',JSON.stringify(result));
+                    localStorage.setItem('languages', JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -252,22 +322,17 @@ class Home extends Component {
 
     render() {
         return (
-            <div id={this.props.navbarOpenCheck} className="container-fluid HomePageContainer">
+            <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
-                <div className="row homePage">
-                    <div className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm">
+                <Row className="homePage">
+                    <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
                         {this.funcGoogleFacebook()}
-                    </div>
-                    <div className="col-lg-9 col-md-10 col-sm-12 ">
+                    </Col>
+                    <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0">
                         {this.func1()}
-
-                    </div>
-
-                </div>
-                <Box mt={8}>
-                    <Copyright />
-                </Box>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }
