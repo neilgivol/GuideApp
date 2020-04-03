@@ -18,7 +18,13 @@ import parties from '../Img/Expertise/parties.jpg';
 import shopping from '../Img/Expertise/shopping.jfif';
 import shoppingInMarket from '../Img/Expertise/shoppingInMarket.jpg';
 import wineTours from '../Img/Expertise/wineTours.jpg';
-import zionism from '../Img/Expertise/zionism.jpg';
+import eldryTrips from '../Img/Expertise/eldry trips.jpg';
+import extreme from '../Img/Expertise/extreme.jpg';
+import HistoryAndArcheology from '../Img/Expertise/History and Archeology.jpg';
+import nature from '../Img/Expertise/nature.jpg';
+import religions from '../Img/Expertise/religions.png';
+
+
 
 
 
@@ -28,20 +34,18 @@ class Expertise extends Component {
         this.state = {
             itemsInCart: [],
             itemsArray: [
-                { id: 1, name: "Zionism", image:zionism},
+                { id: 1, name: "Religions", image:religions},
                 { id: 2, name: "Wine Tours", image:wineTours},
                 { id: 3, name: "Market Shopping", image:shoppingInMarket},
                 { id: 4, name: "Malls Shopping", image:shopping},
                 { id: 5, name: "Parties", image:parties},
-                { id: 6, name: "Kabbalah", image:kabbalah},
-                { id: 7, name: "Judaism", image:judaism},
-                { id: 8, name: "Islam", image:islam},
-                { id: 9, name: "History places", image:historyplaces},
-                { id: 10, name: "Desert", image:desert},
-                { id: 11, name: "Culinary", image:culinary},
-                { id: 12, name: "Christianity", image:christianity},
-                { id: 13, name: "Bible", image:bible},
-                { id: 14, name: "Beach", image:beach}
+                { id: 6, name: "Eldry Trips", image:eldryTrips},
+                { id: 7, name: "Nature", image:nature},
+                { id: 8, name: "History places", image:historyplaces},
+                { id: 9, name: "Desert", image:desert},
+                { id: 10, name: "Culinary", image:culinary},
+                { id: 11, name: "Extreme", image:extreme},
+                { id: 12, name: "Beach", image:beach}
             ]
         }
     }
