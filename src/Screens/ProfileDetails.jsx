@@ -18,7 +18,7 @@ import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
-import {Card,Col} from 'shards-react';
+
 
 
 // const GreenRadio = withStyles({
