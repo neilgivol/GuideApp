@@ -9,7 +9,7 @@ class HobbieCard extends Component {
     render() {
         return (
             <div className="CardItem" onClick={()=>this.props.addToCart(this.props.oneItem)}>
-            <img  className="CardImage"  variant="top" src={this.props.oneItem.image} />
+            <img  className="CardImage" rel="preload" variant="top" src={this.props.oneItem.image} />
                     <h4>{this.props.oneItem.name}</h4>
 
             </div>

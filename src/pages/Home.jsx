@@ -45,7 +45,11 @@ class Home extends Component {
             Guide: '',
             GuideLanguages: [],
             GuideAreas: [],
-            AllAreas: [],
+            GuideHobbies:[],
+            GuideExpertises:[],
+            AllAreas: this.props.AllAreas,
+            AllHobbies:this.props.AllHobbies,
+            AllExpertises:this.props.AllExpertises,
             GuideLinks: [],
             fulllink: [],
             options: [
@@ -93,9 +97,24 @@ class Home extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-    // componentDidUpdate(PrevProps, state) {
-    //     console.log(PrevProps);
-    // }
+    componentDidUpdate(PrevProps, state) {
+        if(PrevProps.AllExpertises !== this.props.AllExpertises){
+            this.props.ReloadHobbies();
+           this.setState({
+            AllExpertises:this.props.AllExpertises
+           })
+        }
+        if(PrevProps.AllHobbies !== this.props.AllHobbies){
+            this.setState({
+                AllHobbies:this.props.AllHobbies
+            })
+        }
+        if(PrevProps.AllAreas !== this.props.AllAreas){
+            this.setState({
+                AllAreas:this.props.AllAreas
+            })
+        }
+    }
     componentWillMount() {
         const Guidetemp = JSON.parse(localStorage.getItem('Guide'));
         if (this.props.location.state === undefined) {
@@ -111,10 +130,11 @@ class Home extends Component {
         this.getLinksFromSQL(Guidetemp);
     }
     componentDidMount() {
+        this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
+        this.GetExpertisesGuides(this.state.Guide);
         //this.getLinksFromSQL(this.state.Guide);
-        this.GetAllAreas();
     }
     getLinksFromSQL = (TempGuide) => {
         fetch('http://localhost:49948/api/Link/' + TempGuide.gCode, {
@@ -157,33 +177,39 @@ class Home extends Component {
     }
 
 
-    GetAllAreas = () => {
-        fetch("http://localhost:49948/api/Area", {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-            })
-        })
-            .then(res => {
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    this.setState({
-                        AllAreas: result
-                    })
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
-    }
-
+    // GetAllAreas = () => {
+    //     fetch("http://localhost:49948/api/Area", {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json; charset=UTF-8',
+    //         })
+    //     })
+    //         .then(res => {
+    //             return res.json()
+    //         })
+    //         .then(
+    //             (result) => {
+    //                 this.setState({
+    //                     AllAreas: result
+    //                 })
+    //             },
+    //             (error) => {
+    //                 console.log("err post=", error);
+    //             });
+    // }
+    
     updateAreasGuides = (areas) => {
         this.GetAreasGuideList(this.state.Guide);
 
     }
     updateLanguageGuides = () => {
         this.GetLanguagesGuideList(this.state.Guide);
+    }
+    updateHobbiesGuides = () => {
+        this.GetHobbiesGuideList(this.state.Guide);
+    }
+    updateExpertisesGuides = () => {
+        this.GetExpertisesGuides(this.state.Guide);
     }
 
     ClickPage2 = (e) => {
@@ -207,10 +233,10 @@ class Home extends Component {
             return <Languages updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
         }
         else if (namePage2 === "Hobbies") {
-            return <Hobbies GuideDetails={this.state.Guide} />
+            return <Hobbies GuideDetails={this.state.Guide} AllHobbies={this.state.AllHobbies} guideListHobbies={this.state.GuideHobbies} updateHobbies={this.updateHobbiesGuides} />
         }
         else if (namePage2 === "Expertise") {
-            return <Expertise GuideDetails={this.state.Guide} />
+            return <Expertise GuideDetails={this.state.Guide} AllExpertises={this.state.AllExpertises} GuideExpertises={this.state.GuideExpertises} updateExpertises={this.updateExpertisesGuides} />
         }
     }
 
@@ -228,6 +254,45 @@ class Home extends Component {
                 (result) => {
                     this.setState({ GuideAreas: result })
                     localStorage.setItem('areas', JSON.stringify(result));
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+    GetHobbiesGuideList=(TempGuide)=>{
+        fetch("http://localhost:49948/api/Hobby/" + TempGuide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ GuideHobbies: result })
+                    localStorage.setItem('Hobby', JSON.stringify(result));
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+
+    GetExpertisesGuides=(TempGuide)=>{
+        fetch("http://localhost:49948/api/Expertise/" + TempGuide.gCode, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ GuideExpertises: result })
+                    localStorage.setItem('Expertise', JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);

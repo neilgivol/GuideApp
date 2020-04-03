@@ -11,7 +11,7 @@ nav.responsive-toolbar {
     & ~ * {
         padding-top: 60px;
     }
-
+   
     ul {
         background: #333333;
         display: flex;
@@ -43,8 +43,12 @@ nav.responsive-toolbar {
             padding: 10px 20px;
 
             .active {
-                background: #999;
+                background: #A2D4FF;
             }
+            // :hover{
+            //     box-shadow:0 0.125rem 9.375rem rgb(255, 251, 190);
+               
+            // }
         }
 
         a {
