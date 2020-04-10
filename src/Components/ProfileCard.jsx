@@ -1,78 +1,94 @@
 import React, { Component, useState } from 'react';
-import {  Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import '../Css/ProfileCard.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import {Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem,ListGroup} from 'shards-react';
+import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, ListGroup } from 'shards-react';
+import StarRatings from 'react-star-ratings';
+import pic from '../Img/Default-welcomer.png';
+
+
 
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
         this.state = {
             user: this.props.GuideDetails,
-            languages:this.props.languages,
-            areas:this.props.areas,
-            sum:0
+            languages: this.props.languages,
+            areas: this.props.areas,
+            sum: 0,
+            rating: this.props.GuideDetails.Rank // sqlמחזיר 0 ולא את המספר מה
+        }
+
+    }
+
+    componentDidMount() {
+        console.log(this.props.GuideLinks)
+        console.log(this.props.GuideDetails);
+
+        const areas = JSON.parse(localStorage.getItem('areas'));
+        const languages = JSON.parse(localStorage.getItem('languages'));
+        const links = JSON.parse(localStorage.getItem('links'));
+        console.log(links)
+
+        if (this.state.areas.length === 0) {
+            this.setState({
+                areas: areas
+            })
+        }
+        if (this.state.languages.length === 0) {
+            this.setState({
+                languages: languages
+            })
+        }
+        let tempSum = 10;
+        let userBirth = this.state.user.BirthDay;
+        let userPhone = this.state.user.Phone;
+        let userDescription = this.state.user.DescriptionGuide
+        let userPicture = this.state.user.ProfilePic;
+        let userAreas = this.state.areas;
+        let userLanguages = this.state.languages;
+        if (userBirth !== "") {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (userPhone !== "") {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (userDescription !== "") {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (userPicture !== "") {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (areas.length !== 0) {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (languages.length !== 0) {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if (links.length !== 0) {
+            tempSum = parseInt(tempSum) + 10;
+        }
+
+        this.setState({
+            sum: tempSum
+        })
+    }
+
+    picExsist = () => {
+        if (this.state.user.ProfilePic !== "") {
+            return <CardImg variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
+        }
+        else {
+            return <CardImg variant="top" src={pic} style={{ height: '50', width: '50' }} />
         }
     }
-    componentWillMount(){
-    }
-    // componentDidMount() {
-    //     console.log(this.props.GuideLinks)
-    //     const areas = JSON.parse(localStorage.getItem('areas'));
-    //     const languages = JSON.parse(localStorage.getItem('languages'));
-    //     const links = JSON.parse(localStorage.getItem('links'));
-    //     console.log(links)
-
-    //   if (this.state.areas.length === 0) {
-    //     this.setState({
-    //         areas:areas
-    //     })
-    //   }
-    //   if (this.state.languages.length === 0) {
-    //     this.setState({
-    //         languages:languages
-    //     })
-    //   }
-    //     let tempSum = 10;
-    //     let userBirth = this.state.user.BirthDay;
-    //     let userPhone = this.state.user.Phone;
-    //     let userDescription = this.state.user.DescriptionGuide
-    //     let userPicture = this.state.user.ProfilePic;
-    //     let userAreas = this.state.areas;
-    //     let userLanguages = this.state.languages;
-    //     if (userBirth !== "") {
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //      if(userPhone !== ""){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //      if(userDescription !== ""){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //      if(userPicture !== ""){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //      if(areas.length !== 0){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //      if(languages.length !== 0){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-    //     if(links.length !== 0){
-    //         tempSum=parseInt(tempSum)+10;
-    //     }
-
-    //     this.setState({
-    //         sum:tempSum
-    //     })
-    // }
 
 
     funcPic = () => {
         return <div className="imageClass">
-            <CardImg variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
+         {this.picExsist()}
             <span className="uploadPicIcon">
                 <i class="far fa-image"></i></span>
         </div>
@@ -87,14 +103,19 @@ class ProfileCard extends Component {
                 <CardBody>
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
-                       <h1>{this.state.sum}%</h1>
-                                      </CardText>
+                        <h1>{this.state.sum}%</h1>
+                    </CardText>
+                    <p>your current rating :</p>
+                    <StarRatings
+                        rating={this.state.rating}
+                        starRatedColor="blue"
+                        changeRating={this.changeRating}
+                        numberOfStars={5}
+                        name='rating'
+                        starDimension="20px"
+                    />
                 </CardBody>
-                <ListGroup className="list-group-flush">
-                    <ListGroupItem>Cras justo odio</ListGroupItem>
-                    <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-                    <ListGroupItem>Vestibulum at eros</ListGroupItem>
-                </ListGroup>
+
                 <CardBody>
                     <CardLink href="/">Logout</CardLink>
                 </CardBody>

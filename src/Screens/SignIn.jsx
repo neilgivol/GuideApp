@@ -34,7 +34,7 @@ class SignIn extends Component {
             password: "",
             checkBoxVal: "unCheck",
             rememberMe: false,
-         
+
         }
     }
 
@@ -97,98 +97,99 @@ class SignIn extends Component {
     render() {
         return (
             <div className="Cont">
-            <MDBContainer >
-                <MDBRow className="RowDivSignIn text-center">
-                <img className="LogoDiv" src={logo}/>
-                    <MDBCol className="ColDivSignIn" md="6">
-                        <MDBCard className="CardDivSignIn">
-                      
-                            <MDBCardBody className="mx-4">
-                                <div className="text-center">
-                                    <h3 className="dark-grey-text mb-5">
-                                        <strong>Sign in</strong>
-                                    </h3>
-                                </div>
-                                <div className="text-center mb-3">
-                                    <MDBInput  size="lg"
-                                        label="Your email"
-                                        value={this.state.email}
-                                        group
-                                        type="email"
-                                        validate
-                                        error="wrong"
-                                        success="right"
-                                        onChange={this.HandelEmailInput}
-                                    />
-                                    <MDBInput size="lg"
-                                        label="Your password"
-                                        value={this.state.password}
-                                        group
-                                        type="password"
-                                        validate
-                                        containerClass="mb-0"
-                                        onChange={this.HandelPasswordInput}
+                <MDBContainer >
+                    <MDBRow className="RowDivSignIn text-center">
+                        <img className="LogoDiv" src={logo} />
+                        <MDBCol className="ColDivSignIn" md="6">
+                            <MDBCard className="CardDivSignIn">
+                                <MDBCardBody className="mx-4">
+                                    <div className="text-center">
+                                        <h3 className="dark-grey-text mb-5">
+                                            <strong>Sign in</strong>
+                                        </h3>
+                                    </div>
+                                    <div className="text-center mb-3">
+                                        <MDBInput size="lg"
+                                            label="Your email"
+                                            value={this.state.email}
+                                            group
+                                            type="email"
+                                            validate
+                                            error="wrong"
+                                            success="right"
+                                            onChange={this.HandelEmailInput}
+                                        />
+                                        <MDBInput size="lg"
+                                            label="Your password"
+                                            value={this.state.password}
+                                            group
+                                            type="password"
+                                            validate
+                                            containerClass="mb-0"
+                                            onChange={this.HandelPasswordInput}
 
-                                    />
-                                </div>
+                                        />
+                                    </div>
 
-                                <div className="divRemember">
-                                    <FormControlLabel
-                                        control={<Checkbox id="rememberMe" value="lsRememberMe" checked={this.state.rememberMe} color="primary" />}
-                                        label="Remember me"
-                                        onChange={this.RememberMe}
-                                    />
-                                </div>
-                                <div className="text-center mb-3 btnSignIn">
-                                    <MDBBtn
-                                        type="button"
-                                        gradient="blue"
-                                        rounded
-                                        className="btn-block z-depth-1a"
-                                        onClick={this.SignInFunc}
-                                    >
-                                        Sign in
+                                    <div className="divRemember">
+                                        <FormControlLabel
+                                            control={<Checkbox id="rememberMe" value="lsRememberMe" checked={this.state.rememberMe} color="primary" />}
+                                            label="Remember me"
+                                            onChange={this.RememberMe}
+                                        />
+                                    </div>
+                                    <div className="text-center mb-3 btnSignIn">
+                                        <MDBBtn
+                                            type="button"
+                                            gradient="blue"
+                                            rounded
+                                            className="btn-block z-depth-1a"
+                                            onClick={this.SignInFunc}
+                                        >
+                                            Sign in
                 </MDBBtn>
-                                </div>
-                                <div>
-                                    <div className="or-seperator"><i>or</i></div>
-
-                                </div>
-                                <MDBRow>
-                                    <MDBCol md="6">
-                                        <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
-
-                                    </MDBCol>
-                                    <MDBCol md="6">
-                                    <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
-
-                                    </MDBCol>
-                                </MDBRow>
-
-                              
-
-
-                            </MDBCardBody>
-                            <MDBModalFooter className="mx-5 pt-3 mb-1">
-                                <div className="row col-12">
-                                    <div className="col-6 forgotPass">
-                                        <p className="font-small blue-text d-flex justify-content-end"><Link to="/reset">Forgot Password?</Link></p>
                                     </div>
-                                    <div className="col-6 signUp">
-                                        <p className="font-small grey-text d-flex justify-content-end">
-                                            Not a member?
-                                <Link to="/SignUp">SignUp</Link>
-                                        </p>
+                                    <div>
+                                        <div className="or-seperator"><i>or</i></div>
+
                                     </div>
-                                </div>
-                            </MDBModalFooter>
-                        </MDBCard>
-                    </MDBCol>
-                </MDBRow>
-                <Box mt={8}>
-                    <Copyright />
-                </Box>
-            </MDBContainer>
+                                    <MDBRow>
+                                        <MDBCol md="6">
+                                            <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+
+                                        </MDBCol>
+                                        <MDBCol md="6">
+                                            <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
+
+                                        </MDBCol>
+                                    </MDBRow>
+
+
+
+
+                                </MDBCardBody>
+                                <MDBModalFooter className="mx-5 pt-3 mb-1">
+                                    <div className="row col-12">
+                                        <div className="col-5 forgotPass">
+                                            <p className="font-small blue-text d-flex justify-content-end"><Link to="/reset">Forgot Password?</Link></p>
+                                        </div>
+                                        <div className="col-7 signUp">
+                                            <p className="font-small grey-text d-flex justify-content-end">
+                                                Not a member?
+                                                <Link to="/SignUp">SignUp</Link>
+                                         </p>
+                                            
+
+                                        </div>
+                                    </div>
+                                </MDBModalFooter>
+                            </MDBCard>
+                        </MDBCol>
+                    </MDBRow>
+                    <Box mt={8}>
+                        <Copyright />
+                    </Box>
+                </MDBContainer>
             </div>
         );
     }
