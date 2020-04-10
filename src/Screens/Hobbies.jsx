@@ -179,7 +179,7 @@ class Hobbies extends Component {
     }
     render() {
         return (
-            <Card>
+            <Card className="cardDivCenter">
                 <Card.Header>Hobbies</Card.Header>
                 <ListGroup>
                     <ListGroupItem>

@@ -82,9 +82,9 @@ class ProfileDetails extends Component {
             linksfromSQL: []
         };
         let local = true;
-        this.apiUrl = 'http://localhost:49948/api/Guide';
+        this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
         }
     }
 
@@ -174,7 +174,6 @@ class ProfileDetails extends Component {
                 Gender: userGuide.Gender,
                 DescriptionGuide: userGuide.DescriptionGuide,
                 BirthDay: BirthDay
-                // Phone: phoneGuide
             }),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
@@ -264,7 +263,7 @@ class ProfileDetails extends Component {
         console.log(arraylinks);
         if (arraylinks.length === 0) {
             console.log("del")
-            fetch('http://localhost:49948/api/Links/' + this.state.user.gCode, {
+            fetch(this.apiUrl+'Links/' + this.state.user.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
@@ -321,7 +320,7 @@ class ProfileDetails extends Component {
     }
 
     postLinksToSQL = (links) => {
-        fetch('http://localhost:49948/api/Link/UpdateLinks', {
+        fetch(this.apiUrl + 'Link/UpdateLinks', {
             method: 'PUT',
             body: JSON.stringify(links),
             headers: new Headers({
@@ -345,7 +344,6 @@ class ProfileDetails extends Component {
 
 
     render() {
-        console.log("render")
         return (
             <Card small className="mb-4 profileDetails">
                 <CardHeader className="border-bottom">

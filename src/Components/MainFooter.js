@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 // import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import '../Css/Footer.css';
 const MainFooter = ({ contained, menuItems, copyright }) => (
-  <footer className="main-footer d-flex p-2 px-3 bg-white border-top">
+  <footer className="main-footer d-flex p-2 px-3 bg-white border-top hidden-sm hidden-xs">
     <Container fluid={contained}>
       <Row>
-        <Col sm="6"><Nav className="nav">
+        <Col className="hidden-sm hidden-xs" sm="6"><Nav className="nav">
           {menuItems.map((item, idx) => (
             <NavItem key={idx}>
               <NavLink tag={Link} to={item.to}>
@@ -19,7 +19,7 @@ const MainFooter = ({ contained, menuItems, copyright }) => (
             </NavItem>
           ))}
         </Nav></Col>
-        <Col className="copy" sm="6"><span className="copyright ml-auto my-auto mr-2">{copyright}</span></Col>
+        <Col className="copy hidden-xs hidden-sm" sm="6"><span className="copyright ml-auto my-auto mr-2">{copyright}</span></Col>
       </Row>
     </Container>
   </footer>

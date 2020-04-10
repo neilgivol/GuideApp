@@ -66,7 +66,7 @@ class Facebook extends Component {
                     appId="240993680265877"
                     scope="user_gender,user_birthday,public_profile"
                     autoLoad={false}
-                    fields="first_name,last_name,email,picture.width(280).height(280),location,gender,birthday"
+                    fields="first_name,last_name,email,picture.width(280).height(280),gender,birthday"
                     onClick={this.componentClicked}
                     callback={this.responseFacebook} 
                     cssClass="loginBtn loginBtn--facebook"

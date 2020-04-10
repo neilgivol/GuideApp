@@ -5,21 +5,6 @@ import '../Css/Hobbies.css';
 import HobbiesList from '../Components/HobbiesList';
 import HobbieAdded from '../Components/HobbieAdded';
 import '../Css/globalhome.css';
-// import beach from '../Img/Expertise/beach.jpg';
-// import bible from '../Img/Expertise/bible.jpg';
-// import christianity from '../Img/Expertise/christianity.jpg';
-// import culinary from '../Img/Expertise/culinary.jpg';
-// import desert from '../Img/Expertise/desert.jpg';
-// import historyplaces from '../Img/Expertise/historyplaces.jpg';
-// import islam from '../Img/Expertise/islam.webp';
-// import judaism from '../Img/Expertise/judaism.jfif';
-// import kabbalah from '../Img/Expertise/kabbalah.jpg';
-// import parties from '../Img/Expertise/parties.jpg';
-// import shopping from '../Img/Expertise/shopping.jfif';
-// import shoppingInMarket from '../Img/Expertise/shoppingInMarket.jpg';
-// import wineTours from '../Img/Expertise/wineTours.jpg';
-// import zionism from '../Img/Expertise/zionism.jpg';
-
 
 
 class Expertise extends Component {
@@ -193,7 +178,7 @@ class Expertise extends Component {
     }
     render() {
         return (
-            <Card>
+            <Card className="cardDivCenter">
                 <Card.Header>Expertises</Card.Header>
                 <ListGroup>
                     <ListGroupItem>

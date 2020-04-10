@@ -103,79 +103,40 @@ nav.responsive-toolbar {
             }
         }
     }
-
-    // @media only screen and (max-width: 600px) {
-    //     nav.responsive-toolbar {
-    //         ul {
-    //             height: 100%;
-    //             width: 300px;
-    //             left: -240px;
-    //             position: fixed;
-    //             top: 60px;
-    //             flex-direction: column;
-    //             transition: 300ms ease all;
+    @media only screen and (max-width: 600px){
+        .app{
+            position: relative;
+            height: 100%;
+        }
+      
+        nav.responsive-toolbar {
+            position: absolute;
+            top: 1100px;
+            height: 60px;
+            ul {
+                height: 100%;
+                width: 100%;
+                left: 0px;
+                position: absolute;
+                bottom: 100px;
+                flex-direction: row;
+                transition: 300ms ease all;
+                top: 0px;
+                &.active {
+                    left: 0px;
+                }
     
-    //             &.active {
-    //                 left: 0px;
-    //             }
+                li {
+                    width: 100%;
+                    padding-left: 0px;
+                    padding-right: 0;
+                }
     
-    //             figure {
-    //                 margin-inline-start: 2px;
-    //                 position: fixed;
-    //                 left: 9px;
-    //                 top: 10px;
-    //             }
-    
-    //             li {
-    //                 width: 100%;
-    //                 padding-left: 0;
-    //                 padding-right: 0;
-    //             }
-    
-    //             a {
-    //                 flex-direction: row;
-    //                 justify-content: space-between;
-    //                 margin-left: 20px;
-    //                 margin-right: 16px;
-    //             }
-    //         }
-    //     }
-    //   }
-
-    //   @media screen and (max-width: 759px) {
-    //     nav.responsive-toolbar {
-    //         ul {
-    //             height: 100%;
-    //             width: 300px;
-    //             left: -240px;
-    //             position: fixed;
-    //             top: 60px;
-    //             flex-direction: column;
-    //             transition: 300ms ease all;
-    
-    //             &.active {
-    //                 left: 0px;
-    //             }
-    
-    //             figure {
-    //                 margin-inline-start: 2px;
-    //                 position: fixed;
-    //                 left: 9px;
-    //                 top: 10px;
-    //             }
-    
-    //             li {
-    //                 width: 100%;
-    //                 padding-left: 0;
-    //                 padding-right: 0;
-    //             }
-    
-    //             a {
-    //                 flex-direction: row;
-    //                 justify-content: space-between;
-    //                 margin-left: 20px;
-    //                 margin-right: 16px;
-    //             }
-    //         }
-    //     }
-    //  }
+                a {
+                    flex-direction: row;
+                    margin-left: 0px;
+                    margin-right: 30px;
+                }
+            }
+        }
+    }
