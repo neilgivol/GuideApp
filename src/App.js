@@ -15,7 +15,6 @@ import logo from './logo.svg';
 import ProfileDetails from './Screens/ProfileDetails';
 import Area from './Screens/Area';
 import Check from './Screens/Check';
-import SignInTemp from './Screens/SignInTemp';
 import menu from './Img/menu.png';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
@@ -56,9 +55,9 @@ class App extends Component {
     
     }
     let local = true;
-    this.apiUrl = 'http://localhost:49948/api/Guide';
+    this.apiUrl = 'http://localhost:49948/api/';
     if (!local) {
-      this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
+      this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
     }
   }
   componentDidMount() {
@@ -111,7 +110,7 @@ class App extends Component {
   PostGuideToCheckSignUp=(userDetails)=>{
     console.log("enter")
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
-    fetch(this.apiUrl + '/PostToCheck', {
+    fetch(this.apiUrl + 'Guide/PostToCheck', {
       method: 'POST',
       body: JSON.stringify({
         Email: userDetails.Email,
@@ -147,7 +146,7 @@ class App extends Component {
 
 PostGuideToCheckSignIn=(signInUser)=>{
   //pay attention case sensitive!!!! should be exactly as the prop in C#!
-  fetch(this.apiUrl + '/PostToCheck', {
+  fetch(this.apiUrl + 'Guide/PostToCheck', {
     method: 'POST',
     body: JSON.stringify({
       Email: signInUser.Email,
@@ -190,7 +189,7 @@ else{
 }
 
 GetAllHobbies=()=>{
-  fetch("http://localhost:49948/api/Hobby", {
+  fetch(this.apiUrl+"Hobby", {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -224,7 +223,7 @@ OrgenizeHobbies=(result)=>{
         })
 }
 GetAllExpertises=()=>{
-  fetch("http://localhost:49948/api/Expertise", {
+  fetch(this.apiUrl+"Expertise", {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -243,7 +242,6 @@ GetAllExpertises=()=>{
 }
 OrgenizeExpertises=(result)=>{
   let temp = [];
-  console.log(result);
         for (let i = 0; i < result.length; i++) {
             const element = result[i];
             let expertise = {
@@ -259,7 +257,7 @@ OrgenizeExpertises=(result)=>{
 }
 
 GetAllAreas=()=>{
-  fetch("http://localhost:49948/api/Area", {
+  fetch(this.apiUrl+"Area", {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -291,9 +289,6 @@ GetAllAreas=()=>{
           <Route exact path="/reset" >
             <ResetPassword />
           </Route>
-          <Route exact path="/temp" >
-            <SignInTemp />
-          </Route>
           <Route exact path="/" >
             <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp}  />
           </Route>
@@ -310,7 +305,7 @@ GetAllAreas=()=>{
               linkColor="#1988ff"
             />
             <Home ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
-            <MainFooter/>
+            <MainFooter className="hidden-xs"/>
           </Route>
           <Route path="/chat">
             <ResponsiveNavigation

@@ -8,6 +8,35 @@
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
     font-size: 20px;
   }
+  .menuPhone{
+    position: relative;
+    top:3px;
+  }
+  .ulSignPhone{
+    width: 150px;
+    position: absolute;
+    background-color:  #e7e7e7;
+    opacity: 0.9;
+    list-style-type: none;
+    z-index: 800;
+    top:90px;
+
+  }
+.ulSignPhone li{
+  font-size: 12px;
+}
+
+  .ulSignPhone li a{
+    display: block;
+    color: black;
+    text-decoration: none;
+  }
+.ulSignPhone li a:hover{
+  background-color:  #b3e0ff;
+}
+.ulSignPhone .active{
+  margin-left:-20px;
+}
   
  .ulSign li {
     float: left;

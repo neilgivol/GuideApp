@@ -43,24 +43,7 @@ class Languages extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-    // componentDidUpdate(PrevProps, state) {
-    //     if (PrevProps.Allusers !== this.props.Allusers) {
-    //         let array = [];
-    //         for (let i = 0; i < this.state.GuideListFromSQL.length; i++) {
-    //             const SQLelement = this.state.GuideListFromSQL[i];
-    //             for (let j = 0; j < this.state.items.length; j++) {
-    //                 const itemsElement = this.state.items[j];
-    //                 if (SQLelement.Language_Code === itemsElement.id) {
-    //                     array.push(itemsElement);
-    //                 }
-    //             }
-    //         }
-    //         console.log(array);
-    //         this.setState({
-    //             selectedItems: array
-    //         })
-    //     }
-    // }
+ 
 
     componentDidMount() {
         let array = [];
@@ -123,7 +106,7 @@ class Languages extends Component {
     }
 
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
-        fetch('http://localhost:49948/api/Guide/PostGuideLanguage', {
+        fetch(this.apiUrl + 'Guide/PostGuideLanguage', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideLanguages),
             headers: new Headers({

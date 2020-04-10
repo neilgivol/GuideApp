@@ -8,7 +8,8 @@ class NavbarProfile extends Component {
         classActiveDetails: "active",
         classActiveLang: "noActive",
         classActiveExpetise: "noActive",
-        classActiveHobbies: "noActive"
+        classActiveHobbies: "noActive",
+        showing:true
     }
     ClickPage = (e) => {
         const newName = e;
@@ -62,15 +63,42 @@ class NavbarProfile extends Component {
             })
         }
     }
+
+    openNavbarPhone=()=>{
+       if (this.state.showing) {
+           this.setState({
+               showing:false
+           })
+
+       }
+       else{
+        this.setState({
+            showing:true
+        })
+       }
+    }
     render() {
         return (
-            <ul className="ulSign">
+            <div>
+            <button onClick={this.openNavbarPhone} className="menuPhone hidden-xl hidden-lg hidden-md">
+            <i class="fas fa-bars"></i>
+            </button>
+            {this.state.showing ?   <ul className="ulSignPhone hidden-md hidden-xl hidden-lg">
+            <li className={this.state.classActiveDetails}><Link onClick={this.ClickPage} to="/home">Profile Details</Link></li>
+            <li className={this.state.classActiveArea}><Link onClick={this.ClickPage} to="/home">Area Knowledge</Link></li>
+            <li className={this.state.classActiveLang}><Link onClick={this.ClickPage} to="/home">Languages</Link></li>
+            <li className={this.state.classActiveExpetise}><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
+            <li className={this.state.classActiveHobbies}><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
+        </ul> : null}
+          
+            <ul className="ulSign hidden-sm hidden-xs">
                 <li className={this.state.classActiveDetails}><Link onClick={this.ClickPage} to="/home">Profile Details</Link></li>
                 <li className={this.state.classActiveArea}><Link onClick={this.ClickPage} to="/home">Area Knowledge</Link></li>
                 <li className={this.state.classActiveLang}><Link onClick={this.ClickPage} to="/home">Languages</Link></li>
                 <li className={this.state.classActiveExpetise}><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
                 <li className={this.state.classActiveHobbies}><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
             </ul>
+            </div>
         );
     }
 }

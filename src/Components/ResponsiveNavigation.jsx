@@ -5,16 +5,21 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
     const [ hoverIndex, setHoverIndex ] = useState(-1)
     const [ clickIndex, setClickIndex ] = useState(-1)
    
+
+   
     useEffect(() => {
-        const x = window.matchMedia("(max-width: 768px)")
+        const x = window.matchMedia("(max-width: 1000px)")
         function myFunction(e) {
            if (e.matches) {
             setNavOpen(!navOpen);
             navbarCheckFunc(navOpen);
+            console.log("close")
            }
            else{
             setNavOpen(navOpen);
             navbarCheckFunc(!navOpen);
+            console.log("open")
+
            }
           
         };
@@ -34,7 +39,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
                 className={ navOpen ? 'active' : '' }
                 id={ navOpen ? 'activeNav' : 'noActiveNav' }
             >
-                <figure className="image-logo" onClick={ () => { setNavOpen(!navOpen);navbarCheckFunc(navOpen);} }>
+                <figure className="image-logo hidden-xs" onClick={ () => { setNavOpen(!navOpen);navbarCheckFunc(navOpen);} }>
                     <img src={ logo } height="40px" width="40px" alt="toolbar-logo" />
                 </figure>
                 { navLinks.map((link, index) => 

@@ -49,9 +49,22 @@ body{
     width: 100%;
     bottom:15px;
 }
+.centerDiv .cardDivCenter{
+    height: 100%;
+}
 @media only screen and (max-width: 600px) {
+   
    #close{
-    left: 80px;
-
+    left: -10px;
+    width: 100%;
+    position: absolute;
+    top:-100px;
    }
+   #open{
+       left:-10px;
+       width: 100%;
+       position: absolute;
+       top:-100px;
+   }
+  
   }

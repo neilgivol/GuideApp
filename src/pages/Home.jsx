@@ -92,9 +92,9 @@ class Home extends Component {
             ],
         };
         let local = true;
-        this.apiUrl = 'http://localhost:49948/api/Guide';
+        this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
         }
     }
     componentDidUpdate(PrevProps, state) {
@@ -137,7 +137,7 @@ class Home extends Component {
         //this.getLinksFromSQL(this.state.Guide);
     }
     getLinksFromSQL = (TempGuide) => {
-        fetch('http://localhost:49948/api/Link/' + TempGuide.gCode, {
+        fetch(this.apiUrl+"Link/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -176,28 +176,6 @@ class Home extends Component {
         localStorage.setItem('links', JSON.stringify(temparraylinks));
     }
 
-
-    // GetAllAreas = () => {
-    //     fetch("http://localhost:49948/api/Area", {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json; charset=UTF-8',
-    //         })
-    //     })
-    //         .then(res => {
-    //             return res.json()
-    //         })
-    //         .then(
-    //             (result) => {
-    //                 this.setState({
-    //                     AllAreas: result
-    //                 })
-    //             },
-    //             (error) => {
-    //                 console.log("err post=", error);
-    //             });
-    // }
-    
     updateAreasGuides = (areas) => {
         this.GetAreasGuideList(this.state.Guide);
 
@@ -241,7 +219,7 @@ class Home extends Component {
     }
 
     GetAreasGuideList = (TempGuide) => {
-        fetch("http://localhost:49948/api/Area/" + TempGuide.gCode, {
+        fetch(this.apiUrl + "Area/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -260,7 +238,7 @@ class Home extends Component {
                 });
     }
     GetHobbiesGuideList=(TempGuide)=>{
-        fetch("http://localhost:49948/api/Hobby/" + TempGuide.gCode, {
+        fetch(this.apiUrl + "Hobby/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -280,7 +258,7 @@ class Home extends Component {
     }
 
     GetExpertisesGuides=(TempGuide)=>{
-        fetch("http://localhost:49948/api/Expertise/" + TempGuide.gCode, {
+        fetch(this.apiUrl + "Expertise/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -301,7 +279,7 @@ class Home extends Component {
 
 
     GetLanguagesGuideList = (TempGuide) => {
-        fetch("http://localhost:49948/api/Language/" + TempGuide.gCode, {
+        fetch(this.apiUrl + "Language/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -328,7 +306,7 @@ class Home extends Component {
                     <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
                         {this.funcGoogleFacebook()}
                     </Col>
-                    <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0">
+                    <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
                         {this.func1()}
                     </Col>
                 </Row>
