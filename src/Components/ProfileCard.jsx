@@ -73,8 +73,8 @@ class ProfileCard extends Component {
     funcPic = () => {
         return <div className="imageClass">
             <CardImg variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
-            <span className="uploadPicIcon">
-                <i class="far fa-image"></i></span>
+            {/* <span className="uploadPicIcon">
+                <i class="far fa-image"></i></span> */}
         </div>
     }
     funcName = () => {

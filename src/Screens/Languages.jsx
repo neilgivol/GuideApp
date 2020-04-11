@@ -153,7 +153,7 @@ class Languages extends Component {
         const { items, selectedItems } = this.state;
         return (
             <Card>
-                <Card.Header>Languages</Card.Header>
+                {/* <Card.Header>Languages</Card.Header> */}
                 <ListGroup>
                     <ListGroupItem>
                         <div className="row title"><h2>Choose Language:</h2></div>
@@ -165,6 +165,7 @@ class Languages extends Component {
                             onChange={this.handleChange}
                             showSearch={true}
                             showSelectAll={false}
+                            responsiveHeight={600}
                         />
                     </ListGroupItem>
                 </ListGroup>

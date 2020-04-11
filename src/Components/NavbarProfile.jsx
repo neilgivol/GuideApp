@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../Css/signUpNavBar.css';
+import {Button,Col,Row, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Switch, Route, Link, withRouter } from 'react-router-dom';
 class NavbarProfile extends Component {
     state = {
@@ -9,12 +10,13 @@ class NavbarProfile extends Component {
         classActiveLang: "noActive",
         classActiveExpetise: "noActive",
         classActiveHobbies: "noActive",
-        showing:true
+        showing:false
     }
     ClickPage = (e) => {
         const newName = e;
         this.setState({
-            name: e.target.text
+            name: e.target.text,
+            showing:false
         });
         this.props.ClickPage2(e.target.text);
         if (e.target.text === "Profile Details") {
@@ -80,12 +82,15 @@ class NavbarProfile extends Component {
     render() {
         return (
             <div>
-            <button onClick={this.openNavbarPhone} className="menuPhone hidden-xl hidden-lg hidden-md">
+            <div className="divHead col-xs-12 hidden-lg hidden-md hidden-xl">
+            <Button className="primary col-xs-2 navprovilePhone" onClick={this.openNavbarPhone} className="menuPhone hidden-xl hidden-lg hidden-md">
             <i class="fas fa-bars"></i>
-            </button>
+            </Button>
+            <h3 className="titlePhone col-xs-9 col-lg-hidden col-xs-hidden col-md-hidden">Isravisor</h3>
+            </div>
+           
             {this.state.showing ?   <ul className="ulSignPhone hidden-md hidden-xl hidden-lg">
             <li className={this.state.classActiveDetails}><Link onClick={this.ClickPage} to="/home">Profile Details</Link></li>
-            <li className={this.state.classActiveArea}><Link onClick={this.ClickPage} to="/home">Area Knowledge</Link></li>
             <li className={this.state.classActiveLang}><Link onClick={this.ClickPage} to="/home">Languages</Link></li>
             <li className={this.state.classActiveExpetise}><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
             <li className={this.state.classActiveHobbies}><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
@@ -93,7 +98,6 @@ class NavbarProfile extends Component {
           
             <ul className="ulSign hidden-sm hidden-xs">
                 <li className={this.state.classActiveDetails}><Link onClick={this.ClickPage} to="/home">Profile Details</Link></li>
-                <li className={this.state.classActiveArea}><Link onClick={this.ClickPage} to="/home">Area Knowledge</Link></li>
                 <li className={this.state.classActiveLang}><Link onClick={this.ClickPage} to="/home">Languages</Link></li>
                 <li className={this.state.classActiveExpetise}><Link onClick={this.ClickPage} to="/home">Expertise</Link></li>
                 <li className={this.state.classActiveHobbies}><Link onClick={this.ClickPage} to="/home">Hobbies</Link></li>
