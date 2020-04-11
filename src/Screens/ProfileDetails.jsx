@@ -233,7 +233,9 @@ class ProfileDetails extends Component {
             this.setState({
                 user: guideUpdate,
                 size: guideUpdate.Gender,
-                phone: guideUpdate.Phone
+                phone: guideUpdate.Phone,
+                License:guideUpdate.License
+
             })
             this.forceUpdate()
             localStorage.setItem('Guide', JSON.stringify(this.state.user))
