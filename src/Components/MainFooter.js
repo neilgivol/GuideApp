@@ -10,15 +10,6 @@ const MainFooter = ({ contained, menuItems, copyright }) => (
   <footer className="main-footer d-flex p-2 px-3 bg-white border-top hidden-sm hidden-xs">
     <Container fluid={contained}>
       <Row>
-        <Col className="hidden-sm hidden-xs" sm="6"><Nav className="nav">
-          {menuItems.map((item, idx) => (
-            <NavItem key={idx}>
-              <NavLink tag={Link} to={item.to}>
-                {item.title}
-              </NavLink>
-            </NavItem>
-          ))}
-        </Nav></Col>
         <Col className="copy hidden-xs hidden-sm" sm="6"><span className="copyright ml-auto my-auto mr-2">{copyright}</span></Col>
       </Row>
     </Container>

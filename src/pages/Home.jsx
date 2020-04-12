@@ -204,9 +204,9 @@ class Home extends Component {
         if (namePage2 === "Profile Details") {
             return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
         }
-        else if (namePage2 === "Area Knowledge") {
-            return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
-        }
+        // else if (namePage2 === "Area Knowledge") {
+        //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
+        // }
         else if (namePage2 === "Languages") {
             return <Languages updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
         }

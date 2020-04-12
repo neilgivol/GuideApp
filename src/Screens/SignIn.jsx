@@ -170,10 +170,10 @@ class SignIn extends Component {
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">
                                     <div className="row col-12">
-                                        <div className="col-5 forgotPass">
+                                        <div className="col-6 forgotPass">
                                             <p className="font-small blue-text d-flex justify-content-end"><Link to="/reset">Forgot Password?</Link></p>
                                         </div>
-                                        <div className="col-7 signUp">
+                                        <div className="col-6 signUp">
                                             <p className="font-small grey-text d-flex justify-content-end">
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>

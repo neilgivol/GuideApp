@@ -36,7 +36,7 @@ class Area extends Component {
 
 }
     componentDidMount(){
-        for (let i = 1; i < this.props.AreasArray.length; i++) {
+        for (let i = 0; i < this.props.AreasArray.length; i++) {
             const element = {
                 id:i,
                label: this.props.AreasArray[i].AreaName

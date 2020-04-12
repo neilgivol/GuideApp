@@ -180,18 +180,18 @@ class Hobbies extends Component {
     render() {
         return (
             <Card className="cardDivCenter">
-                <Card.Header>Hobbies</Card.Header>
+                {/* <Card.Header>Hobbies</Card.Header> */}
                 <ListGroup>
                     <ListGroupItem>
                         <div className="row title"><h2>Choose Hobbies:</h2></div>
                     </ListGroupItem>
                     <ListGroupItem>
                             <div className='row HobbiesDiv'>
-                                <div className='col HobbiesList'>
+                                <div className='col HobbiesList col-md col-xs-12'>
                                     <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
                                 </div>
-                                <span className="middleLine col-1"></span>
-                                <div className='col HobbiesAdded'>
+                                <span className="middleLine col-md-1 col-xs-12"></span>
+                                <div className='col HobbiesAdded col-md col-xs-12'>
                                 <div className="row titleAdded"><span>selection:</span> </div>
                                     <div className="row HobbiesListSide HobbieAddedList">
                                         {this.state.itemsInCart.map((item, key) =>

@@ -18,8 +18,6 @@ class Facebook extends Component {
             BirthDay:new Date(),
             Gender:""
         }
-     
-
     }
     componentClicked = () => {
     }
@@ -63,7 +61,7 @@ class Facebook extends Component {
             ) :
             fbContent = (
                 <FacebookLoginBtn
-                    appId="240993680265877"
+                    appId="189882132323354"
                     scope="user_gender,user_birthday,public_profile"
                     autoLoad={false}
                     fields="first_name,last_name,email,picture.width(280).height(280),gender,birthday"
@@ -71,7 +69,6 @@ class Facebook extends Component {
                     callback={this.responseFacebook} 
                     cssClass="loginBtn loginBtn--facebook"
                     />
-                   
             );
 
         return (

@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import {Button,Col,Row, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
 //import DatePicker from 'react-datepicker';
 import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,7 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
 import 'react-phone-input-2/lib/style.css';
-import '../Css/ProfileDetails.css';
 import 'react-dropdown/style.css';
 import '../Css/globalhome.css';
 import Select from 'react-select';
@@ -20,7 +19,8 @@ import instegram from '../Img/The_Instagram_Logo.jpg';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import {Card, CardHeader} from 'shards-react';
+import '../Css/ProfileDetails.css';
+//import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
         super(props)
@@ -263,7 +263,7 @@ class ProfileDetails extends Component {
         console.log(arraylinks);
         if (arraylinks.length === 0) {
             console.log("del")
-            fetch(this.apiUrl+'Links/' + this.state.user.gCode, {
+            fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
@@ -346,9 +346,9 @@ class ProfileDetails extends Component {
     render() {
         return (
             <Card small className="mb-4 profileDetails">
-                <CardHeader className="border-bottom">
+                <Card.Header className="border-bottom">
                     <h6 className="m-0">Profile Details</h6>
-                </CardHeader>
+                </Card.Header>
                 <ListGroup flush>
                     <ListGroupItem className="p-3">
                         <Row>
@@ -358,6 +358,7 @@ class ProfileDetails extends Component {
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feFirstName">First Name</label>
                                             <input
+                                                className="form-control"
                                                 id="feFirstName"
                                                 placeholder="First Name"
                                                 value={this.state.user.FirstName}
@@ -367,6 +368,7 @@ class ProfileDetails extends Component {
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feLastName">Last Name</label>
                                             <input
+                                                className="form-control"
                                                 id="feLastName"
                                                 placeholder="Last Name"
                                                 value={this.state.user.LastName}
@@ -378,7 +380,7 @@ class ProfileDetails extends Component {
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feEmail">Email</label>
                                             <input
-
+                                                className="form-control"
                                                 id="feEmail"
                                                 placeholder="Email Address"
                                                 value={this.state.user.Email}
@@ -387,7 +389,7 @@ class ProfileDetails extends Component {
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feLicense">License Number</label>
                                             <input
-
+                                            className="form-control"
                                                 id="feLicense"
                                                 placeholder="License Number"
                                                 value={this.state.user.License}
@@ -397,57 +399,57 @@ class ProfileDetails extends Component {
                                     </Row>
                                     <Row>
                                         <Col md="6" className="form-group">
-                                            <label htmlFor="feBirth">Birthday</label><br/>
-                                            
-                                                <DatePicker
-                                                    selected={this.state.BirthDay}
-                                                    value={this.state.BirthDay}
-                                                    onChange={(newDate) => this.setState({ BirthDay: newDate })}
-                                                    name="birthDate"
-                                                    dateFormat="dd/MM/yyyy"
-                                                />
-                                            
+                                            <label htmlFor="feBirth">Birthday</label><br />
+
+                                            <DatePicker
+                                                selected={this.state.BirthDay}
+                                                value={this.state.BirthDay}
+                                                onChange={(newDate) => this.setState({ BirthDay: newDate })}
+                                                name="birthDate"
+                                                dateFormat="dd/MM/yyyy"
+                                            />
+
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feGender">Gender</label>
-                                            <br/>
+                                            <br />
                                             <Radio
-                                                    checked={this.state.size === "female"}
-                                                    onChange={this.handleChangeGender}
-                                                    value="female"
-                                                    name="radio-button-demo"
-                                                    color="default"
-                                                />
-                                                <label>Female</label>
-                                                <Radio
-                                                    checked={this.state.size === "male"}
-                                                    onChange={this.handleChangeGender}
-                                                    value="male"
-                                                    name="radio-button-demo"
-                                                    color="default"
-                                                />
-                                                <label>Male</label>
-                                            
-                                               
-                                           
+                                                checked={this.state.size === "female"}
+                                                onChange={this.handleChangeGender}
+                                                value="female"
+                                                name="radio-button-demo"
+                                                color="default"
+                                            />
+                                            <label>Female</label>
+                                            <Radio
+                                                checked={this.state.size === "male"}
+                                                onChange={this.handleChangeGender}
+                                                value="male"
+                                                name="radio-button-demo"
+                                                color="default"
+                                            />
+                                            <label>Male</label>
+
+
+
                                         </Col>
                                     </Row>
                                     <Row>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="fephone">Phone</label>
-                                                <ReactPhoneInput
-                                                    inputExtraProps={{
-                                                        name: "phone",
-                                                        required: true,
-                                                        autoFocus: true
-                                                    }}
-                                                    country={'il'}
-                                                    value={this.state.phone}
-                                                    onChange={this.handleOnChange3}
-                                                />
+                                            <ReactPhoneInput
+                                                inputExtraProps={{
+                                                    name: "phone",
+                                                    required: true,
+                                                    autoFocus: true
+                                                }}
+                                                country={'il'}
+                                                value={this.state.phone}
+                                                onChange={this.handleOnChange3}
+                                            />
                                         </Col>
                                     </Row>
-                                    <Row>
+                                    {/* <Row>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feLinks">Link Type</label><br />
                                         </Col>
@@ -477,7 +479,7 @@ class ProfileDetails extends Component {
                                             </ul>
                                         </Col>
 
-                                    </Row>
+                                    </Row> */}
                                     <Row>
                                         <Col>
                                             <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -492,7 +494,7 @@ class ProfileDetails extends Component {
                                     <Row>
                                         <Col>
                                             <Button variant="primary" onClick={() => { this.UpdateDetails(); }}>Update Your Account</Button>
-                                            
+
 
                                         </Col>
 
@@ -502,7 +504,7 @@ class ProfileDetails extends Component {
                         </Row>
                     </ListGroupItem>
                 </ListGroup>
-                
+
             </Card>
         );
     }

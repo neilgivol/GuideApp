@@ -41,58 +41,54 @@ class ResetPassword extends Component {
     }
   
 
-    GetGuides = () => {   //gets guide list 
-        fetch(this.apiUrl, {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json; charset=UTF-8',
-            })
-        })
-            .then(res => {
-                return res.json()
-            })
-            .then(
-                (result) => {
-                    this.CheckIfUserExist(result);
+    // GetGuides = () => {   //gets guide list 
+    //     fetch(this.apiUrl, {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json; charset=UTF-8',
+    //         })
+    //     })
+    //         .then(res => {
+    //             return res.json()
+    //         })
+    //         .then(
+    //             (result) => {
+    //                 this.CheckIfUserExist(result);
                     
-                },
-                (error) => {
-                    console.log("err post=", error);
-                });
+    //             },
+    //             (error) => {
+    //                 console.log("err post=", error);
+    //             });
 
 
-    }
-    CheckIfUserExist = (result) => { //check if guide exist
-        let emailFound = false
-        let tempUser ="";
-        for (let i = 0; i < result.length; i++) {
-            const element = result[i];
-            if (element.Email===this.state.email) {
+    // }
+    // CheckIfUserExist = (result) => { //check if guide exist
+    //     let emailFound = false
+    //     let tempUser ="";
+    //     for (let i = 0; i < result.length; i++) {
+    //         const element = result[i];
+    //         if (element.Email===this.state.email) {
                 
-                emailFound=true;
-                tempUser=element;
-            }
+    //             emailFound=true;
+    //             tempUser=element;
+    //         }
           
             
-        }
-        if (emailFound) {
-            this.ResetUserPassword(tempUser)
-        }
-        else{
-            alert("there is no user with the following email")
-        }
+    //     }
+    //     if (emailFound) {
+    //         this.ResetUserPassword(tempUser)
+    //     }
+    //     else{
+    //         alert("there is no user with the following email")
+    //     }
 
 
-    }
-    ResetUserPassword = (user)=>{
-        console.log(user);
-        fetch(this.apiUrl + '/ResetPassword', {
+    // }
+    ResetUserPassword = ()=>{
+         let tempMail = this.state.email; 
+        fetch(this.apiUrl + '/Reset', {
             method: 'POST',
-            body: JSON.stringify({
-              Email: user.Email,
-              PasswordGuide: user.PasswordGuide
-              
-            }),
+            body: JSON.stringify(tempMail),
             headers: new Headers({
               'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
@@ -150,7 +146,7 @@ class ResetPassword extends Component {
                                         gradient="blue"
                                         rounded
                                         className="btn-block z-depth-1a btnReset"
-                                        onClick={this.GetGuides}
+                                        onClick={this.ResetUserPassword}
                                     >Reset Password</MDBBtn>
                                 </Form.Group>
 
