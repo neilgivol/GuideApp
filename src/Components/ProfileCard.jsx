@@ -7,6 +7,7 @@ import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, ListGroup } from 'shards-react';
 import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
+import ImageUploader from 'react-images-upload';
 
 
 
@@ -18,9 +19,24 @@ class ProfileCard extends Component {
             languages: this.props.languages,
             areas: this.props.areas,
             sum: 0,
-            rating: this.props.GuideDetails.Rank // sqlמחזיר 0 ולא את המספר מה
+            rating: this.props.GuideDetails.Rank ,
+            pictures: []
         }
+        this.onDrop = this.onDrop.bind(this);
 
+    }
+    onDrop(picture) {
+        let newPic="";
+      for (let index = 0; index < picture.length; index++) {
+          const element = picture[index];
+          newPic=element.name;
+      }
+      console.log(newPic);
+      
+        this.setState({
+            pictures: newPic,
+        });
+        console.log(this.state.pictures)
     }
 
     componentDidMount() {
@@ -88,11 +104,14 @@ class ProfileCard extends Component {
 
     funcPic = () => {
         return <div className="imageClass">
-         {this.picExsist()}
+            {this.picExsist()}
             <span className="uploadPicIcon">
-                <i class="far fa-image"></i></span>
+                <i class="far fa-image"></i>
+            </span>
+            
         </div>
     }
+   
     funcName = () => {
         return <h2>{this.state.user.FirstName} {this.state.user.LastName}</h2>
     }
@@ -100,7 +119,15 @@ class ProfileCard extends Component {
         return (
             <Card className="CardBodyDiv">
                 {this.funcPic()}
+          
                 <CardBody>
+                <ImageUploader
+                withIcon={true}
+                buttonText='Choose images'
+                onChange={this.onDrop}
+                imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                maxFileSize={5242880}
+            />
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
                         <h1>{this.state.sum}%</h1>
