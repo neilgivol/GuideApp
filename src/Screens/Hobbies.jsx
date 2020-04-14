@@ -175,7 +175,6 @@ class Hobbies extends Component {
               this.setState({
                   itemsArray:tempArray
               })
-              console.log(tempArray);
     }
     render() {
         return (

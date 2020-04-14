@@ -8,9 +8,7 @@ import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, 
 import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
 import ImageUploader from 'react-images-upload';
-
-
-
+import Fileupload from '../Components/fileUpload';
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
@@ -19,24 +17,50 @@ class ProfileCard extends Component {
             languages: this.props.languages,
             areas: this.props.areas,
             sum: 0,
-            rating: this.props.GuideDetails.Rank ,
+            rating: this.props.GuideDetails.Rank,
             pictures: []
         }
         this.onDrop = this.onDrop.bind(this);
-
+        let local = true;
+        this.apiUrl = 'http://localhost:49948/api';
+        if (!local) {
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
+        }
     }
     onDrop(picture) {
-        let newPic="";
-      for (let index = 0; index < picture.length; index++) {
-          const element = picture[index];
-          newPic=element.name;
-      }
-      console.log(newPic);
-      
+        let newPic = "";
+        for (let index = 0; index < picture.length; index++) {
+            const element = picture[index];
+            newPic = element;
+        }
+        console.log(newPic);
+        this.UploadPicture(newPic);
         this.setState({
             pictures: newPic,
         });
         console.log(this.state.pictures)
+    }
+    UploadPicture = (pic) => {
+        console.log("enter")
+        //pay attention case sensitive!!!! should be exactly as the prop in C#!
+        fetch(this.apiUrl + 'Guide/PostPic', {
+            method: 'POST',
+            body: JSON.stringify(pic),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
 
     componentDidMount() {
@@ -77,15 +101,8 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
-        if (areas.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
-        }
-        if (languages.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
-        }
-        if (links.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
-        }
+
+
 
         this.setState({
             sum: tempSum
@@ -108,10 +125,10 @@ class ProfileCard extends Component {
             <span className="uploadPicIcon">
                 <i class="far fa-image"></i>
             </span>
-            
+
         </div>
     }
-   
+
     funcName = () => {
         return <h2>{this.state.user.FirstName} {this.state.user.LastName}</h2>
     }
@@ -119,15 +136,15 @@ class ProfileCard extends Component {
         return (
             <Card className="CardBodyDiv">
                 {this.funcPic()}
-          
+
                 <CardBody>
-                <ImageUploader
-                withIcon={true}
-                buttonText='Choose images'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880}
-            />
+                    <ImageUploader
+                        withIcon={true}
+                        buttonText='Choose images'
+                        onChange={this.onDrop}
+                        imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                        maxFileSize={5242880}
+                    />
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
                         <h1>{this.state.sum}%</h1>

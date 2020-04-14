@@ -174,7 +174,6 @@ class Expertise extends Component {
               this.setState({
                   itemsArray:tempArray
               })
-              console.log(tempArray);
     }
     render() {
         return (
