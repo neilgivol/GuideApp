@@ -22,3 +22,6 @@ border-radius: 50% 50% 50% 50%;
 .imageClass{
     position: relative;
 }
+.CardBodyDiv Button{
+    width: 100%;
+}

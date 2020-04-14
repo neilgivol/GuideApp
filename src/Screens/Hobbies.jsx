@@ -30,7 +30,7 @@ class Hobbies extends Component {
             itemsInCart: [],
             ListFromSQL:[]
         }
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';

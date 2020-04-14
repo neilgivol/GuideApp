@@ -54,7 +54,7 @@ class App extends Component {
       AllExpertises:[]
     
     }
-    let local = true;
+    let local = false;
     this.apiUrl = 'http://localhost:49948/api/';
     if (!local) {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -104,6 +104,30 @@ class App extends Component {
         let tempArray = this.state.guides;
         return tempArray;
 
+  }
+
+
+  GetGuidesFromSQL = () => {
+    let data = {
+                resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
+            };
+    fetch('https://data.gov.il/api/action/datastore_search', {
+      method: 'GET',
+      body:data,
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json()
+      })
+      .then(
+        (result) => {
+        console.log(result)
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
   }
 
 

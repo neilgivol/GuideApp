@@ -139,9 +139,22 @@ text-align: left;
   background-attachment: fixed;
   background-size: cover;
   
-  
+}
 
- 
+@media only screen and (max-width: 600px) {
+
+  .forgotPass{
+    position: absolute;
+    left: 100%;
+  }
+  .signUp{
+    position: absolute;
+    right: 100%;
+  }
+  .signUp p{
+    width: max-content;
+  }
+
 }
 
 

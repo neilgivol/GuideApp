@@ -37,7 +37,7 @@ class Languages extends Component {
             tempList: [],
             GuideListFromSQL: this.props.guideListLanguages
         };
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
@@ -106,7 +106,7 @@ class Languages extends Component {
     }
 
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
-        fetch(this.apiUrl + 'Guide/PostGuideLanguage', {
+        fetch(this.apiUrl + '/Guide/PostGuideLanguage', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideLanguages),
             headers: new Headers({

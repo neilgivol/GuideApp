@@ -8,7 +8,7 @@ import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, 
 import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
 import ImageUploader from 'react-images-upload';
-import Fileupload from '../Components/fileUpload';
+import FileUpload from '../Components/fileUpload';
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
@@ -18,10 +18,12 @@ class ProfileCard extends Component {
             areas: this.props.areas,
             sum: 0,
             rating: this.props.GuideDetails.Rank,
-            pictures: []
+            pictures: [],
+            hobbies:this.props.guideListHobbies,
+            expertise:this.props.GuideExpertises
         }
         this.onDrop = this.onDrop.bind(this);
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
@@ -41,11 +43,14 @@ class ProfileCard extends Component {
         console.log(this.state.pictures)
     }
     UploadPicture = (pic) => {
-        console.log("enter")
+        const data= new FormData();
+        data.append("UploadedFile",pic);
         //pay attention case sensitive!!!! should be exactly as the prop in C#!
-        fetch(this.apiUrl + 'Guide/PostPic', {
+        fetch(this.apiUrl + '/Guide/PostPic', {
             method: 'POST',
-            body: JSON.stringify(pic),
+            contentType: false,
+            processData: false,
+            body: data,
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
@@ -101,6 +106,14 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
+        if(this.state.hobbies.length>0)
+        {
+            tempSum = parseInt(tempSum) + 10;
+        }
+        if(this.state.expertise.length>0)
+        {
+            tempSum = parseInt(tempSum) + 10;
+        }
 
 
 
@@ -145,6 +158,7 @@ class ProfileCard extends Component {
                         imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
                         maxFileSize={5242880}
                     />
+                    <FileUpload/>
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
                         <h1>{this.state.sum}%</h1>

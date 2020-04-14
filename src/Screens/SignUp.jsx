@@ -105,7 +105,7 @@ componentDidMount(){
             <MDBCard className="CardDivSignIn">
               <MDBCardBody className="mx-4 CardBody">
                 <div>
-                  <Link to="/signIn"><i className="fa fa-undo" aria-hidden="true"></i></Link>
+                  <Link to="/"><i className="fa fa-undo" aria-hidden="true"></i></Link>
                 </div>
                 <div className="text-center">
                   <h3 className="dark-grey-text mb-5">

@@ -178,8 +178,6 @@ class SignIn extends Component {
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>
                                          </p>
-                                            
-
                                         </div>
                                     </div>
                                 </MDBModalFooter>

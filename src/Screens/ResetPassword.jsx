@@ -33,7 +33,7 @@ class ResetPassword extends Component {
 
         }
      
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';

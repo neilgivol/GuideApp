@@ -91,7 +91,7 @@ class Home extends Component {
                 },
             ],
         };
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -196,7 +196,7 @@ class Home extends Component {
         });
     }
     funcGoogleFacebook = () => {
-        return <ProfileCard GuideDetails={this.state.Guide} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
+        return <ProfileCard GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
     }
 
     func1 = () => {

@@ -81,7 +81,7 @@ class ProfileDetails extends Component {
             selectedOption: null,
             linksfromSQL: []
         };
-        let local = true;
+        let local = false;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -163,7 +163,7 @@ class ProfileDetails extends Component {
         let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
-        fetch(this.apiUrl, {
+        fetch(this.apiUrl + 'Guide', {
             method: 'PUT',
             body: JSON.stringify({
                 FirstName: userGuide.FirstName,
