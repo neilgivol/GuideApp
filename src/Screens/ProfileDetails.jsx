@@ -79,9 +79,10 @@ class ProfileDetails extends Component {
                 },
             ],
             selectedOption: null,
-            linksfromSQL: []
+            linksfromSQL: [],
+            local:this.props.local
         };
-        let local = false;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';

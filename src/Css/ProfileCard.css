@@ -25,3 +25,8 @@ border-radius: 50% 50% 50% 50%;
 .CardBodyDiv Button{
     width: 100%;
 }
+.uploadDiv{
+    width: 100%;
+    height: 100px;
+    margin-bottom: 30px;
+}

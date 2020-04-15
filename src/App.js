@@ -19,6 +19,7 @@ import menu from './Img/menu.png';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import MainFooter from './Components/MainFooter';
+import FileUpload from './Components/fileUpload.jsx';
 
 const navLinks = [
   {
@@ -47,6 +48,7 @@ class App extends Component {
     super(props)
     this.state = {
       guides: [],
+      local:true,
       navbarCheckOpen: "open",
       tempGuide:"",
       AllAreas:[],
@@ -54,7 +56,7 @@ class App extends Component {
       AllExpertises:[]
     
     }
-    let local = false;
+    let local = this.state.local;
     this.apiUrl = 'http://localhost:49948/api/';
     if (!local) {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -305,16 +307,19 @@ GetAllAreas=()=>{
     return (
       <div className="app">
         <Switch>
+        <Route path="/upload" >
+        <FileUpload local={this.state.local}/>
+        </Route>
           <Route  path="/check" >
             <Check
               color="#008ae6"
               type="spin" />
           </Route>
           <Route exact path="/reset" >
-            <ResetPassword />
+            <ResetPassword local={this.state.local} />
           </Route>
           <Route exact path="/" >
-            <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp}  />
+            <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local}  />
           </Route>
           <Route path="/signUp">
             <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
@@ -328,7 +333,7 @@ GetAllAreas=()=>{
               hoverBackground="#A2D4FF"
               linkColor="#1988ff"
             />
-            <Home ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <Home local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
             <MainFooter className="hidden-xs"/>
           </Route>
           <Route path="/chat">

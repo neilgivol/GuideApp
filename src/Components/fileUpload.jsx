@@ -1,20 +1,28 @@
 import React from 'react';
-import { FilePond } from 'react-filepond';
+import { FilePond,registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
 import { Button} from 'react-bootstrap';
+//import '../Css/ProfileCard.css';
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
 export default class FileUpload extends React.Component{
-  constructor(){
-      super();
-
-      let local = false;
+  constructor(props){
+      super(props);
+this.state={
+    local:this.props.local
+}
+      let local = this.state.local;
       this.apiUrl = 'http://localhost:49948/api';
       if (!local) {
           this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
       }
   }
-
+//   38d03ea95849bc780865c7c3cb107cdb
     AddPDF = (error, file)=>{
         console.log(file)
         if(this.fileValidate(file)){
@@ -71,9 +79,7 @@ export default class FileUpload extends React.Component{
     // }
     render(){
         return(
-            <Button>
                 <FilePond allowMultiple={false} onaddfile={this.AddPDF} />
-            </Button>
         )
     }
 }

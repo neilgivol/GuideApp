@@ -9,6 +9,9 @@ import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
 import ImageUploader from 'react-images-upload';
 import FileUpload from '../Components/fileUpload';
+import { Progress } from "shards-react";
+import { Link, withRouter  } from 'react-router-dom';
+
 class ProfileCard extends Component {
     constructor(props) {
         super(props);
@@ -20,14 +23,20 @@ class ProfileCard extends Component {
             rating: this.props.GuideDetails.Rank,
             pictures: [],
             hobbies:this.props.guideListHobbies,
-            expertise:this.props.GuideExpertises
+            expertise:this.props.GuideExpertises,
+            local:this.props.local,
+            upload:false
         }
         this.onDrop = this.onDrop.bind(this);
-        let local = false;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
+    }
+        componentWillMount(){
+        console.log(this.state.local);
+        console.log("ddd");
     }
     onDrop(picture) {
         let newPic = "";
@@ -75,6 +84,9 @@ class ProfileCard extends Component {
         const areas = JSON.parse(localStorage.getItem('areas'));
         const languages = JSON.parse(localStorage.getItem('languages'));
         const links = JSON.parse(localStorage.getItem('links'));
+        const hobbies = JSON.parse(localStorage.getItem('Hobby'));
+        const expertises = JSON.parse(localStorage.getItem('Expertise'));
+
         console.log(links)
 
         if (this.state.areas.length === 0) {
@@ -87,7 +99,7 @@ class ProfileCard extends Component {
                 languages: languages
             })
         }
-        let tempSum = 10;
+        let tempSum = 20;
         let userBirth = this.state.user.BirthDay;
         let userPhone = this.state.user.Phone;
         let userDescription = this.state.user.DescriptionGuide
@@ -106,20 +118,41 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
-        if(this.state.hobbies.length>0)
+        if(hobbies.length>0)
         {
-            tempSum = parseInt(tempSum) + 10;
+            tempSum = parseInt(tempSum) + 20;
         }
-        if(this.state.expertise.length>0)
+        if(expertises.length>0)
         {
-            tempSum = parseInt(tempSum) + 10;
+            tempSum = parseInt(tempSum) + 20;
         }
 
-
+        console.log(this.state.expertise)
+        console.log(this.state.hobbies)
 
         this.setState({
             sum: tempSum
         })
+    }
+    changeup=()=>{
+        if (this.state.upload) {
+            this.setState({
+                upload:false
+            })
+        }
+        else{
+            this.setState({
+                upload:true
+            });
+        }
+       
+        this.upload();
+    }
+    upload=()=>{
+        if (this.state.upload) {
+            console.log("dd")
+            return <div className="uploadDiv"><FileUpload  local={this.state.local}/></div>
+        }
     }
 
     picExsist = () => {
@@ -136,9 +169,8 @@ class ProfileCard extends Component {
         return <div className="imageClass">
             {this.picExsist()}
             <span className="uploadPicIcon">
-                <i class="far fa-image"></i>
+              <i class="far fa-image" onClick={this.changeup}></i>
             </span>
-
         </div>
     }
 
@@ -151,17 +183,17 @@ class ProfileCard extends Component {
                 {this.funcPic()}
 
                 <CardBody>
-                    <ImageUploader
-                        withIcon={true}
-                        buttonText='Choose images'
-                        onChange={this.onDrop}
-                        imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
-                        maxFileSize={5242880}
-                    />
-                    <FileUpload/>
+                    {/* <ImageUploader
+                    //     withIcon={true}
+                    //     buttonText='Choose images'
+                    //     onChange={this.onDrop}
+                    //     imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                    //     maxFileSize={5242880}
+                    // /> */}
+                    {this.upload()}
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
-                        <h1>{this.state.sum}%</h1>
+                    <Progress theme="primary" value={this.state.sum} />
                     </CardText>
                     <p>your current rating :</p>
                     <StarRatings
@@ -182,4 +214,4 @@ class ProfileCard extends Component {
     }
 }
 
-export default ProfileCard;
+export default withRouter(ProfileCard);

@@ -40,6 +40,7 @@ class Home extends Component {
         super(props);
         this.state = {
             namePage: 'Profile Details',
+            local:this.props.local,
             navbar: this.props.navbarOpenCheck,
             //allUsers: this.props.Allusers,
             Guide: '',
@@ -91,7 +92,7 @@ class Home extends Component {
                 },
             ],
         };
-        let local = false;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -196,25 +197,25 @@ class Home extends Component {
         });
     }
     funcGoogleFacebook = () => {
-        return <ProfileCard GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
+        return <ProfileCard local={this.state.local} GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
     }
 
     func1 = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
+            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
         }
         // else if (namePage2 === "Area Knowledge") {
         //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
         // }
         else if (namePage2 === "Languages") {
-            return <Languages updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
+            return <Languages local={this.state.local} updateLanguage={this.updateLanguageGuides} guideListLanguages={this.state.GuideLanguages} GuideDetails={this.state.Guide} />
         }
         else if (namePage2 === "Hobbies") {
-            return <Hobbies GuideDetails={this.state.Guide} AllHobbies={this.state.AllHobbies} guideListHobbies={this.state.GuideHobbies} updateHobbies={this.updateHobbiesGuides} />
+            return <Hobbies local={this.state.local} GuideDetails={this.state.Guide} AllHobbies={this.state.AllHobbies} guideListHobbies={this.state.GuideHobbies} updateHobbies={this.updateHobbiesGuides} />
         }
         else if (namePage2 === "Expertise") {
-            return <Expertise GuideDetails={this.state.Guide} AllExpertises={this.state.AllExpertises} GuideExpertises={this.state.GuideExpertises} updateExpertises={this.updateExpertisesGuides} />
+            return <Expertise local={this.state.local} GuideDetails={this.state.Guide} AllExpertises={this.state.AllExpertises} GuideExpertises={this.state.GuideExpertises} updateExpertises={this.updateExpertisesGuides} />
         }
     }
 

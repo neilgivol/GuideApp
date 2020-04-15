@@ -29,11 +29,12 @@ class ResetPassword extends Component {
         this.state = {
             email: "",
             password: "",
+            local:this.props.local
             
 
         }
      
-        let local = false;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
