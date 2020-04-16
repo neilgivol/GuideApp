@@ -3,6 +3,7 @@ import "@kenshooui/react-multi-select/dist/style.css"
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
 import '../Css/globalhome.css';
+import Swal from 'sweetalert2';
 
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 
@@ -148,6 +149,14 @@ class Languages extends Component {
         console.log(array);
         this.setState({
             selectedItems: array
+        });
+
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'הפרטים שלך עודכנו בהצלחה',
+            showConfirmButton: false,
+            timer: 1200
         });
     }
     render() {

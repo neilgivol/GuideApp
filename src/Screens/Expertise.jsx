@@ -5,6 +5,7 @@ import '../Css/Hobbies.css';
 import HobbiesList from '../Components/HobbiesList';
 import HobbieAdded from '../Components/HobbieAdded';
 import '../Css/globalhome.css';
+import Swal from 'sweetalert2';
 
 
 class Expertise extends Component {
@@ -95,7 +96,16 @@ class Expertise extends Component {
         }else{
             this.PostExpertiseGuideToSQL(tempArray);
 
-        }    }
+        } 
+
+        Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'הפרטים שלך עודכנו בהצלחה',
+                showConfirmButton: false,
+                timer: 1200
+            });
+       }
 
 
     updateHobbies=()=>{
@@ -174,7 +184,8 @@ class Expertise extends Component {
               }
               this.setState({
                   itemsArray:tempArray
-              })
+              });
+            
     }
     render() {
         return (
@@ -191,7 +202,7 @@ class Expertise extends Component {
                             </div>
                             <span className="middleLine col-md-1 col-xs-12"></span>
                             <div className='col HobbiesAdded col-md col-xs-12'>
-                                <div className="row titleAdded"><span>selection:</span> </div>
+                                <div className="row titleAdded"><span>your selections:</span> </div>
                                 <div className="row HobbiesListSide HobbieAddedList">
                                     {this.state.itemsInCart.map((item, key) =>
                                         <HobbieAdded removeFromCart={this.removeFromCart} item={item} key={item.id} />)}

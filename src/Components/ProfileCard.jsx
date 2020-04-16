@@ -118,11 +118,11 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
-        if(hobbies.length>0)
+        if(hobbies !== null)
         {
             tempSum = parseInt(tempSum) + 20;
         }
-        if(expertises.length>0)
+        if(expertises !== null)
         {
             tempSum = parseInt(tempSum) + 20;
         }
@@ -151,8 +151,41 @@ class ProfileCard extends Component {
     upload=()=>{
         if (this.state.upload) {
             console.log("dd")
-            return <div className="uploadDiv"><FileUpload  local={this.state.local}/></div>
+            return <div className="uploadDiv"><FileUpload changeURL={this.ChangeProfileImage}  local={this.state.local}/></div>
         }
+        //this.ChangeProfileImage();
+    }
+    ChangeProfileImage=(newurl)=>{
+        console.log(newurl);
+        
+        let urlPicture = "D:/WhyDontWork/IsraVisor-server/uploadedFiles/" + newurl;
+        let ProfilePicture = {
+            id: this.state.user.gCode,
+            picPath: urlPicture
+        }
+        fetch(this.apiUrl + '/Guide/UpdateProfilePic', {
+            method: 'POST',
+            body: JSON.stringify(
+                {
+                    id: this.state.user.gCode,
+            picPath: urlPicture
+                }
+            ),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
 
     picExsist = () => {

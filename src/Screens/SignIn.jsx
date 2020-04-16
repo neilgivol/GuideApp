@@ -156,17 +156,11 @@ class SignIn extends Component {
                                     <MDBRow>
                                         <MDBCol md="6">
                                             <Facebook checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
-
                                         </MDBCol>
                                         <MDBCol md="6">
                                             <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
-
                                         </MDBCol>
                                     </MDBRow>
-
-
-
-
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">
                                     <div className="row col-12">

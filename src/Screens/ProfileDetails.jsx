@@ -20,6 +20,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import '../Css/ProfileDetails.css';
+import Swal from 'sweetalert2';
 //import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
@@ -193,7 +194,13 @@ class ProfileDetails extends Component {
                     console.log("err post=", error);
                 });
 
-        alert("Success");
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'הפרטים שלך עודכנו בהצלחה',
+                    showConfirmButton: false,
+                    timer: 1200
+                });
     }
     Addlinks = () => {
         const fullLinkList = [];

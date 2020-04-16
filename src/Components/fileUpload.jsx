@@ -1,20 +1,21 @@
 import React from 'react';
 import { FilePond,registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
-import { Button} from 'react-bootstrap';
 //import '../Css/ProfileCard.css';
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 
 // Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,FilePondPluginImageResize);
 
 export default class FileUpload extends React.Component{
   constructor(props){
       super(props);
 this.state={
-    local:this.props.local
+    local:this.props.local,
+    newURL:""
 }
       let local = this.state.local;
       this.apiUrl = 'http://localhost:49948/api';
@@ -46,7 +47,6 @@ this.state={
     }
     saveToDB=(file)=>{
         console.log(file.file);
-        
         const data= new FormData();
         data.append("UploadedFile",file.file);
         //גישה לקונטרולר
@@ -61,6 +61,7 @@ this.state={
         }).catch((error)=>{
             console.log(error);
         });
+        this.props.changeURL(file.file.name);
     }
     // saveToFirebaseStorage = (file)=>{
     //     const groupData = JSON.parse(localStorage.getItem('groupData'));
@@ -79,7 +80,7 @@ this.state={
     // }
     render(){
         return(
-                <FilePond allowMultiple={false} onaddfile={this.AddPDF} />
+                <FilePond allowMultiple={false} onaddfile={this.AddPDF} imageResizeTargetWidth={280} imageResizeTargetHeight={280} allowImageResize={true} />
         )
     }
 }
