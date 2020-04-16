@@ -56,8 +56,8 @@ this.state={
             processData: false,
             mode:'no-cors',
             body: data
-        }).then(function(data) {
-            console.log(data);
+        }).then((result) => {
+            console.log(result);
         }).catch((error)=>{
             console.log(error);
         });
