@@ -97,12 +97,16 @@ class SignIn extends Component {
     render() {
         return (
             <div className="Cont">
-                <MDBContainer >
-                    <MDBRow className="RowDivSignIn text-center">
+                <MDBContainer>
+                    <MDBRow> 
+                        <MDBCol md="12 text-center"> 
                         <img className="LogoDiv" src={logo} />
+                        </MDBCol>
+                    </MDBRow>
+                    <MDBRow className="RowDivSignIn text-center">
                         <MDBCol className="ColDivSignIn" md="6">
                             <MDBCard className="CardDivSignIn">
-                                <MDBCardBody className="mx-4">
+                                <MDBCardBody className="cardBody mx-4">
                                     <div className="text-center">
                                         <h3 className="dark-grey-text mb-5">
                                             <strong>Sign in</strong>
@@ -163,17 +167,13 @@ class SignIn extends Component {
 
                                         </MDBCol>
                                     </MDBRow>
-
-
-
-
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">
                                     <div className="row col-12">
-                                        <div className="col-6 forgotPass">
+                                        <div className="col-4 forgotPass">
                                             <p className="font-small blue-text d-flex justify-content-end"><Link to="/reset">Forgot Password?</Link></p>
                                         </div>
-                                        <div className="col-6 signUp">
+                                        <div className="col-8 signUp">
                                             <p className="font-small grey-text d-flex justify-content-end">
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>

@@ -61,7 +61,7 @@ class Facebook extends Component {
             ) :
             fbContent = (
                 <FacebookLoginBtn
-                    appId="189882132323354"
+                    appId="240993680265877"
                     scope="user_gender,user_birthday,public_profile"
                     autoLoad={false}
                     fields="first_name,last_name,email,picture.width(280).height(280),gender,birthday"
