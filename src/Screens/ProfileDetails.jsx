@@ -108,7 +108,6 @@ class ProfileDetails extends Component {
         }
     }
 
-
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
         });
@@ -121,11 +120,6 @@ class ProfileDetails extends Component {
 
         });
     }
-
-    // onFormSubmit(e) {
-    //     e.preventDefault();
-    //     console.log(this.state.startDate)
-    // }
 
     onChangeFirstName = (e) => {
         this.setState({
@@ -161,6 +155,7 @@ class ProfileDetails extends Component {
         })
     }
 
+    //עדכון פרטי המשתמש והכנסתם למסד הנתונים
     UpdateDetails = () => {
         let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
@@ -202,6 +197,7 @@ class ProfileDetails extends Component {
                     timer: 1200
                 });
     }
+    //הוספת לינקים
     Addlinks = () => {
         const fullLinkList = [];
         const linksToSQL = [];
@@ -234,6 +230,7 @@ class ProfileDetails extends Component {
     }
 
 
+    //שינוי הפרטים של המשתמש על המסך לאחר שלחץ על כפתור העידכון
     uploadNewDetails = (guideUpdate) => {
         console.log(guideUpdate);
         if (guideUpdate !== null) {
@@ -269,6 +266,7 @@ class ProfileDetails extends Component {
             }
         }
         console.log(arraylinks);
+        
         if (arraylinks.length === 0) {
             console.log("del")
             fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {

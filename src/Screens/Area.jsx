@@ -14,8 +14,8 @@ class Area extends Component {
         this.state = {
             items: [],
             selectedItems: [],
-            allAreasCities:[],
-            guideList:this.props.guideListAreas
+            allAreasCities: [],
+            guideList: this.props.guideListAreas
         };
 
         let local = false;
@@ -24,27 +24,27 @@ class Area extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-  
-    componentDidUpdate(PrevProps,state){
-    if (PrevProps.guideListAreas !== this.props.guideListAreas) {
-        this.setState({
-            guideList:this.props.guideListAreas
-        })
-    }
-    console.log(PrevProps.guideListAreas);
-    console.log(this.props.guideListAreas);
 
-}
-    componentDidMount(){
+    componentDidUpdate(PrevProps, state) {
+        if (PrevProps.guideListAreas !== this.props.guideListAreas) {
+            this.setState({
+                guideList: this.props.guideListAreas
+            })
+        }
+        console.log(PrevProps.guideListAreas);
+        console.log(this.props.guideListAreas);
+
+    }
+    componentDidMount() {
         for (let i = 0; i < this.props.AreasArray.length; i++) {
             const element = {
-                id:i,
-               label: this.props.AreasArray[i].AreaName
+                id: i,
+                label: this.props.AreasArray[i].AreaName
             };
             this.state.items.push(element);
         }
 
-        let array=[];
+        let array = [];
         for (let i = 0; i < this.state.guideList.length; i++) {
             const SQLelement = this.state.guideList[i];
             for (let j = 0; j < this.state.items.length; j++) {
@@ -55,50 +55,59 @@ class Area extends Component {
             }
         }
         this.setState({
-            selectedItems:array
+            selectedItems: array
         })
     }
 
-    UpdateGuideAreas = () =>{
+    //עדכון אזורים במסד נתונים
+    UpdateGuideAreas = () => {
         let tempArrayGuideAreas = [];
         let GuideCode = this.props.GuideDetails.gCode;
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
+            //יצירת אובייקט גייסון הכולל את המספר זיהוי של המדריך והמספר זיהוי של האזור
             const Guide_Area = {
-                Guide_Code:GuideCode,
-                Area_Code:element.id
+                Guide_Code: GuideCode,
+                Area_Code: element.id
             }
             tempArrayGuideAreas.push(Guide_Area);
         }
 
+        //  בדיקה האם למדריך יש  אזורים מסוימים בסל בעת לחיצה על כפתור השמירה
+
+        // אם אין אזורים בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימים אזורים - ימחקו כל התחביבים של המדריך
         if (tempArrayGuideAreas.length === 0) {
             console.log("del")
             fetch(this.apiUrl + '/Area/' + GuideCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
-                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
                 })
-                })
+            })
                 .then(res => {
-                console.log('res=', res);
-                return res.json()
+                    console.log('res=', res);
+                    return res.json()
                 })
                 .then(
-                (result) => {
-                    this.setState({
-                        guideList:result
-                    })
-                    this.UpdateNewAreas(this.state.guideList);
-                },
-                (error) => {
-                console.log("err post=", error);
-                });
-                
-        }else{
+                    (result) => {
+                        this.setState({
+                            guideList: result
+                        })
+                        this.UpdateNewAreas(this.state.guideList);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
+                    });
+
+        } 
+        //אם יש אזורים ברשימה- הם יוכנסו למסד הנתונים.
+        else {
             this.PostAreaGuideToSQL(tempArrayGuideAreas);
         }
     }
+    
+    //הכנסת אזורים למסד הנתונים
     PostAreaGuideToSQL = (tempArrayGuideAreas) => {
         fetch('http://localhost:49948/api/Area/PostGuideAreas', {
             method: 'POST',
@@ -106,7 +115,7 @@ class Area extends Component {
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
-            
+
         })
             .then(res => {
                 console.log('res=', res);
@@ -116,7 +125,7 @@ class Area extends Component {
                 (result) => {
                     console.log("fetch POST= ", result);
                     this.setState({
-                        guideList:result
+                        guideList: result
                     })
                     this.UpdateNewAreas(this.state.guideList);
                 },
@@ -124,9 +133,12 @@ class Area extends Component {
                     console.log("err post=", error);
                 });
     }
-    UpdateNewAreas=()=>{
+
+
+    //עדכון רשימת האזורים החדשה על המסך לאחר שהוכנסו למסד הנתונים
+    UpdateNewAreas = () => {
         this.props.updateArea(this.state.guideList);
-        let array=[];
+        let array = [];
         for (let i = 0; i < this.state.guideList.length; i++) {
             const SQLelement = this.state.guideList[i];
             for (let j = 0; j < this.state.items.length; j++) {
@@ -137,7 +149,7 @@ class Area extends Component {
             }
         }
         this.setState({
-            selectedItems:array
+            selectedItems: array
         })
     }
 
@@ -149,26 +161,26 @@ class Area extends Component {
     render() {
         const { items, selectedItems } = this.state;
         return (
-                <Card>
-                    <Card.Header>Area Knowledge</Card.Header>
-                    <ListGroup>
-                        <ListGroupItem>
-                            <div className="row title"><h2>Choose Area:</h2></div>
-                        </ListGroupItem>
-                        <ListGroupItem>
-                            <MultiSelect
-                                items={items}
-                                selectedItems={selectedItems}
-                                onChange={this.handleChange}
-                                showSearch={true}
-                                showSelectAll={false}
-                            />
-                        </ListGroupItem>
-                    </ListGroup>
-                    <div>
-                        <Button onClick={() => { this.UpdateGuideAreas() }}>Save</Button>
-                    </div>
-                </Card>
+            <Card>
+                <Card.Header>Area Knowledge</Card.Header>
+                <ListGroup>
+                    <ListGroupItem>
+                        <div className="row title"><h2>Choose Area:</h2></div>
+                    </ListGroupItem>
+                    <ListGroupItem>
+                        <MultiSelect
+                            items={items}
+                            selectedItems={selectedItems}
+                            onChange={this.handleChange}
+                            showSearch={true}
+                            showSelectAll={false}
+                        />
+                    </ListGroupItem>
+                </ListGroup>
+                <div>
+                    <Button onClick={() => { this.UpdateGuideAreas() }}>Save</Button>
+                </div>
+            </Card>
         );
     }
 }

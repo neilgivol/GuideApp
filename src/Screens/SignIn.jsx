@@ -38,6 +38,7 @@ class SignIn extends Component {
         }
     }
 
+    //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
     componentDidMount() {
         const rememberMe = localStorage.getItem('rememberMe') === 'true';
         const usernameEntered = rememberMe ? localStorage.getItem('usernameEntered') : '';
@@ -83,6 +84,7 @@ class SignIn extends Component {
         }
     }
 
+    //לוקח את פרטי המשתמש ושולח אותם למסד נתונים כדי לבדוק האם קיים משתמש כזה
     SignInFunc = () => {
         localStorage.setItem('rememberMe', this.state.rememberMe);
         localStorage.setItem('usernameEntered', this.state.rememberMe ? this.state.email : '');
@@ -91,6 +93,7 @@ class SignIn extends Component {
             Email: this.state.email,
             Password: this.state.password
         }
+        //הפרטים נשלחים לפונקציה שנמצאת בAPP.JS
         this.props.checkSignIn(signInUser);
     }
 

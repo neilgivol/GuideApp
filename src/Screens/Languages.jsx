@@ -37,7 +37,7 @@ class Languages extends Component {
             ListFromSQL: [],
             tempList: [],
             GuideListFromSQL: this.props.guideListLanguages,
-            local:this.props.local
+            local: this.props.local
         };
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
@@ -45,20 +45,25 @@ class Languages extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
- 
+
+
 
     componentDidMount() {
         let array = [];
+        //רץ על כל השפות של המדריך מהמסד נתונים
         for (let i = 0; i < this.state.GuideListFromSQL.length; i++) {
             const SQLelement = this.state.GuideListFromSQL[i];
+            //רץ על מערך אייטמס שמופיע למעלה
             for (let j = 0; j < this.state.items.length; j++) {
                 const itemsElement = this.state.items[j];
+                //בודק אם השפה של המדריך תואמת לשפה בריצה הנוכחית ע"י השוואת ה-איי די שלהם
                 if (SQLelement.Language_Code === itemsElement.id) {
                     array.push(itemsElement);
                 }
             }
         }
         this.setState({
+            //מכניס את המערך הזמני למערך שפות שנבחרו ובכך מציג אותם למסך
             selectedItems: array
         })
     }
@@ -67,46 +72,57 @@ class Languages extends Component {
         this.setState({ selectedItems });
     }
 
+    //עדכון שפות במסד נתונים
     UpdateAllLanguages = () => {
         let tempArrayGuideLanguages = [];
         let GuideCode = this.props.GuideDetails.gCode;
         for (let i = 0; i < this.state.selectedItems.length; i++) {
             const element = this.state.selectedItems[i];
+            //יצירת אובייקט גייסון הכולל את המספר זיהוי של המדריך והמספר זיהוי של השפה
             const Guide_Language = {
                 Guide_Code: GuideCode,
                 Language_Code: element.id
             }
             tempArrayGuideLanguages.push(Guide_Language);
         }
+
+
+        //  בדיקה האם למדריך יש  שפות מסוימות בסל בעת לחיצה על כפתור השמירה
+
+        // אם אין שפות בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימות שפות - ימחקו כל השפות של המדריך
         if (tempArrayGuideLanguages.length === 0) {
             console.log("del")
             fetch(this.apiUrl + '/Language/' + GuideCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
-                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
                 })
-                })
+            })
                 .then(res => {
-                console.log('res=', res);
-                return res.json()
+                    console.log('res=', res);
+                    return res.json()
                 })
                 .then(
-                (result) => {
-                    this.setState({
-                        ListFromSQL: result
+                    (result) => {
+                        this.setState({
+                            ListFromSQL: result
+                        });
+                        this.UpdateList(this.state.ListFromSQL);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
                     });
-                    this.UpdateList(this.state.ListFromSQL);
-                },
-                (error) => {
-                console.log("err post=", error);
-                });
-                
-        }else{
+
+        }
+
+        //אם יש שפות ברשימה- הן יוכנסו למסד הנתונים.
+        else {
             this.PostLangGuideToSQL(tempArrayGuideLanguages);
         }
     }
 
+    //הכנסת השפות למסד הנתונים
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
         fetch(this.apiUrl + '/Guide/PostGuideLanguage', {
             method: 'POST',
@@ -133,6 +149,8 @@ class Languages extends Component {
                     console.log("err post=", error);
                 });
     }
+
+    //עדכון רשימת השפות החדשה על המסך לאחר שהוכנסו למסד הנתונים
     UpdateList = (e) => {
         this.props.updateLanguage();
         console.log(e);

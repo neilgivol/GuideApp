@@ -42,51 +42,9 @@ class ResetPassword extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
         }
     }
-  
-
-    // GetGuides = () => {   //gets guide list 
-    //     fetch(this.apiUrl, {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json; charset=UTF-8',
-    //         })
-    //     })
-    //         .then(res => {
-    //             return res.json()
-    //         })
-    //         .then(
-    //             (result) => {
-    //                 this.CheckIfUserExist(result);
-                    
-    //             },
-    //             (error) => {
-    //                 console.log("err post=", error);
-    //             });
 
 
-    // }
-    // CheckIfUserExist = (result) => { //check if guide exist
-    //     let emailFound = false
-    //     let tempUser ="";
-    //     for (let i = 0; i < result.length; i++) {
-    //         const element = result[i];
-    //         if (element.Email===this.state.email) {
-                
-    //             emailFound=true;
-    //             tempUser=element;
-    //         }
-          
-            
-    //     }
-    //     if (emailFound) {
-    //         this.ResetUserPassword(tempUser)
-    //     }
-    //     else{
-    //         alert("there is no user with the following email")
-    //     }
-
-
-    // }
+    //שולח את האימייל של המשתמש למסד הנתונים ושם משנה את סיסמתו
     ResetUserPassword = ()=>{
          let tempMail = this.state.email; 
         fetch(this.apiUrl + '/Reset', {

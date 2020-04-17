@@ -31,9 +31,7 @@ class SignUp extends Component {
       startDate: new Date(),
     }
   }
-componentDidMount(){
-  console.log("DidMount_SignUp")
-}
+
   HandelEmail = (e) => {
     this.setState({
       email: e.target.value
@@ -65,7 +63,7 @@ componentDidMount(){
     )
   }
  
-
+//בודק האם השדה של סיסמא תואם לשדה של אשר סיסמא
   CheckPasswordConfirm = () => {
     let password = this.state.password;
     let confirmPassword = this.state.confirmPassword;
@@ -78,6 +76,8 @@ componentDidMount(){
     }
 
   }
+  
+  //APP.JS  לוקח את הפרטים שהמשתמש הזין ושולח אותם למסד נתונים שם נבדק אם המשתמש כבר רשום או לא(הפונקציה נמצאת ב
   moveFunc = () =>{ 
     let signDate = this.state.startDate.toLocaleDateString('en-US');
     let GuideSignUp = {
@@ -93,8 +93,6 @@ componentDidMount(){
     this.props.checkIfExistAndSignUP(GuideSignUp);
   }
    
-
- 
   render() {
     return (
       <MDBContainer>

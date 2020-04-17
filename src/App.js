@@ -62,6 +62,7 @@ class App extends Component {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
     }
   }
+  //מביא את כל האזורים, התחביבים וההתמחויות שנמצאות במסד נתונים
   componentDidMount() {
     console.log("DidMount_App");
     this.GetAllAreas();
@@ -70,6 +71,7 @@ class App extends Component {
       // this.GetGuidesFromSQL();
   }
 
+  //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות. 
   navbarCheck = (nav) => {
     if (nav) {
       this.setState({
@@ -84,6 +86,8 @@ class App extends Component {
 
   }
 
+
+  //?????
   GetGuidesFromSQL = () => {
     fetch(this.apiUrl, {
       method: 'GET',
@@ -108,7 +112,7 @@ class App extends Component {
 
   }
 
-
+//????
   GetGuidesFromSQL = () => {
     let data = {
                 resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
@@ -132,7 +136,7 @@ class App extends Component {
         });
   }
 
-
+ //לוקח את הפרטים מעמוד ההרשמה ובודק האם האימייל נמצא במסד נתונים- אם לא נמצא יוסיף אותו למסד נתונים
   PostGuideToCheckSignUp=(userDetails)=>{
     console.log("enter")
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
@@ -170,6 +174,7 @@ class App extends Component {
         });
 }
 
+//לוקח את פרטי המשתמש מהעמוד ההתחברות(אימייל וסיסמא) ובודק האם נמצא במסד נתונים
 PostGuideToCheckSignIn=(signInUser)=>{
   //pay attention case sensitive!!!! should be exactly as the prop in C#!
   fetch(this.apiUrl + 'Guide/PostToCheck', {
@@ -199,6 +204,7 @@ PostGuideToCheckSignIn=(signInUser)=>{
       console.log(this.state.tempGuide);
 }
 
+//  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
 MoveToHomePage=(e)=>{
 console.log(e)
 if (e!== null) {
@@ -214,6 +220,7 @@ else{
 }
 }
 
+//מביא את כל התחביבים שקיימים במסד הנתונים
 GetAllHobbies=()=>{
   fetch(this.apiUrl+"Hobby", {
             method: 'GET',
@@ -232,6 +239,8 @@ GetAllHobbies=()=>{
                     console.log("err post=", error);
                 });
 }
+
+//מסדר את התחביבים בגייסון הכולל מספר זיהוי,שם ותמונה
 OrgenizeHobbies=(result)=>{
   let temp = [];
   console.log(result);
@@ -248,6 +257,8 @@ OrgenizeHobbies=(result)=>{
           AllHobbies:temp
         })
 }
+
+//מביא את כל ההתמחויות הקיימות במסד נתונים
 GetAllExpertises=()=>{
   fetch(this.apiUrl+"Expertise", {
             method: 'GET',
@@ -266,6 +277,8 @@ GetAllExpertises=()=>{
                     console.log("err post=", error);
                 });
 }
+
+//מסדר את כל ההתמחויות בקובץ גייסון הכולל מספר זיהוי, שם ותמונה
 OrgenizeExpertises=(result)=>{
   let temp = [];
         for (let i = 0; i < result.length; i++) {
@@ -282,6 +295,7 @@ OrgenizeExpertises=(result)=>{
         })
 }
 
+//מביא את כל האזורים הקיימים במסד נתונים
 GetAllAreas=()=>{
   fetch(this.apiUrl+"Area", {
             method: 'GET',

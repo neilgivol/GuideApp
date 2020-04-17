@@ -13,9 +13,9 @@ class Expertise extends Component {
         super(props);
         this.state = {
             itemsInCart: [],
-            itemsArray:this.props.AllExpertises,
-            ListFromSQL:[],
-            local:this.props.local
+            itemsArray: this.props.AllExpertises,
+            ListFromSQL: [],
+            local: this.props.local
 
         }
         let local = this.state.local;
@@ -24,14 +24,14 @@ class Expertise extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-    componentDidMount(){
-        if(this.props.GuideExpertises.length !== 0){
+    componentDidMount() {
+        if (this.props.GuideExpertises.length !== 0) {
             this.UpdateList(this.props.GuideExpertises);
         }
-      
-      }
 
+    }
 
+    //הוספת התמחות חדשה למערך.
     addToCart = (newItem) => {
         const tempArr = [];
         for (let i = 0; i < this.state.itemsArray.length; i++) {
@@ -46,6 +46,7 @@ class Expertise extends Component {
         });
     }
 
+    //מחיקת התמחות מהמערך
     removeFromCart = (newItem) => {
         const tempArr = [];
         for (let i = 0; i < this.state.itemsInCart.length; i++) {
@@ -59,69 +60,67 @@ class Expertise extends Component {
             itemsInCart: tempArr,
         });
     }
-    UpdateExpertise = ()=>{
+
+    //עדכון התמחויות במסד הנתונים
+    UpdateExpertise = () => {
         let tempArray = [];
         for (let i = 0; i < this.state.itemsInCart.length; i++) {
             const element = this.state.itemsInCart[i].id;
+            //יצירת אובייקט גייסון הכולל את המספר זיהוי של המדריך והמספר זיהוי של ההתמחות
             let Guide_Expertise = {
-                guidegCode:this.props.GuideDetails.gCode,
-                ExpertiseCode:element
+                guidegCode: this.props.GuideDetails.gCode,
+                ExpertiseCode: element
             }
             tempArray.push(Guide_Expertise);
         }
+
+        //  בדיקה האם למדריך יש  התמחויות מסוימות בסל בעת לחיצה על כפתור השמירה
+
+        // אם אין התמחויות בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימים התמחויות - ימחקו כל ההתמחויוית של המדריך
+
         if (tempArray.length === 0) {
             console.log("del")
             fetch(this.apiUrl + '/Expertise/' + this.props.GuideDetails.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
-                'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
                 })
-                })
+            })
                 .then(res => {
-                console.log('res=', res);
-                return res.json()
+                    console.log('res=', res);
+                    return res.json()
                 })
                 .then(
-                (result) => {
-                    this.setState({
-                        ListFromSQL: result
+                    (result) => {
+                        this.setState({
+                            ListFromSQL: result
+                        });
+                        this.UpdateList(this.state.ListFromSQL);
+                    },
+                    (error) => {
+                        console.log("err post=", error);
                     });
-                    this.UpdateList(this.state.ListFromSQL);
-                },
-                (error) => {
-                console.log("err post=", error);
-                });
-                
-        }else{
-            this.PostExpertiseGuideToSQL(tempArray);
 
-        } 
-
-        Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'הפרטים שלך עודכנו בהצלחה',
-                showConfirmButton: false,
-                timer: 1200
-            });
-       }
-
-
-    updateHobbies=()=>{
-        let tempArray = [];
-        for (let i = 0; i < this.state.itemsInCart.length; i++) {
-            const element = this.state.itemsInCart[i].id;
-            let Guide_Hobby = {
-                guidegCode:this.props.GuideDetails.gCode,
-                HobbyHCode:element
-            }
-            tempArray.push(Guide_Hobby);
         }
 
-          }
+        //אם יש התמחויות ברשימה- הם יוכנסו למסד הנתונים.
+        else {
+            this.PostExpertiseGuideToSQL(tempArray);
 
-          PostExpertiseGuideToSQL = (tempArray) => {
+        }
+
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'הפרטים שלך עודכנו בהצלחה',
+            showConfirmButton: false,
+            timer: 1200
+        });
+    }
+
+    //הכנסת מערך ההתמחויות של המדריך למסד הנתונים
+    PostExpertiseGuideToSQL = (tempArray) => {
         fetch(this.apiUrl + '/Expertise', {
             method: 'POST',
             body: JSON.stringify(tempArray),
@@ -147,45 +146,45 @@ class Expertise extends Component {
                     console.log("err post=", error);
                 });
     }
-    UpdateList=(result)=>{
+
+    //עדכון רשימת ההתמחויות החדשה על המסך לאחר שהוכנסו למסד הנתונים
+    UpdateList = (result) => {
         let temp = [];
         console.log(result);
-              for (let i = 0; i < result.length; i++) {
-                  const element = result[i];
-                  let expertise = {
-                    id:element.Code,
-                    name: element.NameE,
-                    image:element.Picture
+        for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+            let expertise = {
+                id: element.Code,
+                name: element.NameE,
+                image: element.Picture
+            }
+            temp.push(expertise);
+        }
+        this.setState({
+            itemsInCart: temp
+        })
+        let tempArray = [];
+        let boolifExist = false;
+        for (let i = 0; i < this.state.itemsArray.length; i++) {
+            boolifExist = false;
+            let elementArray = this.state.itemsArray[i];
+            console.log(elementArray);
+            for (let j = 0; j < temp.length; j++) {
+                let elementCart = temp[j];
+                console.log(elementCart);
+                if (elementArray.id === elementCart.id) {
+                    console.log("WHAT???");
+                    boolifExist = true;
                 }
-                  temp.push(expertise);
-              }
-              this.setState({
-                itemsInCart:temp
-              })
+            }
+            if (!boolifExist) {
+                tempArray.push(elementArray);
+            }
+        }
+        this.setState({
+            itemsArray: tempArray
+        });
 
-
-              let tempArray = [];
-              let boolifExist = false;
-              for(let i = 0; i < this.state.itemsArray.length; i++){
-                boolifExist = false;
-                 let elementArray = this.state.itemsArray[i];
-                 console.log(elementArray);
-                  for(let j = 0; j < temp.length; j++){
-                      let elementCart = temp[j];
-                      console.log(elementCart);
-                      if(elementArray.id === elementCart.id){
-                          console.log("WHAT???");
-                        boolifExist = true;
-                      }
-                  }
-                  if(!boolifExist){
-                      tempArray.push(elementArray);
-                  }
-              }
-              this.setState({
-                  itemsArray:tempArray
-              });
-            
     }
     render() {
         return (
@@ -212,7 +211,7 @@ class Expertise extends Component {
                     </ListGroupItem>
 
                     <div>
-                        <Button onClick={() => {this.UpdateExpertise() }}>Save</Button>
+                        <Button onClick={() => { this.UpdateExpertise() }}>Save</Button>
                     </div>
                 </ListGroup>
             </Card>

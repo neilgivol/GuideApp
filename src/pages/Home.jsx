@@ -40,17 +40,17 @@ class Home extends Component {
         super(props);
         this.state = {
             namePage: 'Profile Details',
-            local:this.props.local,
+            local: this.props.local,
             navbar: this.props.navbarOpenCheck,
             //allUsers: this.props.Allusers,
             Guide: '',
             GuideLanguages: [],
             GuideAreas: [],
-            GuideHobbies:[],
-            GuideExpertises:[],
+            GuideHobbies: [],
+            GuideExpertises: [],
             AllAreas: this.props.AllAreas,
-            AllHobbies:this.props.AllHobbies,
-            AllExpertises:this.props.AllExpertises,
+            AllHobbies: this.props.AllHobbies,
+            AllExpertises: this.props.AllExpertises,
             GuideLinks: [],
             fulllink: [],
             options: [
@@ -99,20 +99,20 @@ class Home extends Component {
         }
     }
     componentDidUpdate(PrevProps, state) {
-        if(PrevProps.AllExpertises !== this.props.AllExpertises){
+        if (PrevProps.AllExpertises !== this.props.AllExpertises) {
             this.props.ReloadHobbies();
-           this.setState({
-            AllExpertises:this.props.AllExpertises
-           })
-        }
-        if(PrevProps.AllHobbies !== this.props.AllHobbies){
             this.setState({
-                AllHobbies:this.props.AllHobbies
+                AllExpertises: this.props.AllExpertises
             })
         }
-        if(PrevProps.AllAreas !== this.props.AllAreas){
+        if (PrevProps.AllHobbies !== this.props.AllHobbies) {
             this.setState({
-                AllAreas:this.props.AllAreas
+                AllHobbies: this.props.AllHobbies
+            })
+        }
+        if (PrevProps.AllAreas !== this.props.AllAreas) {
+            this.setState({
+                AllAreas: this.props.AllAreas
             })
         }
     }
@@ -137,8 +137,10 @@ class Home extends Component {
         this.GetExpertisesGuides(this.state.Guide);
         //this.getLinksFromSQL(this.state.Guide);
     }
+
+    //מביא את הלינקים של המדריך הספציפי
     getLinksFromSQL = (TempGuide) => {
-        fetch(this.apiUrl+"Link/" + TempGuide.gCode, {
+        fetch(this.apiUrl + "Link/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -152,6 +154,7 @@ class Home extends Component {
                     this.setState({
                         GuideLinks: result
                     })
+                    //שולח את הרשימה לפונקציה שמסדרת את כל הלינקים
                     this.orgenzie(result);
                 },
                 (error) => {
@@ -159,6 +162,7 @@ class Home extends Component {
                 });
     }
 
+    //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
     orgenzie = (links) => {
         let templink = "";
         let temparraylinks = [];
@@ -178,19 +182,24 @@ class Home extends Component {
     }
 
     updateAreasGuides = (areas) => {
+        //מביא את רשימת האזורים של המדריך 
         this.GetAreasGuideList(this.state.Guide);
 
     }
     updateLanguageGuides = () => {
+        //מביא את רשימת השפות של המדריך 
         this.GetLanguagesGuideList(this.state.Guide);
     }
     updateHobbiesGuides = () => {
+        //מביא את רשימת התחביבים של המדריך 
         this.GetHobbiesGuideList(this.state.Guide);
     }
     updateExpertisesGuides = () => {
+        //מביא את רשימת ההתמחויות של המדריך 
         this.GetExpertisesGuides(this.state.Guide);
     }
 
+    //שינוי עמוד
     ClickPage2 = (e) => {
         this.setState({
             namePage: e
@@ -200,7 +209,8 @@ class Home extends Component {
         return <ProfileCard local={this.state.local} GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
     }
 
-    func1 = () => {
+    //רינדור החלק המרכזי במסך לפי ה name page
+    renderMainPage = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
             return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
@@ -219,6 +229,7 @@ class Home extends Component {
         }
     }
 
+    //מביא את רשימת האזורים של המדריך 
     GetAreasGuideList = (TempGuide) => {
         fetch(this.apiUrl + "Area/" + TempGuide.gCode, {
             method: 'GET',
@@ -238,7 +249,9 @@ class Home extends Component {
                     console.log("err post=", error);
                 });
     }
-    GetHobbiesGuideList=(TempGuide)=>{
+
+    //מביא את רשימת התחביבים של המדריך
+    GetHobbiesGuideList = (TempGuide) => {
         fetch(this.apiUrl + "Hobby/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
@@ -258,7 +271,8 @@ class Home extends Component {
                 });
     }
 
-    GetExpertisesGuides=(TempGuide)=>{
+    //מביא את רשימת ההתמחויות של המדריך
+    GetExpertisesGuides = (TempGuide) => {
         fetch(this.apiUrl + "Expertise/" + TempGuide.gCode, {
             method: 'GET',
             headers: new Headers({
@@ -279,6 +293,7 @@ class Home extends Component {
     }
 
 
+    //מביא את כל השפות של המדריך
     GetLanguagesGuideList = (TempGuide) => {
         fetch(this.apiUrl + "Language/" + TempGuide.gCode, {
             method: 'GET',
@@ -299,18 +314,32 @@ class Home extends Component {
                 });
     }
 
+//אם העמוד הנוכחי הוא עדכון פרופיל אז יופיע כרטיס הפרופיל של המדריך, אם לא אז לא
+    showProfileCard = () => {
+        if (this.state.namePage === "Profile Details") {
+            return <Row className="homePage">
+                <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
+                    {this.funcGoogleFacebook()}
+                </Col>
+                <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
+                    {this.renderMainPage()}
+                </Col>
+            </Row>
+        }
+        else {
+            return <Row className="homePage">
+                <Col className="cardDiv col-12">
+                    {this.renderMainPage()}
+                </Col>
+            </Row>
+        }
+    }
+
     render() {
         return (
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
-                <Row className="homePage">
-                    <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
-                        {this.funcGoogleFacebook()}
-                    </Col>
-                    <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
-                        {this.func1()}
-                    </Col>
-                </Row>
+                {this.showProfileCard()}
             </Container>
         )
     }
