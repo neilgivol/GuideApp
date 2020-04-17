@@ -8,8 +8,9 @@ import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, 
 import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
 import ImageUploader from 'react-images-upload';
-
-
+import FileUpload from '../Components/fileUpload';
+import { Progress } from "shards-react";
+import { Link, withRouter  } from 'react-router-dom';
 
 class ProfileCard extends Component {
     constructor(props) {
@@ -19,24 +20,61 @@ class ProfileCard extends Component {
             languages: this.props.languages,
             areas: this.props.areas,
             sum: 0,
-            rating: this.props.GuideDetails.Rank ,
-            pictures: []
+            rating: this.props.GuideDetails.Rank,
+            pictures: [],
+            hobbies:this.props.guideListHobbies,
+            expertise:this.props.GuideExpertises,
+            local:this.props.local,
+            upload:false
         }
         this.onDrop = this.onDrop.bind(this);
-
+        let local = this.state.local;
+        this.apiUrl = 'http://localhost:49948/api';
+        if (!local) {
+            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
+        }
+    }
+        componentWillMount(){
+        console.log(this.state.local);
+        console.log("ddd");
     }
     onDrop(picture) {
-        let newPic="";
-      for (let index = 0; index < picture.length; index++) {
-          const element = picture[index];
-          newPic=element.name;
-      }
-      console.log(newPic);
-      
+        let newPic = "";
+        for (let index = 0; index < picture.length; index++) {
+            const element = picture[index];
+            newPic = element;
+        }
+        console.log(newPic);
+        this.UploadPicture(newPic);
         this.setState({
             pictures: newPic,
         });
         console.log(this.state.pictures)
+    }
+    UploadPicture = (pic) => {
+        const data= new FormData();
+        data.append("UploadedFile",pic);
+        //pay attention case sensitive!!!! should be exactly as the prop in C#!
+        fetch(this.apiUrl + '/Guide/PostPic', {
+            method: 'POST',
+            contentType: false,
+            processData: false,
+            body: data,
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
 
     componentDidMount() {
@@ -46,6 +84,9 @@ class ProfileCard extends Component {
         const areas = JSON.parse(localStorage.getItem('areas'));
         const languages = JSON.parse(localStorage.getItem('languages'));
         const links = JSON.parse(localStorage.getItem('links'));
+        const hobbies = JSON.parse(localStorage.getItem('Hobby'));
+        const expertises = JSON.parse(localStorage.getItem('Expertise'));
+
         console.log(links)
 
         if (this.state.areas.length === 0) {
@@ -58,7 +99,7 @@ class ProfileCard extends Component {
                 languages: languages
             })
         }
-        let tempSum = 10;
+        let tempSum = 20;
         let userBirth = this.state.user.BirthDay;
         let userPhone = this.state.user.Phone;
         let userDescription = this.state.user.DescriptionGuide
@@ -77,19 +118,74 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
-        if (areas.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
+        if(hobbies !== null)
+        {
+            tempSum = parseInt(tempSum) + 20;
         }
-        if (languages.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
+        if(expertises !== null)
+        {
+            tempSum = parseInt(tempSum) + 20;
         }
-        if (links.length !== 0) {
-            tempSum = parseInt(tempSum) + 10;
-        }
+
+        console.log(this.state.expertise)
+        console.log(this.state.hobbies)
 
         this.setState({
             sum: tempSum
         })
+    }
+    changeup=()=>{
+        if (this.state.upload) {
+            this.setState({
+                upload:false
+            })
+        }
+        else{
+            this.setState({
+                upload:true
+            });
+        }
+       
+        this.upload();
+    }
+    upload=()=>{
+        if (this.state.upload) {
+            console.log("dd")
+            return <div className="uploadDiv"><FileUpload changeURL={this.ChangeProfileImage}  local={this.state.local}/></div>
+        }
+        //this.ChangeProfileImage();
+    }
+    ChangeProfileImage=(newurl)=>{
+        console.log(newurl);
+        
+        let urlPicture = "D:/WhyDontWork/IsraVisor-server/uploadedFiles/" + newurl;
+        let ProfilePicture = {
+            id: this.state.user.gCode,
+            picPath: urlPicture
+        }
+        fetch(this.apiUrl + '/Guide/UpdateProfilePic', {
+            method: 'POST',
+            body: JSON.stringify(
+                {
+                    id: this.state.user.gCode,
+            picPath: urlPicture
+                }
+            ),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                console.log('res=', res);
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
     }
 
     picExsist = () => {
@@ -106,12 +202,11 @@ class ProfileCard extends Component {
         return <div className="imageClass">
             {this.picExsist()}
             <span className="uploadPicIcon">
-                <i class="far fa-image"></i>
+              <i class="far fa-image" onClick={this.changeup}></i>
             </span>
-            
         </div>
     }
-   
+
     funcName = () => {
         return <h2>{this.state.user.FirstName} {this.state.user.LastName}</h2>
     }
@@ -119,18 +214,19 @@ class ProfileCard extends Component {
         return (
             <Card className="CardBodyDiv">
                 {this.funcPic()}
-          
+
                 <CardBody>
-                <ImageUploader
-                withIcon={true}
-                buttonText='Choose images'
-                onChange={this.onDrop}
-                imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                maxFileSize={5242880}
-            />
+                    {/* <ImageUploader
+                    //     withIcon={true}
+                    //     buttonText='Choose images'
+                    //     onChange={this.onDrop}
+                    //     imgExtension={['.jpg', '.gif', '.png', '.gif', 'jpeg']}
+                    //     maxFileSize={5242880}
+                    // /> */}
+                    {this.upload()}
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
-                        <h1>{this.state.sum}%</h1>
+                    <Progress theme="primary" value={this.state.sum} />
                     </CardText>
                     <p>your current rating :</p>
                     <StarRatings
@@ -151,4 +247,4 @@ class ProfileCard extends Component {
     }
 }
 
-export default ProfileCard;
+export default withRouter(ProfileCard);

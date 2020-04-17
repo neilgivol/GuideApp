@@ -22,3 +22,12 @@ border-radius: 50% 50% 50% 50%;
 .imageClass{
     position: relative;
 }
+.CardBodyDiv Button{
+    width: 100%;
+}
+.uploadDiv{
+   margin-bottom: 20px;
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+}

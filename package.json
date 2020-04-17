@@ -2,6 +2,7 @@
   "name": "isravisor",
   "version": "0.1.0",
   "private": true,
+  "main": "index.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
@@ -14,6 +15,10 @@
     "@testing-library/react": "^9.4.1",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
+    "filepond": "^4.13.2",
+    "filepond-plugin-image-exif-orientation": "^1.0.7",
+    "filepond-plugin-image-preview": "^4.6.1",
+    "filepond-plugin-image-resize": "^2.0.4",
     "globalize": "^1.4.2",
     "globalize-webpack-plugin": "^3.0.0",
     "jquery": "^3.4.1",
@@ -63,5 +68,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": "http://proj.ruppin.ac.il/bgroup10/prod/guideapp"
 }

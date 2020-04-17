@@ -6,6 +6,8 @@ import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '../Css/globalhome.css';
+import Swal from 'sweetalert2';
+
 // import art from '../Img/Hobbies/artMuseums.jpg';
 // import camping from '../Img/Hobbies/camping.jfif';
 // import classicMusic from '../Img/Hobbies/classicMusic.jpg';
@@ -28,9 +30,10 @@ class Hobbies extends Component {
         this.state = {
             itemsArray: this.props.AllHobbies,
             itemsInCart: [],
-            ListFromSQL:[]
+            ListFromSQL:[],
+            local:this.props.local
         }
-        let local = true;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
@@ -109,7 +112,16 @@ class Hobbies extends Component {
                 
         }else{
             this.PostLangGuideToSQL(tempArray);
-        }    }
+        }
+
+        Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'הפרטים שלך עודכנו בהצלחה',
+                showConfirmButton: false,
+                timer: 1200
+            });
+        }
 
     PostLangGuideToSQL = (tempArray) => {
         fetch(this.apiUrl + '/Hobby', {
@@ -174,8 +186,8 @@ class Hobbies extends Component {
               }
               this.setState({
                   itemsArray:tempArray
-              })
-              console.log(tempArray);
+              });
+          
     }
     render() {
         return (
@@ -192,7 +204,7 @@ class Hobbies extends Component {
                                 </div>
                                 <span className="middleLine col-md-1 col-xs-12"></span>
                                 <div className='col HobbiesAdded col-md col-xs-12'>
-                                <div className="row titleAdded"><span>selection:</span> </div>
+                                <div className="row titleAdded"><span>your selections:</span> </div>
                                     <div className="row HobbiesListSide HobbieAddedList">
                                         {this.state.itemsInCart.map((item, key) =>
                                             <HobbieAdded removeFromCart={this.removeFromCart} item={item} key={item.id} />)}

@@ -1,9 +1,29 @@
 import React from 'react';
-import { FilePond } from 'react-filepond';
+import { FilePond,registerPlugin } from 'react-filepond';
 import 'filepond/dist/filepond.min.css';
+//import '../Css/ProfileCard.css';
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 
+// Register the plugins
+registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,FilePondPluginImageResize);
 
 export default class FileUpload extends React.Component{
+  constructor(props){
+      super(props);
+this.state={
+    local:this.props.local,
+    newURL:""
+}
+      let local = this.state.local;
+      this.apiUrl = 'http://localhost:49948/api';
+      if (!local) {
+          this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
+      }
+  }
+//   38d03ea95849bc780865c7c3cb107cdb
     AddPDF = (error, file)=>{
         console.log(file)
         if(this.fileValidate(file)){
@@ -27,21 +47,21 @@ export default class FileUpload extends React.Component{
     }
     saveToDB=(file)=>{
         console.log(file.file);
-        
         const data= new FormData();
         data.append("UploadedFile",file.file);
         //גישה לקונטרולר
-        fetch('http://localhost:49948/api/uploadPic', {
+        fetch(this.apiUrl + '/Guide/PostPic', {
             method: 'post',
             contentType: false,
             processData: false,
             mode:'no-cors',
             body: data
-        }).then(function(data) {
-            console.log(data);
+        }).then((result) => {
+            console.log(result);
         }).catch((error)=>{
             console.log(error);
         });
+        this.props.changeURL(file.file.name);
     }
     // saveToFirebaseStorage = (file)=>{
     //     const groupData = JSON.parse(localStorage.getItem('groupData'));
@@ -60,13 +80,8 @@ export default class FileUpload extends React.Component{
     // }
     render(){
         return(
-            <div style={divStyle}>
-                <FilePond allowMultiple={false} onaddfile={this.AddPDF} labelIdlE='PDF UPLOAD'/>
-            </div>
+                <FilePond allowMultiple={false} onaddfile={this.AddPDF} imageResizeTargetWidth={280} imageResizeTargetHeight={280} allowImageResize={true} />
         )
     }
 }
 
-const divStyle = {
-    padding:'150px'
-} 

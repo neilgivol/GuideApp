@@ -3,6 +3,7 @@ import "@kenshooui/react-multi-select/dist/style.css"
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
 import '../Css/globalhome.css';
+import Swal from 'sweetalert2';
 
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 
@@ -35,9 +36,10 @@ class Languages extends Component {
             selectedItems: [],
             ListFromSQL: [],
             tempList: [],
-            GuideListFromSQL: this.props.guideListLanguages
+            GuideListFromSQL: this.props.guideListLanguages,
+            local:this.props.local
         };
-        let local = true;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
@@ -106,7 +108,7 @@ class Languages extends Component {
     }
 
     PostLangGuideToSQL = (tempArrayGuideLanguages) => {
-        fetch(this.apiUrl + 'Guide/PostGuideLanguage', {
+        fetch(this.apiUrl + '/Guide/PostGuideLanguage', {
             method: 'POST',
             body: JSON.stringify(tempArrayGuideLanguages),
             headers: new Headers({
@@ -147,6 +149,14 @@ class Languages extends Component {
         console.log(array);
         this.setState({
             selectedItems: array
+        });
+
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'הפרטים שלך עודכנו בהצלחה',
+            showConfirmButton: false,
+            timer: 1200
         });
     }
     render() {

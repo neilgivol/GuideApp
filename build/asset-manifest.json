@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/bgroup10/prod/guideapp/static/css/main.b500e03d.chunk.css",
+    "main.js": "/bgroup10/prod/guideapp/static/js/main.d20bf82f.chunk.js",
+    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.d20bf82f.chunk.js.map",
+    "runtime-main.js": "/bgroup10/prod/guideapp/static/js/runtime-main.5bb7056a.js",
+    "runtime-main.js.map": "/bgroup10/prod/guideapp/static/js/runtime-main.5bb7056a.js.map",
+    "static/css/2.0c8a1896.chunk.css": "/bgroup10/prod/guideapp/static/css/2.0c8a1896.chunk.css",
+    "static/js/2.c35875a0.chunk.js": "/bgroup10/prod/guideapp/static/js/2.c35875a0.chunk.js",
+    "static/js/2.c35875a0.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.c35875a0.chunk.js.map",
+    "index.html": "/bgroup10/prod/guideapp/index.html",
+    "precache-manifest.4cfa08a119da438690577292aff0dae9.js": "/bgroup10/prod/guideapp/precache-manifest.4cfa08a119da438690577292aff0dae9.js",
+    "service-worker.js": "/bgroup10/prod/guideapp/service-worker.js",
+    "static/css/2.0c8a1896.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.0c8a1896.chunk.css.map",
+    "static/css/main.b500e03d.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.b500e03d.chunk.css.map",
+    "static/js/2.c35875a0.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.c35875a0.chunk.js.LICENSE.txt",
+    "static/media/Default-welcomer.png": "/bgroup10/prod/guideapp/static/media/Default-welcomer.9d1403c3.png",
+    "static/media/The_Instagram_Logo.jpg": "/bgroup10/prod/guideapp/static/media/The_Instagram_Logo.00beabec.jpg",
+    "static/media/UploadIcon.svg": "/bgroup10/prod/guideapp/static/media/UploadIcon.1cedb6e9.svg",
+    "static/media/mdb.css": "/bgroup10/prod/guideapp/static/media/arrow_right.8ef6a08c.svg",
+    "static/media/all.min.css": "/bgroup10/prod/guideapp/static/media/fa-solid-900.cdfec5cf.woff",
+    "static/media/facebook.png": "/bgroup10/prod/guideapp/static/media/facebook.6a8e6677.png",
+    "static/media/linkedin.png": "/bgroup10/prod/guideapp/static/media/linkedin.660ffeb0.png",
+    "static/media/logo.svg": "/bgroup10/prod/guideapp/static/media/logo.ee7cd8ed.svg",
+    "static/media/website.png": "/bgroup10/prod/guideapp/static/media/website.ff6e9809.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5bb7056a.js",
+    "static/css/2.0c8a1896.chunk.css",
+    "static/js/2.c35875a0.chunk.js",
+    "static/css/main.b500e03d.chunk.css",
+    "static/js/main.d20bf82f.chunk.js"
+  ]
+}

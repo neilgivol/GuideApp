@@ -20,6 +20,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import '../Css/ProfileDetails.css';
+import Swal from 'sweetalert2';
 //import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
@@ -79,9 +80,10 @@ class ProfileDetails extends Component {
                 },
             ],
             selectedOption: null,
-            linksfromSQL: []
+            linksfromSQL: [],
+            local:this.props.local
         };
-        let local = true;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -163,7 +165,7 @@ class ProfileDetails extends Component {
         let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
-        fetch(this.apiUrl, {
+        fetch(this.apiUrl + 'Guide', {
             method: 'PUT',
             body: JSON.stringify({
                 FirstName: userGuide.FirstName,
@@ -192,7 +194,13 @@ class ProfileDetails extends Component {
                     console.log("err post=", error);
                 });
 
-        alert("Success");
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'הפרטים שלך עודכנו בהצלחה',
+                    showConfirmButton: false,
+                    timer: 1200
+                });
     }
     Addlinks = () => {
         const fullLinkList = [];

@@ -19,6 +19,7 @@ import menu from './Img/menu.png';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import MainFooter from './Components/MainFooter';
+import FileUpload from './Components/fileUpload.jsx';
 
 const navLinks = [
   {
@@ -47,6 +48,7 @@ class App extends Component {
     super(props)
     this.state = {
       guides: [],
+      local:true,
       navbarCheckOpen: "open",
       tempGuide:"",
       AllAreas:[],
@@ -54,7 +56,7 @@ class App extends Component {
       AllExpertises:[]
     
     }
-    let local = true;
+    let local = this.state.local;
     this.apiUrl = 'http://localhost:49948/api/';
     if (!local) {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
@@ -104,6 +106,30 @@ class App extends Component {
         let tempArray = this.state.guides;
         return tempArray;
 
+  }
+
+
+  GetGuidesFromSQL = () => {
+    let data = {
+                resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
+            };
+    fetch('https://data.gov.il/api/action/datastore_search', {
+      method: 'GET',
+      body:data,
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    })
+      .then(res => {
+        return res.json()
+      })
+      .then(
+        (result) => {
+        console.log(result)
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
   }
 
 
@@ -281,16 +307,19 @@ GetAllAreas=()=>{
     return (
       <div className="app">
         <Switch>
+        <Route path="/upload" >
+        <FileUpload local={this.state.local}/>
+        </Route>
           <Route  path="/check" >
             <Check
               color="#008ae6"
               type="spin" />
           </Route>
           <Route exact path="/reset" >
-            <ResetPassword />
+            <ResetPassword local={this.state.local} />
           </Route>
           <Route exact path="/" >
-            <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp}  />
+            <SignIn checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local}  />
           </Route>
           <Route path="/signUp">
             <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
@@ -304,7 +333,7 @@ GetAllAreas=()=>{
               hoverBackground="#A2D4FF"
               linkColor="#1988ff"
             />
-            <Home ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <Home local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
             <MainFooter className="hidden-xs"/>
           </Route>
           <Route path="/chat">

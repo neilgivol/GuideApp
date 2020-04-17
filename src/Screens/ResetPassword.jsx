@@ -10,6 +10,8 @@ import { Form } from 'react-bootstrap';
 import '../Css/passwordReset.css';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Swal from 'sweetalert2';
+
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -29,11 +31,12 @@ class ResetPassword extends Component {
         this.state = {
             email: "",
             password: "",
+            local:this.props.local
             
 
         }
      
-        let local = true;
+        let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
@@ -105,7 +108,13 @@ class ResetPassword extends Component {
               (error) => {
                 console.log("err post=", error);
               });
-
+              Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'נשלחה סיסמא חדשה למייל',
+                showConfirmButton: false,
+                timer: 1200
+            });
 
 
     }
