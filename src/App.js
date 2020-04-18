@@ -68,6 +68,7 @@ class App extends Component {
     this.GetAllAreas();
     this.GetAllHobbies();
     this.GetAllExpertises();
+    this.GetGuidesGOVFromSQL();
       // this.GetGuidesFromSQL();
   }
 
@@ -113,13 +114,13 @@ class App extends Component {
   }
 
 //????
-  GetGuidesFromSQL = () => {
+  GetGuidesGOVFromSQL = () => {
     let data = {
                 resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
             };
     fetch('https://data.gov.il/api/action/datastore_search', {
-      method: 'GET',
-      body:data,
+      method: 'POST',
+      body:JSON.stringify(data),
       headers: new Headers({
         'Content-Type': 'application/json; charset=UTF-8',
       })
@@ -351,27 +352,18 @@ GetAllAreas=()=>{
             <MainFooter className="hidden-xs"/>
           </Route>
           <Route path="/chat">
-            <ResponsiveNavigation
+          <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}
               navLinks={navLinks}
               logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
+              background="#fff"
+              hoverBackground="#A2D4FF"
+              linkColor="#1988ff"
             />
-            <Chat />
+            <Chat  navbarOpenCheck={this.state.navbarCheckOpen} />
+            <MainFooter className="hidden-xs"/>
           </Route>
-          <Route path="/area">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
-            />
-            <Area />
-          </Route>
+        
           <Route path="/portfolio">
             <ResponsiveNavigation
               navbarCheckFunc={this.navbarCheck}

@@ -49,8 +49,9 @@ box-shadow: 0 0.125rem 9.375rem rgba(90,97,105,.1), 0 0.25rem 0.5rem rgba(90,97,
     color: rgba(0,0,0,.8);
     font-size: 10px;
 }
-.del span{
-color:white
+.delSpan i{
+color:black;
+font-size: 14px;
 }
 .del:hover{
     color:white;
