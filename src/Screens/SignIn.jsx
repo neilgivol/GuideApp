@@ -34,7 +34,7 @@ class SignIn extends Component {
             password: "",
             checkBoxVal: "unCheck",
             rememberMe: false,
-            lieceneNum:""
+            lieceneNum: ""
 
         }
     }
@@ -105,7 +105,7 @@ class SignIn extends Component {
         this.props.checkSignIn(signInUser);
     }
 
-    SignInWithGovIL=()=>{
+    SignInWithGovIL = () => {
         this.props.GovList(this.state.lieceneNum);
     }
 
@@ -180,23 +180,32 @@ class SignIn extends Component {
                                             <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                         </MDBCol>
                                     </MDBRow>
+                                    <div>
+                                        <div className="or-seperator"><i>or</i></div>
+
+                                    </div>
                                     <MDBRow className="GOVDIV">
-                                        <MDBCol md="12">
-                                            <h5>enter your liencne number to log in with gov.il members</h5>
-                                            <MDBInput
-                                                type="number"
-                                                onChange={this.HandelNumberInput}
-                                            />
-                                            <MDBBtn
-                                            type="button"
-                                            gradient="blue"
-                                            rounded
-                                            className="btn-block z-depth-1a"
-                                            onClick={this.SignInWithGovIL}
-                                        >
-                                            ENTER
+                                            <h5>Sign In By Liecense Number</h5>
+                                            <MDBCol className="InputNumber" md="6">
+                                                <MDBInput
+                                                    type="number"
+                                                    onChange={this.HandelNumberInput}
+                                                    label="Your Liecnse Number"
+                                                />
+                                            </MDBCol>
+                                            <MDBCol className="ButtonClass" md="6">
+                                                <MDBBtn
+                                                    type="button"
+                                                    gradient="blue"
+                                                    rounded
+                                                    className="btn-block z-depth-1a"
+                                                    onClick={this.SignInWithGovIL}
+                                                >
+                                                    ENTER
                                             </MDBBtn>
-                                        </MDBCol>
+                                            </MDBCol>
+
+
                                     </MDBRow>
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">

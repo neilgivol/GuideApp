@@ -155,48 +155,80 @@ class App extends Component {
     else {
       alert("Error, You Not In Gov IL");
     }
-    console.log(this.state.GuidesFromGovIL);
   }
 
   //מוסיף מדריך מאתר משרד התיירות
   AddGuideFromGovIL = (licenseNum) => {
+    let FirstName;
+    let LastName = "";
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
       if (num == licenseNum) {
         let License = element.License_Number;
         let fullname = JSON.stringify(element.Name);
-        fullname = fullname.split(" ");
-        let FirstName = fullname[0];
-        FirstName = FirstName.split('"');
-        FirstName = FirstName[1];
-        let LastName = fullname[1];
-        LastName = LastName.split('"');
-        LastName = LastName[0];
-        let Email = JSON.stringify(element.Email);
-        Email = Email.split(">");
-        Email = Email[1].split("<");
-        Email = Email[0];
-        let Phone = JSON.stringify(element.Phone);
-        Phone = Phone.split(">");
-        Phone = Phone[1].split("<");
-        Phone = Phone[0].split("-");
-        let PhoneTemp = "";
-        for (let i = 0; i < Phone.length; i++) {
-          const element = Phone[i];
-          PhoneTemp += element;
+        if (fullname !== "") {
+          fullname = fullname.split('"');
+          fullname = fullname[1];
+          fullname = fullname.split(" ");
+          if (fullname.length>2) {
+            for (let i = 0; i < fullname.length; i++) {
+              const element = fullname[i];
+              if (i == fullname.length-1) {
+                FirstName = element;
+              }
+              else if(i == fullname.length-2){
+                LastName += element; 
+              }
+              else{
+                LastName += element + " "; 
+
+              }
+              
+            }
+          }
+          else if(fullname.length == 2){
+           FirstName = fullname[1];
+           LastName = fullname[0];
+          }
+          else{
+            LastName = "Guide";
+            FirstName = fullname[0];
+          }
+          
+          console.log(FirstName);
+          console.log(LastName);
+          console.log(fullname);
         }
-        Phone = PhoneTemp;
-        let Phone1 = Phone.slice(0,4);
-        let Phone2 = Phone.slice(4,7);
-        let Phone3 = Phone.slice(7,10);
-        let Phone4 = Phone.slice(10,13);
-        console.log(Phone1);
-        console.log(Phone2);
-        console.log(Phone3);
-        console.log(Phone4);
-        Phone = Phone1 + " " + Phone2 + " " + Phone3 + " " + Phone4;
-        console.log(Phone);
+       let Email;
+        if (element.Email !== "") {
+           Email = JSON.stringify(element.Email);
+          Email = Email.split(">");
+          Email = Email[1].split("<");
+          Email = Email[0];
+        }
+        else{
+          Email = "";
+        }
+       
+        let Phone = JSON.stringify(element.Phone);
+        if (Phone !== "") {
+          Phone = Phone.split(">");
+          Phone = Phone[1].split("<");
+          Phone = Phone[0].split("-");
+          let PhoneTemp = "";
+          for (let i = 0; i < Phone.length; i++) {
+            const element = Phone[i];
+            PhoneTemp += element;
+          }
+          Phone = PhoneTemp;
+          let Phone1 = Phone.slice(0,4);
+          let Phone2 = Phone.slice(4,7);
+          let Phone3 = Phone.slice(7,10);
+          let Phone4 = Phone.slice(10,13);
+          Phone = Phone1 + " " + Phone2 + " " + Phone3 + " " + Phone4;
+        }
+      
         let gLanguages = JSON.stringify(element.Language);
         gLanguages = gLanguages.split(";");
         let Languages = [];
@@ -225,7 +257,6 @@ class App extends Component {
           License: licenseNum,
           SignDate: signDateCorrect
         }
-
         this.PostGuideToSQLFromGovIL(Guide, Languages);
       }
     }
