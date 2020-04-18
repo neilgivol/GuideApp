@@ -33,6 +33,9 @@ height: 30px;
     .myForm{
         font-size: 12px;
     }
-
+    .centerDiv{
+        margin-left:15px;
+        margin-top: 5px;
+    }
   
 }
