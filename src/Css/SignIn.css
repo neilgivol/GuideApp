@@ -47,6 +47,10 @@
       border:1px solid black;
       border-radius: 50%;
   }
+  .ButtonClass{
+    place-self: flex-end;
+    margin-bottom: 10px;
+  }
  
   .CardBody{
     text-align: left;

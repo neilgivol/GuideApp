@@ -34,12 +34,14 @@ class SignIn extends Component {
             password: "",
             checkBoxVal: "unCheck",
             rememberMe: false,
+            lieceneNum: ""
 
         }
     }
 
     //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
     componentDidMount() {
+        console.log(this.props.GOV);
         const rememberMe = localStorage.getItem('rememberMe') === 'true';
         const usernameEntered = rememberMe ? localStorage.getItem('usernameEntered') : '';
         const PasswordEntered = rememberMe ? localStorage.getItem('PasswordEntered') : '';
@@ -58,6 +60,12 @@ class SignIn extends Component {
     HandelPasswordInput = (e) => {
         this.setState({
             password: e.target.value
+        }
+        )
+    }
+    HandelNumberInput = (e) => {
+        this.setState({
+            lieceneNum: e.target.value
         }
         )
     }
@@ -97,13 +105,17 @@ class SignIn extends Component {
         this.props.checkSignIn(signInUser);
     }
 
+    SignInWithGovIL = () => {
+        this.props.GovList(this.state.lieceneNum);
+    }
+
     render() {
         return (
             <div className="Cont">
                 <MDBContainer>
-                    <MDBRow> 
-                        <MDBCol md="12 text-center"> 
-                        <img className="LogoDiv" src={logo} />
+                    <MDBRow>
+                        <MDBCol md="12 text-center">
+                            <img className="LogoDiv" src={logo} />
                         </MDBCol>
                     </MDBRow>
                     <MDBRow className="RowDivSignIn text-center">
@@ -168,6 +180,33 @@ class SignIn extends Component {
                                             <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                         </MDBCol>
                                     </MDBRow>
+                                    <div>
+                                        <div className="or-seperator"><i>or</i></div>
+
+                                    </div>
+                                    <MDBRow className="GOVDIV">
+                                            <h5>Sign In By Liecense Number</h5>
+                                            <MDBCol className="InputNumber" md="6">
+                                                <MDBInput
+                                                    type="number"
+                                                    onChange={this.HandelNumberInput}
+                                                    label="Your Liecnse Number"
+                                                />
+                                            </MDBCol>
+                                            <MDBCol className="ButtonClass" md="6">
+                                                <MDBBtn
+                                                    type="button"
+                                                    gradient="blue"
+                                                    rounded
+                                                    className="btn-block z-depth-1a"
+                                                    onClick={this.SignInWithGovIL}
+                                                >
+                                                    ENTER
+                                            </MDBBtn>
+                                            </MDBCol>
+
+
+                                    </MDBRow>
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">
                                     <div className="row col-12">
@@ -178,7 +217,7 @@ class SignIn extends Component {
                                             <p className="font-small grey-text d-flex justify-content-end">
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>
-                                         </p>
+                                            </p>
                                         </div>
                                     </div>
                                 </MDBModalFooter>

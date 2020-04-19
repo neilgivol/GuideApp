@@ -6,11 +6,11 @@ class HobbieAdded extends Component {
     }
     render() {
         return (
-            <div className="CardItem">
+            <div className="CardItem" onClick={() => this.props.removeFromCart(this.props.item)}>
             <img  className="CardImage"  variant="top"  src={this.props.item.image} />
-                    <div className="titleCard"><h4 className="titleh">{this.props.item.name}</h4></div>
+                    <div className="titleCardDiv"><h4 className="titleh">{this.props.item.name}</h4></div>
                     <div className='del'>
-                            <span className='delSpan fas fa-remove fa-2x' onClick={() => this.props.removeFromCart(this.props.item)}></span>
+                            <span className='delSpan'><i class="fas fa-times"></i></span>
                         </div>
             </div>
         );

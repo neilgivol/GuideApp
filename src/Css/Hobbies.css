@@ -49,8 +49,9 @@ box-shadow: 0 0.125rem 9.375rem rgba(90,97,105,.1), 0 0.25rem 0.5rem rgba(90,97,
     color: rgba(0,0,0,.8);
     font-size: 10px;
 }
-.del span{
-color:white
+.delSpan i{
+color:black;
+font-size: 14px;
 }
 .del:hover{
     color:white;
@@ -58,23 +59,26 @@ color:white
 .CardItem:hover{
     background-color: #b3e0ff;
 }
-.titleCard h4{
-    text-align: center;
+.titleCardDiv h4{
     font-size: 15px;
+    text-align: center;
+vertical-align: middle;
+line-height: 20px;     
 }
-.titleCard h4:hover{
+.titleCardDiv h4:hover{
   color: white;
 }
 
-.titleCard{
+.titleCardDiv{
+    height: 20%;
     position: absolute;
-    top: 70%;
+    top: 80%;
     width: 100%;
     opacity: 0.7;
     background-color: #b3e0ff;
     font-weight: bold;
 }
-.titleCard:hover{
+.titleCardDiv:hover{
     background-color: #00639d;
 color:white;
 cursor: pointer;
@@ -116,7 +120,7 @@ cursor: pointer;
     }
     .del{
         position: absolute;
-        bottom: 70%;
+        bottom: 77%;
         left:3%;
         font-size: 8px;
     }
@@ -125,26 +129,29 @@ cursor: pointer;
         display:inline-block;
         border-bottom:1px solid rgba(0,0,0,.8);
     }
-    .titleCard h4{
+    .titleCardDiv h4{
         font-size: 10px;
         margin:0 auto;
+        text-align: center;
+    vertical-align: middle;
+    line-height: 15px;     
     }
     
-    .titleCard h4:hover{
+    .titleCardDiv h4:hover{
         color: white;
       }
       
-      .titleCard{
-          position: absolute;
-          top: 77%;
-          width: 100%;
-          opacity: 0.7;
-          background-color: #b3e0ff;
-          font-weight: bold;
-          height: 30px;
+      .titleCardDiv{
+        height: 20%;
+    position: absolute;
+    top: 83%;
+    width: 100%;
+    opacity: 0.7;
+    background-color: #b3e0ff;
+    font-weight: bold;
       }
    
-      .titleCard:hover{
+      .titleCardDiv:hover{
           background-color: #00639d;
       color:white;
       cursor: pointer;
