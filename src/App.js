@@ -56,7 +56,8 @@ class App extends Component {
       AllHobbies: [],
       AllExpertises: [],
       GuidesFromGovIL: [],
-      LanguagesList:[]
+      LanguagesList: [],
+      LanguagesListOrgenized:[]
 
     }
     let local = this.state.local;
@@ -171,46 +172,46 @@ class App extends Component {
           fullname = fullname.split('"');
           fullname = fullname[1];
           fullname = fullname.split(" ");
-          if (fullname.length>2) {
+          if (fullname.length > 2) {
             for (let i = 0; i < fullname.length; i++) {
               const element = fullname[i];
-              if (i == fullname.length-1) {
+              if (i == fullname.length - 1) {
                 FirstName = element;
               }
-              else if(i == fullname.length-2){
-                LastName += element; 
+              else if (i == fullname.length - 2) {
+                LastName += element;
               }
-              else{
-                LastName += element + " "; 
+              else {
+                LastName += element + " ";
 
               }
-              
+
             }
           }
-          else if(fullname.length == 2){
-           FirstName = fullname[1];
-           LastName = fullname[0];
+          else if (fullname.length == 2) {
+            FirstName = fullname[1];
+            LastName = fullname[0];
           }
-          else{
+          else {
             LastName = "Guide";
             FirstName = fullname[0];
           }
-          
+
           console.log(FirstName);
           console.log(LastName);
           console.log(fullname);
         }
-       let Email;
+        let Email;
         if (element.Email !== "") {
-           Email = JSON.stringify(element.Email);
+          Email = JSON.stringify(element.Email);
           Email = Email.split(">");
           Email = Email[1].split("<");
           Email = Email[0];
         }
-        else{
+        else {
           Email = "";
         }
-       
+
         let Phone = JSON.stringify(element.Phone);
         if (Phone !== "") {
           Phone = Phone.split(">");
@@ -222,13 +223,13 @@ class App extends Component {
             PhoneTemp += element;
           }
           Phone = PhoneTemp;
-          let Phone1 = Phone.slice(0,4);
-          let Phone2 = Phone.slice(4,7);
-          let Phone3 = Phone.slice(7,10);
-          let Phone4 = Phone.slice(10,13);
+          let Phone1 = Phone.slice(0, 4);
+          let Phone2 = Phone.slice(4, 7);
+          let Phone3 = Phone.slice(7, 10);
+          let Phone4 = Phone.slice(10, 13);
           Phone = Phone1 + " " + Phone2 + " " + Phone3 + " " + Phone4;
         }
-      
+
         let gLanguages = JSON.stringify(element.Language);
         gLanguages = gLanguages.split(";");
         let Languages = [];
@@ -238,7 +239,7 @@ class App extends Component {
             element = element.split('"');
             Languages.push(element[0]);
           }
-          else if(i == 0){
+          else if (i == 0) {
             element = element.split('"');
             Languages.push(element[1]);
           }
@@ -246,6 +247,23 @@ class App extends Component {
             Languages.push(element);
           }
         }
+        let DescriptionGuide = JSON.stringify(element.FullDescription);
+        DescriptionGuide = DescriptionGuide.split('"');
+        DescriptionGuide = DescriptionGuide[1].split("<p>");
+        let tempDescription = "";
+        for (let i = 0; i < DescriptionGuide.length; i++) {
+          const element = DescriptionGuide[i];
+          let templine = element.split("</p>");
+          if (i == 0 || i == DescriptionGuide.length-1) {
+            tempDescription += templine[0];
+          }
+          else{
+            tempDescription += templine[0] + " ";
+          }
+        }
+        DescriptionGuide = tempDescription;
+        DescriptionGuide = DescriptionGuide.replace("'","`")
+        console.log(DescriptionGuide);
         let SignDate = new Date();
         let signDateCorrect = SignDate.toLocaleDateString('en-US');
 
@@ -255,14 +273,16 @@ class App extends Component {
           LastName: LastName,
           Phone: Phone,
           License: licenseNum,
-          SignDate: signDateCorrect
+          SignDate: signDateCorrect,
+          DescriptionGuide: DescriptionGuide
         }
+        console.log(Guide);
         this.PostGuideToSQLFromGovIL(Guide, Languages);
       }
     }
   }
 
-//מכניס מדריך מאתר משרד התיירות
+  //מכניס מדריך מאתר משרד התיירות
   PostGuideToSQLFromGovIL = (Guide, Languages) => {
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostGuideFromGovIL', {
@@ -278,10 +298,16 @@ class App extends Component {
       })
       .then(
         (result) => {
-          this.setState({
-            tempGuide: result
-          })
-          this.AddLanguages(this.state.tempGuide, Languages);
+          if (result !== null) {
+            this.setState({
+              tempGuide: result
+            })
+            this.AddLanguages(this.state.tempGuide, Languages);
+          }
+          else{
+            alert("Error")
+          }
+         
         },
         (error) => {
           console.log("err post=", error);
@@ -289,51 +315,53 @@ class App extends Component {
     console.log(this.state.tempGuide);
   }
 
-//מוסיף שפות מאתר התיירות למדריך
+  //מוסיף שפות מאתר התיירות למדריך
   AddLanguages = (guide, languages) => {
     console.log(languages);
     console.log(guide);
-let listGuideLang = [];
+    let listGuideLang = [];
     for (let i = 0; i < languages.length; i++) {
       const element = languages[i];
       for (let j = 0; j < this.state.LanguagesList.length; j++) {
         const elementFromState = this.state.LanguagesList[j];
         if (elementFromState.LNameEnglish === element) {
           let Guide_Language = {
-            Guide_Code:guide.gCode,
-            Language_Code:elementFromState.LCode
+            Guide_Code: guide.gCode,
+            Language_Code: elementFromState.LCode
           }
           listGuideLang.push(Guide_Language);
         }
       }
     }
     console.log(listGuideLang);
-this.PostLanguagesGuide(listGuideLang);
+    this.PostLanguagesGuide(listGuideLang);
   }
-  PostLanguagesGuide=(guideLanguages)=>{
+
+  //מכניסה את שפות המדריך מאתר משרד התיירות
+  PostLanguagesGuide = (guideLanguages) => {
     fetch(this.apiUrl + '/Guide/PostGuideLanguage', {
       method: 'POST',
       body: JSON.stringify(guideLanguages),
       headers: new Headers({
-          'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
       })
 
-  })
+    })
       .then(res => {
-          console.log('res=', res);
-          return res.json()
+        console.log('res=', res);
+        return res.json()
       })
       .then(
-          (result) => {
-              console.log("fetch POST= ", result);
-              console.log(result);
-              this.MoveToHomePage(this.state.tempGuide);
-          },
-          (error) => {
-              console.log("err post=", error);
-          });
+        (result) => {
+          console.log("fetch POST= ", result);
+          console.log(result);
+          this.MoveToHomePage(this.state.tempGuide);
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
   }
-  GetAllLanguages=()=>{
+  GetAllLanguages = () => {
     fetch(this.apiUrl + "Language", {
       method: 'GET',
       headers: new Headers({
@@ -348,6 +376,7 @@ this.PostLanguagesGuide(listGuideLang);
           this.setState({
             LanguagesList: result
           })
+          this.OrgenizeLanguages(result);
           console.log(result);
         },
         (error) => {
@@ -513,6 +542,22 @@ this.PostLanguagesGuide(listGuideLang);
     })
   }
 
+  //מסדר את השפות לפי ID ו label
+OrgenizeLanguages = (result) =>{
+  let tempArrayList = [];
+  for (let i = 0; i < result.length; i++) {
+    const element = result[i];
+    let Language = {
+      id:i+1,
+      label: element.LNameEnglish + " / " + element.LName
+    }
+    tempArrayList.push(Language);
+  }
+console.log(tempArrayList);
+  this.setState({
+    LanguagesListOrgenized:tempArrayList
+  })
+}
   //מביא את כל האזורים הקיימים במסד נתונים
   GetAllAreas = () => {
     fetch(this.apiUrl + "Area", {
@@ -565,7 +610,7 @@ this.PostLanguagesGuide(listGuideLang);
               hoverBackground="#A2D4FF"
               linkColor="#1988ff"
             />
-            <Home local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+            <Home AllLanguages={this.state.LanguagesListOrgenized} local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
             <MainFooter className="hidden-xs" />
           </Route>
           <Route path="/chat">

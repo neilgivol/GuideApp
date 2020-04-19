@@ -12,27 +12,7 @@ class Languages extends Component {
         super(props)
         this.handleChange = this.handleChange.bind(this);
         this.state = {
-            items: [
-                { id: 1, label: "Hebrew / עברית" },
-                { id: 2, label: "English", disabled: false },
-                { id: 3, label: "Spainish / Español", disabled: false },
-                { id: 4, label: "Arabic / العربية" },
-                { id: 5, label: "Chinese / 古文" },
-                { id: 6, label: "Dutch / Nederlands" },
-                { id: 7, label: "French / Français" },
-                { id: 8, label: "German / Deutsch" },
-                { id: 9, label: "Italian / Italiano" },
-                { id: 10, label: "Portuguese / Português" },
-                { id: 11, label: "Russian / Русский" },
-                { id: 12, label: "Polish / polski" },
-                { id: 13, label: "Hungarian / Magyar" },
-                { id: 14, label: "Swedish / Svenska" },
-                { id: 15, label: "Norwegian / Norsk" },
-                { id: 16, label: "Danish / Dansk" },
-                { id: 17, label: "Yiddish / יידיש" },
-                { id: 18, label: "Romanian / Română" }
-
-            ],
+            items:this.props.LanguagesList,
             selectedItems: [],
             ListFromSQL: [],
             tempList: [],
