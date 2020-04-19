@@ -209,7 +209,7 @@ class ProfileCard extends Component {
         console.log(result);
         localStorage.setItem('Guide', JSON.stringify(result))
         this.props.history.push({
-            pathname: '/home/',
+            pathname: '/',
             state: { GuideTemp: result }
         });
     }

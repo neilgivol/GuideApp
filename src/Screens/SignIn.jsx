@@ -38,7 +38,15 @@ class SignIn extends Component {
 
         }
     }
-
+componentWillMount(){
+    if (this.props.location.state !== undefined) {
+        this.props.history.push({
+            pathname: '/home/',
+            state: { GuideTemp: this.props.location.state.GuideTemp }
+          });
+        
+    }
+}
     //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
     componentDidMount() {
         console.log(this.props.GOV);
