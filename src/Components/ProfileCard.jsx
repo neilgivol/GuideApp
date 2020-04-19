@@ -10,7 +10,9 @@ import pic from '../Img/Default-welcomer.png';
 import ImageUploader from 'react-images-upload';
 import FileUpload from '../Components/fileUpload';
 import { Progress } from "shards-react";
-import { Link, withRouter  } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+
+
 
 class ProfileCard extends Component {
     constructor(props) {
@@ -22,10 +24,12 @@ class ProfileCard extends Component {
             sum: 0,
             rating: this.props.GuideDetails.Rank,
             pictures: [],
-            hobbies:this.props.guideListHobbies,
-            expertise:this.props.GuideExpertises,
-            local:this.props.local,
-            upload:false
+            hobbies: this.props.guideListHobbies,
+            expertise: this.props.GuideExpertises,
+            local: this.props.local,
+            upload: false,
+            showDivPicture: false,
+            newProfilePicURL: ""
         }
         this.onDrop = this.onDrop.bind(this);
         let local = this.state.local;
@@ -34,7 +38,7 @@ class ProfileCard extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
-        componentWillMount(){
+    componentWillMount() {
         console.log(this.state.local);
         console.log("ddd");
     }
@@ -52,8 +56,8 @@ class ProfileCard extends Component {
         console.log(this.state.pictures)
     }
     UploadPicture = (pic) => {
-        const data= new FormData();
-        data.append("UploadedFile",pic);
+        const data = new FormData();
+        data.append("UploadedFile", pic);
         //pay attention case sensitive!!!! should be exactly as the prop in C#!
         fetch(this.apiUrl + '/Guide/PostPic', {
             method: 'POST',
@@ -78,16 +82,11 @@ class ProfileCard extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.GuideLinks)
-        console.log(this.props.GuideDetails);
-
         const areas = JSON.parse(localStorage.getItem('areas'));
         const languages = JSON.parse(localStorage.getItem('languages'));
         const links = JSON.parse(localStorage.getItem('links'));
         const hobbies = JSON.parse(localStorage.getItem('Hobby'));
         const expertises = JSON.parse(localStorage.getItem('Expertise'));
-
-        console.log(links)
 
         if (this.state.areas.length === 0) {
             this.setState({
@@ -118,12 +117,10 @@ class ProfileCard extends Component {
         if (userPicture !== "") {
             tempSum = parseInt(tempSum) + 10;
         }
-        if(hobbies !== null)
-        {
+        if (hobbies !== null) {
             tempSum = parseInt(tempSum) + 20;
         }
-        if(expertises !== null)
-        {
+        if (expertises !== null) {
             tempSum = parseInt(tempSum) + 20;
         }
 
@@ -134,43 +131,52 @@ class ProfileCard extends Component {
             sum: tempSum
         })
     }
-    changeup=()=>{
+    changeup = () => {
         if (this.state.upload) {
             this.setState({
-                upload:false
+                upload: false
             })
         }
-        else{
+        else {
             this.setState({
-                upload:true
+                upload: true
             });
         }
-       
+
         this.upload();
     }
-    upload=()=>{
+    upload = () => {
         if (this.state.upload) {
-            console.log("dd")
-            return <div className="uploadDiv"><FileUpload changeURL={this.ChangeProfileImage}  local={this.state.local}/></div>
+            return <div className="uploadDiv"><FileUpload changeURL={this.ChangeProfileImage} local={this.props.local} /></div>
         }
         //this.ChangeProfileImage();
     }
-    ChangeProfileImage=(newurl)=>{
-        console.log(newurl);
-        
-        let urlPicture = "D:/WhyDontWork/IsraVisor-server/uploadedFiles/" + newurl;
+
+    CancelChangesProfilePic = () => {
+        this.setState({
+            upload: false,
+            showDivPicture: false
+        })
+    }
+
+    ShowProfileChangeQuestion = () => {
+        return <div>
+            <h3>Do You Want To Change Your Profile Picture?</h3>
+            <Button onClick={this.ChangeProfilePic} className="yesBtn col-4">YES</Button>
+            <Button onClick={this.CancelChangesProfilePic} className="noBtn col-4">NO</Button>
+        </div>
+    }
+    ChangeProfilePic = () => {
+        console.log(this.state.newProfilePicURL);
+        let newurl = this.state.newProfilePicURL;
+        let urlPicture = "http://proj.ruppin.ac.il/bgroup10/PROD/uploadedFiles/" + newurl;
         let ProfilePicture = {
             id: this.state.user.gCode,
             picPath: urlPicture
         }
         fetch(this.apiUrl + '/Guide/UpdateProfilePic', {
             method: 'POST',
-            body: JSON.stringify(
-                {
-                    id: this.state.user.gCode,
-            picPath: urlPicture
-                }
-            ),
+            body: JSON.stringify(ProfilePicture),
             headers: new Headers({
                 'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
@@ -182,12 +188,31 @@ class ProfileCard extends Component {
             .then(
                 (result) => {
                     console.log(result);
+                    this.RenderProfilePic(result);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
+
+
+    }
+    ChangeProfileImage = (newurl) => {
+        this.setState({
+            showDivPicture: true,
+            newProfilePicURL: newurl
+        })
+        this.ShowProfileChangeQuestion();
+        console.log(newurl);
     }
 
+    RenderProfilePic = (result) => {
+        console.log(result);
+        localStorage.setItem('Guide', JSON.stringify(result))
+        this.props.history.push({
+            pathname: '/home/',
+            state: { GuideTemp: result }
+        });
+    }
     picExsist = () => {
         if (this.state.user.ProfilePic !== "") {
             return <CardImg variant="top" src={this.state.user.ProfilePic} style={{ height: '50', width: '50' }} />
@@ -202,7 +227,7 @@ class ProfileCard extends Component {
         return <div className="imageClass">
             {this.picExsist()}
             <span className="uploadPicIcon">
-              <i class="far fa-image" onClick={this.changeup}></i>
+                <i class="far fa-image" onClick={this.changeup}></i>
             </span>
         </div>
     }
@@ -224,9 +249,10 @@ class ProfileCard extends Component {
                     //     maxFileSize={5242880}
                     // /> */}
                     {this.upload()}
+                    {this.state.showDivPicture ? this.ShowProfileChangeQuestion() : null}
                     <CardTitle>{this.funcName()}</CardTitle>
                     <CardText>
-                    <Progress theme="primary" value={this.state.sum} />
+                        <Progress theme="primary" value={this.state.sum} />
                     </CardText>
                     <p>your current rating :</p>
                     <StarRatings
