@@ -49,7 +49,7 @@ class App extends Component {
     super(props)
     this.state = {
       guides: [],
-      local: true,
+      local: false,
       navbarCheckOpen: "open",
       tempGuide: "",
       AllAreas: [],

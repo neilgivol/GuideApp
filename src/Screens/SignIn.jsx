@@ -39,12 +39,12 @@ class SignIn extends Component {
         }
     }
 componentWillMount(){
+    //אם החליף תמונה
     if (this.props.location.state !== undefined) {
         this.props.history.push({
             pathname: '/home/',
             state: { GuideTemp: this.props.location.state.GuideTemp }
           });
-        
     }
 }
     //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
