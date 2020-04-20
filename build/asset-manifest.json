@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/bgroup10/prod/guideapp/static/css/main.04db1636.chunk.css",
-    "main.js": "/bgroup10/prod/guideapp/static/js/main.5afc0ab1.chunk.js",
-    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.5afc0ab1.chunk.js.map",
+    "main.css": "/bgroup10/prod/guideapp/static/css/main.5118d922.chunk.css",
+    "main.js": "/bgroup10/prod/guideapp/static/js/main.d46b9cdd.chunk.js",
+    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.d46b9cdd.chunk.js.map",
     "runtime-main.js": "/bgroup10/prod/guideapp/static/js/runtime-main.5bb7056a.js",
     "runtime-main.js.map": "/bgroup10/prod/guideapp/static/js/runtime-main.5bb7056a.js.map",
     "static/css/2.54a20c6a.chunk.css": "/bgroup10/prod/guideapp/static/css/2.54a20c6a.chunk.css",
-    "static/js/2.7fd96d98.chunk.js": "/bgroup10/prod/guideapp/static/js/2.7fd96d98.chunk.js",
-    "static/js/2.7fd96d98.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.7fd96d98.chunk.js.map",
+    "static/js/2.05aaed35.chunk.js": "/bgroup10/prod/guideapp/static/js/2.05aaed35.chunk.js",
+    "static/js/2.05aaed35.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.05aaed35.chunk.js.map",
     "index.html": "/bgroup10/prod/guideapp/index.html",
-    "precache-manifest.24a2e2dd454a886d0ff47b3e47ddc255.js": "/bgroup10/prod/guideapp/precache-manifest.24a2e2dd454a886d0ff47b3e47ddc255.js",
+    "precache-manifest.c11de0687f9e8a9869e47ebe8dd7b367.js": "/bgroup10/prod/guideapp/precache-manifest.c11de0687f9e8a9869e47ebe8dd7b367.js",
     "service-worker.js": "/bgroup10/prod/guideapp/service-worker.js",
     "static/css/2.54a20c6a.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.54a20c6a.chunk.css.map",
-    "static/css/main.04db1636.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.04db1636.chunk.css.map",
-    "static/js/2.7fd96d98.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.7fd96d98.chunk.js.LICENSE.txt",
+    "static/css/main.5118d922.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.5118d922.chunk.css.map",
+    "static/js/2.05aaed35.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.05aaed35.chunk.js.LICENSE.txt",
     "static/media/Default-welcomer.png": "/bgroup10/prod/guideapp/static/media/Default-welcomer.9d1403c3.png",
     "static/media/The_Instagram_Logo.jpg": "/bgroup10/prod/guideapp/static/media/The_Instagram_Logo.00beabec.jpg",
     "static/media/UploadIcon.svg": "/bgroup10/prod/guideapp/static/media/UploadIcon.1cedb6e9.svg",
@@ -27,8 +27,8 @@
   "entrypoints": [
     "static/js/runtime-main.5bb7056a.js",
     "static/css/2.54a20c6a.chunk.css",
-    "static/js/2.7fd96d98.chunk.js",
-    "static/css/main.04db1636.chunk.css",
-    "static/js/main.5afc0ab1.chunk.js"
+    "static/js/2.05aaed35.chunk.js",
+    "static/css/main.5118d922.chunk.css",
+    "static/js/main.d46b9cdd.chunk.js"
   ]
 }

@@ -3,6 +3,7 @@ import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bo
 //import DatePicker from 'react-datepicker';
 import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 //import { withStyles } from '@material-ui/core/styles';
 //import { green } from '@material-ui/core/colors';
 import Radio from '@material-ui/core/Radio';
@@ -229,70 +230,74 @@ class ProfileDetails extends Component {
         })
     }
 
-
     //שינוי הפרטים של המשתמש על המסך לאחר שלחץ על כפתור העידכון
     uploadNewDetails = (guideUpdate) => {
-        console.log(guideUpdate);
-        if (guideUpdate !== null) {
-            let dateBirth = new Date(guideUpdate.BirthDay);
-            this.setState({
-                user: guideUpdate,
-                size: guideUpdate.Gender,
-                phone: guideUpdate.Phone,
-                License:guideUpdate.License
-
-            })
-            this.forceUpdate()
-            localStorage.setItem('Guide', JSON.stringify(this.state.user))
-        }
-
-        let codetype = "";
-        let Link = "";
-        const arraylinks = [];
-        for (let i = 0; i < this.state.fulllink.length; i++) {
-            const element = this.state.fulllink[i];
-            let t = element.split(" - ");
-            let namelink = t[0];
-            for (let j = 0; j < this.state.options.length; j++) {
-                const element2 = this.state.options[j];
-                if (element2.value == namelink) {
-                    Link = {
-                        guidegCode: this.state.user.gCode,
-                        linkPath: t[1],
-                        LinksCategoryLCode: element2.id
-                    }
-                    arraylinks.push(Link);
-                }
-            }
-        }
-        console.log(arraylinks);
+        this.renderPage(guideUpdate);
+        // if (guideUpdate !== null) {
+        //     let dateBirth = new Date(guideUpdate.BirthDay);
+        //     this.setState({
+        //         user: guideUpdate,
+        //         size: guideUpdate.Gender,
+        //         phone: guideUpdate.Phone,
+        //         License:guideUpdate.License
+        //     })
+        //     localStorage.setItem('Guide', JSON.stringify(this.state.user))
+        // }
+        // let codetype = "";
+        // let Link = "";
+        // const arraylinks = [];
+        // for (let i = 0; i < this.state.fulllink.length; i++) {
+        //     const element = this.state.fulllink[i];
+        //     let t = element.split(" - ");
+        //     let namelink = t[0];
+        //     for (let j = 0; j < this.state.options.length; j++) {
+        //         const element2 = this.state.options[j];
+        //         if (element2.value == namelink) {
+        //             Link = {
+        //                 guidegCode: this.state.user.gCode,
+        //                 linkPath: t[1],
+        //                 LinksCategoryLCode: element2.id
+        //             }
+        //             arraylinks.push(Link);
+        //         }
+        //     }
+        // }
+        // console.log(arraylinks);
         
-        if (arraylinks.length === 0) {
-            console.log("del")
-            fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
-                method: 'DELETE',
-                //body: JSON.stringify({id:7}),
-                headers: new Headers({
-                    'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
-                })
-            })
-                .then(res => {
-                    console.log('res=', res);
-                    return res.json()
-                })
-                .then(
-                    (result) => {
-                        this.uploadLinks(result);
-                    },
-                    (error) => {
-                        console.log("err post=", error);
-                    });
-        }
-        else {
-            this.postLinksToSQL(arraylinks);
-        }
-
+        // if (arraylinks.length === 0) {
+        //     console.log("del")
+        //     fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
+        //         method: 'DELETE',
+        //         //body: JSON.stringify({id:7}),
+        //         headers: new Headers({
+        //             'accept': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+        //         })
+        //     })
+        //         .then(res => {
+        //             console.log('res=', res);
+        //             return res.json()
+        //         })
+        //         .then(
+        //             (result) => {
+        //                 this.uploadLinks(result);
+        //             },
+        //             (error) => {
+        //                 console.log("err post=", error);
+        //             });
+        // }
+        // else {
+        //     this.postLinksToSQL(arraylinks);
+        // }
+      
     }
+    renderPage=(guideUpdate)=>{
+        localStorage.setItem('Guide', JSON.stringify(guideUpdate))
+        this.props.history.push({
+            pathname: '/',
+            state: { GuideTemp: guideUpdate }
+        });
+    }
+    //לינקים
     funarray = () => {
         return this.state.fulllink ? null : this.state.fulllink.map(item => <div>{item}</div>)
     }
@@ -324,7 +329,6 @@ class ProfileDetails extends Component {
             fulllink: temparraylinks
         })
     }
-
     postLinksToSQL = (links) => {
         fetch(this.apiUrl + 'Link/UpdateLinks', {
             method: 'PUT',
@@ -516,4 +520,4 @@ class ProfileDetails extends Component {
     }
 }
 
-export default ProfileDetails;
+export default withRouter(ProfileDetails);
