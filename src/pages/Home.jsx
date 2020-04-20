@@ -62,9 +62,9 @@ class Home extends Component {
                 },
                 {
                     id: 1,
-                    name: 'Instegram',
-                    value: 'Instegram',
-                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
+                    name: 'Instagram',
+                    value: 'Instagram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instagram</span></div>
                 },
                 {
                     id: 2,
@@ -164,6 +164,7 @@ class Home extends Component {
 
     //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
     orgenzie = (links) => {
+        console.log(links);
         let templink = "";
         let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {
@@ -213,7 +214,7 @@ class Home extends Component {
     renderMainPage = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
+            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} linksFromSQL={this.state.GuideLinks} GuideLinks={this.state.fulllink} />
         }
         // else if (namePage2 === "Area Knowledge") {
         //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
