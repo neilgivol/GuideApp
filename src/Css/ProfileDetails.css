@@ -30,6 +30,9 @@ height: 30px;
 
 
 @media only screen and (max-width: 600px) {
+     .form-control{
+        font-size: 12px;
+    }
     .myForm{
         font-size: 12px;
     }

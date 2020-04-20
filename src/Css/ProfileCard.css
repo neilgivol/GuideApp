@@ -1,34 +1,69 @@
-.CardBodyDiv img{
-max-width: 75%;
-max-height: 75%;
-margin-top:5%;
-margin-left: 12.5%;
-width: 75%;
-height: 75%;
-border-radius: 50% 50% 50% 50%;
+.CardBodyDiv img {
+  max-width: 75%;
+  max-height: 75%;
+  margin-top: 5%;
+  margin-left: 12.5%;
+  width: 75%;
+  height: 75%;
+  border-radius: 50% 50% 50% 50%;
 }
 .CardBodyDiv {
-    max-height: 100%;
-    max-width: 100%;
-    
+  max-height: 100%;
+  max-width: 100%;
 }
 
-.uploadPicIcon{
-    font-size: 40px;
+.uploadPicIcon {
+  font-size: 40px;
+  position: absolute;
+  top: 80%;
+  left: 80%;
+  color: rgb(0, 100, 199);
+}
+.imageClass {
+  position: relative;
+}
+.CardBodyDiv Button {
+  width: 100%;
+}
+.uploadDiv {
+  margin-bottom: 20px;
+  width: 200px;
+  height: 200px;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .CardBodyDiv img {
+    max-width: 40%;
+    max-height: 40%;
+    margin-top: 5%;
+    margin-left: 29%;
+  }
+  .uploadPicIcon {
+    font-size: 20px;
     position: absolute;
-    top:80%;
-    left:80%;
-    color:rgb(0, 100, 199);
+    top: 85%;
+    left: 65%;
+    color: rgb(0, 100, 199);
+  }
+  .card-body h2{
+      font-size: 20px;
+      margin:0 auto;
+      text-align: center;
+  }
+  .card-body{
+      padding: 5px;
+  }
+  .progress{
+      width: 60%;
+      text-align: center;
+      margin:0 auto;
+  }
+  .card-body p{
+    margin:0 auto;
+
+  }
+  .star-ratings{
+    margin:0 auto;
 }
-.imageClass{
-    position: relative;
-}
-.CardBodyDiv Button{
-    width: 100%;
-}
-.uploadDiv{
-   margin-bottom: 20px;
-    width: 200px;
-    height: 200px;
-    overflow: auto;
 }

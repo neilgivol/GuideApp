@@ -135,7 +135,7 @@ class Home extends Component {
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
-        //this.getLinksFromSQL(this.state.Guide);
+        this.getLinksFromSQL(this.state.Guide);
     }
 
     //מביא את הלינקים של המדריך הספציפי
@@ -319,7 +319,7 @@ class Home extends Component {
     showProfileCard = () => {
         if (this.state.namePage === "Profile Details") {
             return <Row className="homePage">
-                <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
+                <Col className="cardDiv col-lg-3 col-md-2">
                     {this.funcGoogleFacebook()}
                 </Col>
                 <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
