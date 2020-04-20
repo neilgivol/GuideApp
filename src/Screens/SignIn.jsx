@@ -102,6 +102,7 @@ componentWillMount(){
 
     //לוקח את פרטי המשתמש ושולח אותם למסד נתונים כדי לבדוק האם קיים משתמש כזה
     SignInFunc = () => {
+        localStorage.clear();
         localStorage.setItem('rememberMe', this.state.rememberMe);
         localStorage.setItem('usernameEntered', this.state.rememberMe ? this.state.email : '');
         localStorage.setItem('PasswordEntered', this.state.rememberMe ? this.state.password : '');

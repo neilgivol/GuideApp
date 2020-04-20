@@ -65,6 +65,7 @@ class SignUp extends Component {
  
 //בודק האם השדה של סיסמא תואם לשדה של אשר סיסמא
   CheckPasswordConfirm = () => {
+    localStorage.clear();
     let password = this.state.password;
     let confirmPassword = this.state.confirmPassword;
    
