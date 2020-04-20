@@ -62,9 +62,9 @@ class Home extends Component {
                 },
                 {
                     id: 1,
-                    name: 'Instegram',
-                    value: 'Instegram',
-                    label: <div><img className="imageicons" src={instegram} /><span>Instegram</span></div>
+                    name: 'Instagram',
+                    value: 'Instagram',
+                    label: <div><img className="imageicons" src={instegram} /><span>Instagram</span></div>
                 },
                 {
                     id: 2,
@@ -135,7 +135,7 @@ class Home extends Component {
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
-        //this.getLinksFromSQL(this.state.Guide);
+        this.getLinksFromSQL(this.state.Guide);
     }
 
     //מביא את הלינקים של המדריך הספציפי
@@ -164,6 +164,7 @@ class Home extends Component {
 
     //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
     orgenzie = (links) => {
+        console.log(links);
         let templink = "";
         let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {
@@ -213,7 +214,7 @@ class Home extends Component {
     renderMainPage = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} GuideLinks={this.state.fulllink} />
+            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} linksFromSQL={this.state.GuideLinks} GuideLinks={this.state.fulllink} />
         }
         // else if (namePage2 === "Area Knowledge") {
         //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
@@ -318,7 +319,7 @@ class Home extends Component {
     showProfileCard = () => {
         if (this.state.namePage === "Profile Details") {
             return <Row className="homePage">
-                <Col className="cardDiv col-lg-3 col-md-2 hidden-xs hidden-sm ">
+                <Col className="cardDiv col-lg-3 col-md-2">
                     {this.funcGoogleFacebook()}
                 </Col>
                 <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
