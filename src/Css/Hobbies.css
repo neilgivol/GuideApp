@@ -25,6 +25,7 @@ height: 100%;
     max-height: 100%;
 }
 
+
 span.middleLine{
     display:inline-block;
     border-right:1px solid rgba(0,0,0,.125);
@@ -58,6 +59,10 @@ font-size: 14px;
 }
 .CardItem:hover{
     background-color: #b3e0ff;
+    -ms-transform: scale(2); /* IE 9 */
+    -webkit-transform: scale(2); /* Safari 3-8 */
+    transform: scale(2);
+    z-index:999;
 }
 .titleCardDiv h4{
     font-size: 15px;
@@ -89,7 +94,8 @@ cursor: pointer;
     max-height: 100%;
 }
 .titleAdded span{
-    margin-right: 3px;
+    margin-left: 10px;
+    font-size: 20px;
 }
 .cardDivCenter{
     height: 100%;
