@@ -26,8 +26,11 @@ class ProfileDetails extends Component {
             size: '',
             phone: "",
             user: "",
-            local:this.props.local,
-            linksfromSQL:[]
+            local: this.props.local,
+            linksfromSQL: [],
+            firstNameIsValid: true,
+            lastNameIsValid: true,
+            licesnseIsValid: true
         };
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
@@ -68,14 +71,20 @@ class ProfileDetails extends Component {
     }
 
     onChangeFirstName = (e) => {
-        this.setState({
-            user: { ...this.state.user, FirstName: e.target.value }
+        this.setState({ 
+            user: { ...this.state.user, FirstName: e.target.value },
+            firstNameIsValid: e.target.validity.valid
         });
+        
     }
     onChangeLastName = (e) => {
+       
         this.setState({
-            user: { ...this.state.user, LastName: e.target.value }
+            user: { ...this.state.user, LastName: e.target.value },
+            lastNameIsValid: e.target.validity.valid
         });
+       // console.log(this.state.lastNameIsValid)
+   
     }
     onChangePhone = (e) => {
         this.setState({
@@ -84,7 +93,8 @@ class ProfileDetails extends Component {
     }
     onChangeLicense = (e) => {
         this.setState({
-            user: { ...this.state.user, License: e.target.value }
+            user: { ...this.state.user, License: e.target.value },
+            licesnseIsValid:e.target.validity.valid
         });
     }
     onChangeDescriptionGuide = (e) => {
@@ -92,12 +102,14 @@ class ProfileDetails extends Component {
             user: { ...this.state.user, DescriptionGuide: e.target.value }
         });
     }
-  
-  
+
+
 
     //עדכון פרטי המשתמש והכנסתם למסד הנתונים
-    UpdateDetails = () => {
-        let userGuide = this.state.user;
+    UpdateDetails = (event) => {
+        event.preventDefault();
+        if (this.state.lastNameIsValid && this.state.firstNameIsValid && this.state.licesnseIsValid) {
+            let userGuide = this.state.user;
         let BirthDay = this.state.BirthDay.toLocaleDateString('en-US');
         let phoneGuide = this.state.phone;
         fetch(this.apiUrl + 'Guide', {
@@ -129,19 +141,32 @@ class ProfileDetails extends Component {
                     console.log("err post=", error);
                 });
 
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'הפרטים שלך עודכנו בהצלחה',
-                    showConfirmButton: false,
-                    timer: 1200
-                });
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'הפרטים שלך עודכנו בהצלחה',
+            showConfirmButton: false,
+            timer: 1200
+        });
+        }
+        else{
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'something is wrong!',
+                text: 'please check you filled all the inputs correctly',
+                showConfirmButton: false,
+                timer: 2000
+              });
+        }
+       
+        
     }
-   
+
 
     //שינוי הפרטים של המשתמש על המסך לאחר שלחץ על כפתור העידכון
     uploadNewDetails = (guideUpdate) => {
-         if (this.state.linksfromSQL.length === 0) {
+        if (this.state.linksfromSQL.length === 0) {
             console.log("del")
             fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
                 method: 'DELETE',
@@ -167,15 +192,15 @@ class ProfileDetails extends Component {
         }
         this.renderPage(guideUpdate);
     }
-    renderPage=(guideUpdate)=>{
+    renderPage = (guideUpdate) => {
         localStorage.setItem('Guide', JSON.stringify(guideUpdate))
         this.props.history.push({
             pathname: '/',
             state: { GuideTemp: guideUpdate }
         });
     }
-   
- 
+
+
     postLinksToSQL = (links) => {
         fetch(this.apiUrl + 'Link/UpdateLinks', {
             method: 'PUT',
@@ -198,10 +223,10 @@ class ProfileDetails extends Component {
     }
 
 
-    updateLinks=(linksList)=>{
+    updateLinks = (linksList) => {
         console.log(linksList);
         this.setState({
-            linksfromSQL:linksList
+            linksfromSQL: linksList
         })
     }
     render() {
@@ -214,26 +239,35 @@ class ProfileDetails extends Component {
                     <ListGroupItem className="p-3">
                         <Row>
                             <Col>
-                                <Form className="myForm">
+                                <Form className="myForm needs-validation" noValidate onSubmit={this.UpdateDetails}>
                                     <Row form>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feFirstName">First Name</label>
                                             <input
                                                 className="form-control"
+                                                name="firstName"
                                                 id="feFirstName"
                                                 placeholder="First Name"
+                                                validate
                                                 value={this.state.user.FirstName}
                                                 onChange={this.onChangeFirstName}
+                                                required
+                                                pattern="[A-Za-z]{2,32}"
+                                                
                                             />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feLastName">Last Name</label>
                                             <input
                                                 className="form-control"
+                                                name="lastName"
                                                 id="feLastName"
                                                 placeholder="Last Name"
                                                 value={this.state.user.LastName}
                                                 onChange={this.onChangeLastName}
+                                                pattern="[A-Za-z]{2,32}"
+                                                validate
+                                                required
                                             />
                                         </Col>
                                     </Row>
@@ -242,19 +276,26 @@ class ProfileDetails extends Component {
                                             <label htmlFor="feEmail">Email</label>
                                             <input
                                                 className="form-control"
+                                                name="email"
                                                 id="feEmail"
                                                 placeholder="Email Address"
                                                 value={this.state.user.Email}
+                                                validate
+                                                required
+                                                readOnly
                                             />
                                         </Col>
                                         <Col md="6" className="form-group">
                                             <label htmlFor="feLicense">License Number</label>
                                             <input
-                                            className="form-control"
+                                                className="form-control"
                                                 id="feLicense"
+                                                name="licenseNumber"
                                                 placeholder="License Number"
                                                 value={this.state.user.License}
                                                 onChange={this.onChangeLicense}
+                                                validate
+                                                pattern={"[0-9]{2,32}"}
                                             />
                                         </Col>
                                     </Row>
@@ -310,7 +351,7 @@ class ProfileDetails extends Component {
                                             />
                                         </Col>
                                     </Row>
-                                   <Links linksFromSQL={this.state.linksfromSQL} Guide = {this.state.user} updateLinks = {this.updateLinks} GuideLinks={this.props.GuideLinks}/>
+                                    <Links linksFromSQL={this.state.linksfromSQL} Guide={this.state.user} updateLinks={this.updateLinks} GuideLinks={this.props.GuideLinks} />
                                     <Row>
                                         <Col>
                                             <Form.Group controlId="exampleForm.ControlTextarea1">
@@ -324,9 +365,7 @@ class ProfileDetails extends Component {
                                     </Row>
                                     <Row>
                                         <Col>
-                                            <Button variant="primary" onClick={() => { this.UpdateDetails(); }}>Update Your Account</Button>
-
-
+                                            <Button variant="primary" type="submit" >Update Your Account</Button>
                                         </Col>
 
                                     </Row>

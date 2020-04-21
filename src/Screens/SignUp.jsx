@@ -92,7 +92,6 @@ class SignUp extends Component {
 
   };
   submitHandler = event => {
-    console.log(this.state.firstName)
     event.preventDefault();
     event.target.className += " was-validated";
     if (this.state.firstName.isValid && this.state.lastName.isValid && this.state.email.isValid && this.state.password.isValid && this.state.confirmPassword.isValid) {
