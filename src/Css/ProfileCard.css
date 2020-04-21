@@ -39,6 +39,12 @@
     margin-top: 5%;
     margin-left: 29%;
   }
+  .ProfilecardDiv{
+    padding-left: 15px;
+    padding-right: 0px;
+    width: 100%;
+    margin-bottom: 0px;
+  }
   .uploadPicIcon {
     font-size: 20px;
     position: absolute;

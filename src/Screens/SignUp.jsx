@@ -5,17 +5,19 @@ import { Link, withRouter } from "react-router-dom";
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Swal from 'sweetalert2';
+import { easing } from '@material-ui/core';
 const guide = null;
 function Copyright() {
   return (
-      <Typography variant="body2" color="textSecondary" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="#">
-              IsraVisor
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="#">
+        IsraVisor
       </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-      </Typography>
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   );
 }
 
@@ -23,77 +25,159 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      confirmPassword: "",
-      firstName:"",
-      lastName:"",
+      email: {
+        val: "",
+        isValid: false
+      },
+      password: {
+        val: "",
+        isValid: false
+      },
+      confirmPassword: {
+        val: "",
+        isValid: false
+      },
+      firstName: {
+        val: "",
+        isValid: false
+      },
+      lastName: {
+        val: "",
+        isValid: false
+      },
       startDate: new Date(),
+
     }
   }
 
-  HandelEmail = (e) => {
-    this.setState({
-      email: e.target.value
+  changeHandler = event => {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case 'firstName':
+        let firstName = { ...this.state.firstName }
+        firstName.isValid = event.target.validity.valid
+        firstName.val = event.target.value;
+        this.setState({ firstName })
+
+        break;
+      case 'lastName':
+        let lastName = { ...this.state.lastName }
+        lastName.val = event.target.value;
+        lastName.isValid = event.target.validity.valid
+        this.setState({ lastName })
+        break;
+      case 'email':
+        let email = { ...this.state.email }
+        email.val = event.target.value;
+        email.isValid = event.target.validity.valid
+        this.setState({ email })
+        break;
+      case 'password':
+        let newPassword = { ...this.state.password }
+        newPassword.val = event.target.value;
+        newPassword.isValid = event.target.validity.valid
+        this.setState({ password: newPassword })
+        break;
+      case 'confirmPassword':
+        let confirmPassword = { ...this.state.confirmPassword }
+        confirmPassword.val = event.target.value;
+        confirmPassword.isValid = event.target.validity.valid
+        this.setState({ confirmPassword })
+        break;
+      default:
+        break;
     }
-    )
-  }
-  HandelPassword = (e) => {
-    this.setState({
-      password: e.target.value
+
+
+  };
+  submitHandler = event => {
+    console.log(this.state.firstName)
+    event.preventDefault();
+    event.target.className += " was-validated";
+    if (this.state.firstName.isValid && this.state.lastName.isValid && this.state.email.isValid && this.state.password.isValid && this.state.confirmPassword.isValid) {
+      this.CheckPasswordConfirm();
     }
-    )
-  }
-  HandelConfirmPassword = (e) => {
-    this.setState({
-      confirmPassword: e.target.value
+    else {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'something is wrong!',
+        text: 'please check you filled all the inputs correctly',
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
-    )
-  }
-  HandelFirstName = (e) => {
-    this.setState({
-      firstName: e.target.value
-    }
-    )
-  }
-  HandelLastName = (e) => {
-    this.setState({
-      lastName: e.target.value
-    }
-    )
-  }
- 
-//בודק האם השדה של סיסמא תואם לשדה של אשר סיסמא
+
+  };
+
+  // HandelEmail = (e) => {
+  //   this.setState({
+  //     email: e.target.value
+  //   }
+  //   )
+  // }
+  // HandelPassword = (e) => {
+  //   this.setState({
+  //     password: e.target.value
+  //   }
+  //   )
+  // }
+  // HandelConfirmPassword = (e) => {
+  //   this.setState({
+  //     confirmPassword: e.target.value
+  //   }
+  //   )
+  // }
+  // HandelFirstName = (e) => {
+  //   this.setState({
+  //     firstName: e.target.value
+  //   }
+  //   )
+  // }
+  // HandelLastName = (e) => {
+  //   this.setState({
+  //     lastName: e.target.value
+  //   }
+  //   )
+  // }
+
+  //בודק האם השדה של סיסמא תואם לשדה של אשר סיסמא
   CheckPasswordConfirm = () => {
-    localStorage.clear();
-    let password = this.state.password;
-    let confirmPassword = this.state.confirmPassword;
-   
+    let password = this.state.password.val;
+    let confirmPassword = this.state.confirmPassword.val;
+
     if (password !== confirmPassword) {
-      alert("Password not Match")
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: ' password error!',
+        text: 'please make sure the password input and confirm password input are match',
+        showConfirmButton: false,
+        timer: 2000
+      });
     }
     else {
       this.moveFunc();
     }
-
   }
-  
+
   //APP.JS  לוקח את הפרטים שהמשתמש הזין ושולח אותם למסד נתונים שם נבדק אם המשתמש כבר רשום או לא(הפונקציה נמצאת ב
-  moveFunc = () =>{ 
+  moveFunc = () => {
     let signDate = this.state.startDate.toLocaleDateString('en-US');
     let GuideSignUp = {
-      Email: this.state.email,
-      FirstName:this.state.firstName,
-      LastName:this.state.lastName,
-      Password:this.state.password,
-      picture:"",
-      SignDate:signDate,
-      Birthday:signDate,
-      Gender:""
+      Email: this.state.email.val,
+      FirstName: this.state.firstName.val,
+      LastName: this.state.lastName.val,
+      Password: this.state.password.val,
+      picture: "",
+      SignDate: signDate,
+      Birthday: signDate,
+      Gender: ""
     }
     this.props.checkIfExistAndSignUP(GuideSignUp);
   }
-   
+
   render() {
     return (
       <MDBContainer>
@@ -111,74 +195,123 @@ class SignUp extends Component {
                     <strong>Sign Up</strong>
                   </h3>
                 </div>
-                <form>
-                  <div className="grey-text">
+                <form
+                  className="needs-validation"
+                  onSubmit={this.submitHandler}
+                  noValidate
+                >
+                  <MDBRow>
+                    <MDBCol md="12">
                       <MDBInput
                         label="First Name"
+                        name="firstName"
                         icon="user"
                         group
                         type="text"
                         validate
                         error="wrong"
                         success="right"
-                        onChange={this.HandelFirstName}
+                        onChange={this.changeHandler}
+                        required
+                        pattern="[A-Za-z]{2,32}"
                       />
+                      <div className="valid-feedback">Looks good!</div>
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="12">
                       <MDBInput
                         label="Last Name"
+                        name="lastName"
                         icon="user"
                         group
                         type="text"
                         validate
                         error="wrong"
                         success="right"
-                        onChange={this.HandelLastName}
+                        onChange={this.changeHandler}
+                        required
+                        pattern="[A-Za-z]{2,32}"
                       />
-                    <MDBInput
-                      label="Your email"
-                      icon="envelope"
-                      group
-                      type="email"
-                      validate
-                      error="wrong"
-                      success="right"
-                      onChange={this.HandelEmail}
-                    />
-                    <MDBInput
-                      label="Your password"
-                      icon="lock"
-                      group
-                      type="password"
-                      validate
-                      onChange={this.HandelPassword}
-                    />
-                    <MDBInput
-                      label="Confirm your password"
-                      icon="lock"
-                      group
-                      type="password"
-                      validate
-                      error="wrong"
-                      success="right"
-                      onChange={this.HandelConfirmPassword}
-
-                    />
-                  </div>
-                  <div className="text-center py-4 mt-3">
-                    <MDBBtn gradient="blue"
-                      rounded
-                      className="btn-block z-depth-1a" type="button"
-                      onClick={()=>{this.CheckPasswordConfirm()}}>
-                      Register
+                      <div className="valid-feedback">Looks good!</div>
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="12">
+                      <MDBInput
+                        label="Your email"
+                        name="email"
+                        icon="envelope"
+                        group
+                        type="email"
+                        validate
+                        error="wrong"
+                        success="right"
+                        onChange={this.changeHandler}
+                        required
+                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                      />
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="12">
+                      <MDBInput
+                        label="Your password"
+                        name="password"
+                        icon="lock"
+                        id="signUpPassword"
+                        group
+                        type="password"
+                        validate
+                        onChange={this.changeHandler}
+                        required
+                        pattern=".{3,}"
+                      />
+                      <div className="invalid-feedback">
+                        Please provide a valid password.
+                </div>
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="12">
+                      <MDBInput
+                        label="Confirm your password"
+                        name="confirmPassword"
+                        icon="lock"
+                        group
+                        id="signUpConfirmPassword"
+                        type="password"
+                        validate
+                        error="wrong"
+                        success="right"
+                        onChange={this.changeHandler}
+                        required
+                        pattern=".{3,}"
+                      />
+                      <div className="invalid-feedback">
+                        Please provide a valid password.
+                </div>
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBRow>
+                    <MDBCol md="12">
+                      <MDBBtn gradient="blue"
+                        rounded
+                        className="btn-block z-depth-1a" type="submit"
+                      // onClick={()=>{this.CheckPasswordConfirm()}}
+                      >
+                        Register
                   </MDBBtn>
-                  </div>
+                    </MDBCol>
+                  </MDBRow>
                 </form>
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
         </MDBRow>
         <Box mt={8}>
-                    <Copyright />
-                </Box>
+          <Copyright />
+        </Box>
       </MDBContainer>
     );
   }

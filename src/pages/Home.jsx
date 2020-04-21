@@ -319,7 +319,7 @@ class Home extends Component {
     showProfileCard = () => {
         if (this.state.namePage === "Profile Details") {
             return <Row className="homePage">
-                <Col className="cardDiv col-lg-3 col-md-2">
+                <Col className="ProfilecardDiv col-lg-3 col-md-2">
                     {this.funcGoogleFacebook()}
                 </Col>
                 <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">

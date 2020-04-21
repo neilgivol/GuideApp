@@ -101,8 +101,15 @@ cursor: pointer;
     max-height: 175px;
 }
 @media only screen and (max-width: 600px) {
+    .HobbiesDiv{
+        margin-right: 0px;
+    }
     .HobbieAddedList{
         margin-left: -16px;
+    }
+    .titleAdded span{
+        margin-left: 5px;
+        font-size: 15px;
     }
     .card .list-group-item{
        padding: 10px;
@@ -110,13 +117,23 @@ cursor: pointer;
     .title{
         margin-top: 0px;
     }
+    .HobbiesList{
+        padding-right: 0px;
+    }
+    .HobbiesAdded{
+        padding-right: 0px;
+    }
+    .HobbiesListSide{
+        padding-right: 0px;
+        margin-right: -0px;
+    }
     .CardItem{
-        height: 90px;
-        width: 120px;
+        height: 108px;
+        width: 144px;
     }
     .CardItem img{
-        height: 90px;
-        width: 120px;
+        height: 108px;
+        width: 144px;
     }
     .del{
         position: absolute;
@@ -158,5 +175,12 @@ cursor: pointer;
       }
     .centerDiv{
         margin-bottom: 100px;
+    }
+    /* .cardDivCenter{
+        margin-bottom: 60px;
+    } */
+    .cardDiv{
+        margin-bottom: 60px;
+        padding-right: 0px;
     }
 }
