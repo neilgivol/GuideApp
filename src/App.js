@@ -122,6 +122,7 @@ class App extends Component {
   GetGuidesGOVFromSQL = () => {
     var data = {
       resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
+      limit:10000
     };
     let listGov = [];
     $.ajax({
