@@ -252,7 +252,7 @@ class ProfileDetails extends Component {
                                                 value={this.state.user.FirstName}
                                                 onChange={this.onChangeFirstName}
                                                 required
-                                                pattern="[A-Za-z]{2,32}"
+                                                pattern="^[a-zA-Z\s]{2,32}"
                                                 
                                             />
                                         </Col>
@@ -265,7 +265,7 @@ class ProfileDetails extends Component {
                                                 placeholder="Last Name"
                                                 value={this.state.user.LastName}
                                                 onChange={this.onChangeLastName}
-                                                pattern="[A-Za-z]{2,32}"
+                                                pattern="^[a-zA-Z\s]{2,32}"
                                                 validate
                                                 required
                                             />

@@ -11,6 +11,11 @@ import ImageUploader from 'react-images-upload';
 import FileUpload from '../Components/fileUpload';
 import { Progress } from "shards-react";
 import { Link, withRouter } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 
 
@@ -161,10 +166,36 @@ class ProfileCard extends Component {
 
     ShowProfileChangeQuestion = () => {
         return <div>
-            <h3>Do You Want To Change Your Profile Picture?</h3>
-            <Button onClick={this.ChangeProfilePic} className="yesBtn col-4">YES</Button>
-            <Button onClick={this.CancelChangesProfilePic} className="noBtn col-4">NO</Button>
+            <Dialog
+                open={true}
+                onClose={false}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Are you sure you want to change your picture?"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        by clicking yes your picture will be changed
+          </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.CancelChangesProfilePic} color="primary">
+                        No
+          </Button>
+                    <Button onClick={this.ChangeProfilePic} color="primary" autoFocus>
+                        Yes
+          </Button>
+                </DialogActions>
+            </Dialog>
         </div>
+
+
+
+        // return <div>
+        //     <h3>Do You Want To Change Your Profile Picture?</h3>
+        //     <Button onClick={this.ChangeProfilePic} className="yesBtn col-4">YES</Button>
+        //     <Button onClick={this.CancelChangesProfilePic} className="noBtn col-4">NO</Button>
+        // </div>
     }
     ChangeProfilePic = () => {
         console.log(this.state.newProfilePicURL);
