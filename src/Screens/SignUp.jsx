@@ -212,7 +212,7 @@ class SignUp extends Component {
                         success="right"
                         onChange={this.changeHandler}
                         required
-                        pattern="[A-Za-z]{2,32}"
+                        pattern="^[a-zA-Z\s]{2,32}"
                       />
                       <div className="valid-feedback">Looks good!</div>
                     </MDBCol>
@@ -230,7 +230,7 @@ class SignUp extends Component {
                         success="right"
                         onChange={this.changeHandler}
                         required
-                        pattern="[A-Za-z]{2,32}"
+                        pattern="^[a-zA-Z\s]{2,32}"
                       />
                       <div className="valid-feedback">Looks good!</div>
                     </MDBCol>
