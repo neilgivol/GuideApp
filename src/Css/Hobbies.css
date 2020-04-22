@@ -25,6 +25,7 @@ height: 100%;
     max-height: 100%;
 }
 
+
 span.middleLine{
     display:inline-block;
     border-right:1px solid rgba(0,0,0,.125);
@@ -40,6 +41,7 @@ position: relative;
 border-radius: 8px;
 border: 3px outset rgba(164,164,164,0.28);
 border-radius: 4px 4px 4px 4px;
+transition: transform .3s;
 box-shadow: 0 0.125rem 9.375rem rgba(90,97,105,.1), 0 0.25rem 0.5rem rgba(90,97,105,.12), 0 0.9375rem 1.375rem rgba(90,97,105,.1), 0 0.4375rem 2.1875rem rgba(165,182,201,.1);
 }
 .del{
@@ -58,6 +60,10 @@ font-size: 14px;
 }
 .CardItem:hover{
     background-color: #b3e0ff;
+    -ms-transform: scale(1.5); /* IE 9 */
+    -webkit-transform: scale(1.5); /* Safari 3-8 */
+    transform: scale(1.5);
+    z-index:999;
 }
 .titleCardDiv h4{
     font-size: 15px;
@@ -89,7 +95,8 @@ cursor: pointer;
     max-height: 100%;
 }
 .titleAdded span{
-    margin-right: 3px;
+    margin-left: 10px;
+    font-size: 20px;
 }
 .cardDivCenter{
     height: 100%;
@@ -101,8 +108,15 @@ cursor: pointer;
     max-height: 175px;
 }
 @media only screen and (max-width: 600px) {
+    .HobbiesDiv{
+        margin-right: 0px;
+    }
     .HobbieAddedList{
         margin-left: -16px;
+    }
+    .titleAdded span{
+        margin-left: 5px;
+        font-size: 15px;
     }
     .card .list-group-item{
        padding: 10px;
@@ -110,13 +124,23 @@ cursor: pointer;
     .title{
         margin-top: 0px;
     }
+    .HobbiesList{
+        padding-right: 0px;
+    }
+    .HobbiesAdded{
+        padding-right: 0px;
+    }
+    .HobbiesListSide{
+        padding-right: 0px;
+        margin-right: -0px;
+    }
     .CardItem{
-        height: 90px;
-        width: 120px;
+        height: 108px;
+        width: 144px;
     }
     .CardItem img{
-        height: 90px;
-        width: 120px;
+        height: 108px;
+        width: 144px;
     }
     .del{
         position: absolute;
@@ -158,5 +182,12 @@ cursor: pointer;
       }
     .centerDiv{
         margin-bottom: 100px;
+    }
+    /* .cardDivCenter{
+        margin-bottom: 60px;
+    } */
+    .cardDiv{
+        margin-bottom: 60px;
+        padding-right: 0px;
     }
 }
