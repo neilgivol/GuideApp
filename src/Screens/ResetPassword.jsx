@@ -36,7 +36,7 @@ class ResetPassword extends Component {
 
         }
      
-        let local = this.state.local;
+        let local =true;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
@@ -45,11 +45,10 @@ class ResetPassword extends Component {
 
 
     //שולח את האימייל של המשתמש למסד הנתונים ושם משנה את סיסמתו
-    ResetUserPassword = ()=>{
-         let tempMail = this.state.email; 
+    ResetUserPassword = (user)=>{
         fetch(this.apiUrl + '/Reset', {
             method: 'POST',
-            body: JSON.stringify(tempMail),
+            body: JSON.stringify(user),
             headers: new Headers({
               'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
             })
@@ -76,6 +75,33 @@ class ResetPassword extends Component {
 
 
     }
+
+    GetGuideFromSQL = () => {
+        let email = this.state.email; 
+        fetch('http://localhost:49948/api/Guide?email=' + email, {
+          method: 'GET',
+          headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8',
+          })
+        })
+          .then(res => {
+            return res.json()
+          })
+          .then(
+            (result) => {
+                console.log(result);
+            if (result.Email !== null) {
+                this.ResetUserPassword(result);
+            }
+            else{
+                alert("Error Email Adress")
+            }
+            },
+            (error) => {
+              console.log("err post=", error);
+            });
+      }
+    
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
@@ -113,7 +139,7 @@ class ResetPassword extends Component {
                                         gradient="blue"
                                         rounded
                                         className="btn-block z-depth-1a btnReset"
-                                        onClick={this.ResetUserPassword}
+                                        onClick={this.GetGuideFromSQL}
                                     >Reset Password</MDBBtn>
                                 </Form.Group>
 

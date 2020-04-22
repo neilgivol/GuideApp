@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/bgroup10/prod/guideapp/static/css/main.9b13e979.chunk.css",
+    "main.css": "/bgroup10/prod/guideapp/static/css/main.d0d63469.chunk.css",
     "main.js": "/bgroup10/prod/guideapp/static/js/main.605dc9a8.chunk.js",
     "main.js.map": "/bgroup10/prod/guideapp/static/js/main.605dc9a8.chunk.js.map",
     "runtime-main.js": "/bgroup10/prod/guideapp/static/js/runtime-main.5bb7056a.js",
@@ -9,10 +9,10 @@
     "static/js/2.b7e75714.chunk.js": "/bgroup10/prod/guideapp/static/js/2.b7e75714.chunk.js",
     "static/js/2.b7e75714.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.b7e75714.chunk.js.map",
     "index.html": "/bgroup10/prod/guideapp/index.html",
-    "precache-manifest.3f5e620815bca073855fcee25cf37737.js": "/bgroup10/prod/guideapp/precache-manifest.3f5e620815bca073855fcee25cf37737.js",
+    "precache-manifest.00b090e3f7904096f118dbf8f4e9a2c5.js": "/bgroup10/prod/guideapp/precache-manifest.00b090e3f7904096f118dbf8f4e9a2c5.js",
     "service-worker.js": "/bgroup10/prod/guideapp/service-worker.js",
     "static/css/2.54a20c6a.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.54a20c6a.chunk.css.map",
-    "static/css/main.9b13e979.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.9b13e979.chunk.css.map",
+    "static/css/main.d0d63469.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.d0d63469.chunk.css.map",
     "static/js/2.b7e75714.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.b7e75714.chunk.js.LICENSE.txt",
     "static/media/Default-welcomer.png": "/bgroup10/prod/guideapp/static/media/Default-welcomer.9d1403c3.png",
     "static/media/The_Instagram_Logo.jpg": "/bgroup10/prod/guideapp/static/media/The_Instagram_Logo.00beabec.jpg",
@@ -28,7 +28,7 @@
     "static/js/runtime-main.5bb7056a.js",
     "static/css/2.54a20c6a.chunk.css",
     "static/js/2.b7e75714.chunk.js",
-    "static/css/main.9b13e979.chunk.css",
+    "static/css/main.d0d63469.chunk.css",
     "static/js/main.605dc9a8.chunk.js"
   ]
 }
