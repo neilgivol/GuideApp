@@ -16,6 +16,7 @@ import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import '../Css/ProfileDetails.css';
 import Swal from 'sweetalert2';
 import Links from '../Components/Links';
+
 //import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
@@ -30,7 +31,8 @@ class ProfileDetails extends Component {
             linksfromSQL: [],
             firstNameIsValid: true,
             lastNameIsValid: true,
-            licesnseIsValid: true
+            licesnseIsValid: true,
+            fullLinks:[]
         };
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
@@ -41,22 +43,24 @@ class ProfileDetails extends Component {
 
     componentDidMount() {
         let dateBirth = new Date(this.props.GuideDetails.BirthDay);
-        let linkSQL = JSON.parse(localStorage.getItem('linksFromSQL'));
-        console.log(linkSQL);
         this.setState({
             user: this.props.GuideDetails,
             size: this.props.GuideDetails.Gender,
             BirthDay: dateBirth,
             phone: this.props.GuideDetails.Phone,
-            fulllink: this.props.GuideLinks,
-            linksfromSQL:linkSQL
+            fullLinks: this.props.fullLinks,
+            linksfromSQL:this.props.linksfromSQL
         })
-        console.log(this.state.linksfromSQL);
     }
     componentDidUpdate(PrevProps, state) {
-        if (PrevProps.GuideLinks !== this.props.GuideLinks) {
+        if (PrevProps.fullLinks !== this.props.fullLinks) {
             this.setState({
-                fulllink: this.props.GuideLinks
+                fullLinks: this.props.fullLinks
+            })
+        }
+        if (PrevProps.linksfromSQL !== this.props.linksfromSQL) {
+            this.setState({
+                linksfromSQL: this.props.linksfromSQL
             })
         }
     }
@@ -104,9 +108,6 @@ class ProfileDetails extends Component {
             user: { ...this.state.user, DescriptionGuide: e.target.value }
         });
     }
-
-
-
     //עדכון פרטי המשתמש והכנסתם למסד הנתונים
     UpdateDetails = (event) => {
         event.preventDefault();
@@ -161,13 +162,11 @@ class ProfileDetails extends Component {
                 timer: 2000
               });
         }
-       
-        
     }
-
 
     //שינוי הפרטים של המשתמש על המסך לאחר שלחץ על כפתור העידכון
     uploadNewDetails = (guideUpdate) => {
+        console.log(this.state.linksfromSQL);
         if (this.state.linksfromSQL.length === 0) {
             console.log("del")
             fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
@@ -188,12 +187,15 @@ class ProfileDetails extends Component {
                     (error) => {
                         console.log("err post=", error);
                     });
+                    this.props.updateGuide();
         }
         else {
             this.postLinksToSQL(this.state.linksfromSQL);
         }
-        this.renderPage(guideUpdate);
+        //this.renderPage(guideUpdate);
+        this.props.updateGuide();
     }
+  
     renderPage = (guideUpdate) => {
         localStorage.setItem('Guide', JSON.stringify(guideUpdate))
         this.props.history.push({
@@ -201,9 +203,8 @@ class ProfileDetails extends Component {
             state: { GuideTemp: guideUpdate }
         });
     }
-
-
     postLinksToSQL = (links) => {
+        console.log(links);
         fetch(this.apiUrl + 'Link/UpdateLinks', {
             method: 'PUT',
             body: JSON.stringify(links),
@@ -222,6 +223,7 @@ class ProfileDetails extends Component {
                 (error) => {
                     console.log("err post=", error);
                 });
+                this.props.updateGuide();
     }
 
 
@@ -255,7 +257,6 @@ class ProfileDetails extends Component {
                                                 onChange={this.onChangeFirstName}
                                                 required
                                                 pattern="^[a-zA-Z\s]{2,32}"
-                                                
                                             />
                                         </Col>
                                         <Col md="6" className="form-group">
@@ -353,7 +354,7 @@ class ProfileDetails extends Component {
                                             />
                                         </Col>
                                     </Row>
-                                    <Links linksfromSQL={this.state.linksfromSQL} Guide={this.state.user} updateLinks={this.updateLinks} GuideLinks={this.props.GuideLinks} />
+                                    <Links linksfromSQL={this.state.linksfromSQL} Guide={this.state.user} updateLinks={this.updateLinks} GuideLinks={this.state.fullLinks} />
                                     <Row>
                                         <Col>
                                             <Form.Group controlId="exampleForm.ControlTextarea1">

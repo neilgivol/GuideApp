@@ -50,8 +50,8 @@ class Home extends Component {
             AllAreas: this.props.AllAreas,
             AllHobbies: this.props.AllHobbies,
             AllExpertises: this.props.AllExpertises,
-            GuideLinks: [],
-            fulllink: [],
+            linksfromSQL: [],
+            fullLinks: [],
             options: [
                 {
                     id: 0,
@@ -150,8 +150,9 @@ class Home extends Component {
             .then(
                 (result) => {
                     this.setState({
-                        GuideLinks: result
+                        linksfromSQL: result
                     })
+                    console.log(result);
                     //שולח את הרשימה לפונקציה שמסדרת את כל הלינקים
                     this.orgenzie(result);
                 },
@@ -176,7 +177,7 @@ class Home extends Component {
             }
         }
         this.setState({
-            fulllink: temparraylinks
+            fullLinks: temparraylinks
         })
         localStorage.setItem('links', JSON.stringify(temparraylinks));
     }
@@ -197,7 +198,11 @@ class Home extends Component {
         //מביא את רשימת ההתמחויות של המדריך 
         this.GetExpertisesGuides(this.state.Guide);
     }
+    updateGuide=()=>{
+        this.GetGuideFromSQL(this.state.Guide);
+        this.getLinksFromSQL(this.state.Guide);
 
+    }
     //שינוי עמוד
     ClickPage2 = (e) => {
         this.setState({
@@ -212,7 +217,7 @@ class Home extends Component {
     renderMainPage = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails local={this.state.local} GuideDetails={this.state.Guide} linksFromSQL={this.state.GuideLinks} GuideLinks={this.state.fulllink} />
+            return <ProfileDetails updateLinksSQL={this.updateLinks} updateGuide={this.updateGuide} local={this.state.local} GuideDetails={this.state.Guide} linksfromSQL={this.state.linksfromSQL} fullLinks={this.state.fullLinks} />
         }
         // else if (namePage2 === "Area Knowledge") {
         //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
@@ -307,6 +312,26 @@ class Home extends Component {
                 (result) => {
                     this.setState({ GuideLanguages: result })
                     localStorage.setItem('languages', JSON.stringify(result));
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+
+    GetGuideFromSQL=(TempGuide)=>{
+        fetch(this.apiUrl + "Guide?email=" + TempGuide.Email, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json; charset=UTF-8',
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                    this.setState({ Guide: result })
+                    localStorage.setItem('Guide', JSON.stringify(result));
                 },
                 (error) => {
                     console.log("err post=", error);

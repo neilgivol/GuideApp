@@ -71,7 +71,6 @@ componentDidMount(){
     this.setState({
         linksfromSQL:this.props.linksfromSQL
     })
-    console.log(this.props.linksfromSQL);
 }
     componentDidUpdate(PrevProps, PrevState) {
         if (PrevProps.Guide !== this.props.Guide) {
@@ -102,7 +101,6 @@ componentDidMount(){
 
     //הוספת לינקים
     Addlinks = () => {
-        console.log(this.state.linksfromSQL);
         const fullLinkList = [];
         const linksToSQL = [];
         let link;
@@ -124,9 +122,9 @@ componentDidMount(){
                 guidegCode: this.state.user.gCode
             }
         }
-        let linkSQL = JSON.parse(localStorage.getItem('linksFromSQL'));
-        for (let i = 0; i < linkSQL.length; i++) {
-            const element = linkSQL[i];
+        //let linkSQL = JSON.parse(localStorage.getItem('linksFromSQL'));
+        for (let i = 0; i < this.state.linksfromSQL.length; i++) {
+            const element = this.state.linksfromSQL[i];
             linksToSQL.push(element);
         }
     
@@ -136,7 +134,6 @@ componentDidMount(){
                 linksfromSQL: linksToSQL
             })
         }
-
         console.log(this.state.linksfromSQL);
         console.log(linksToSQL);
         this.props.updateLinks(linksToSQL);
