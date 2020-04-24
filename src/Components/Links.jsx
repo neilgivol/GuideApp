@@ -58,7 +58,7 @@ export default class Links extends Component {
                 },
             ],
             selectedOption: null,
-            linksfromSQL: "",
+            linksfromSQL: this.props.linksfromSQL,
             local: this.props.local
         };
         let local = this.state.local;
@@ -71,6 +71,7 @@ componentDidMount(){
     this.setState({
         linksfromSQL:this.props.linksfromSQL
     })
+    console.log(this.props.linksfromSQL);
 }
     componentDidUpdate(PrevProps, PrevState) {
         if (PrevProps.Guide !== this.props.Guide) {
@@ -83,9 +84,9 @@ componentDidMount(){
                 fulllink: this.props.GuideLinks
             })
         }
-        if (PrevProps.linksFromSQL !== this.props.linksFromSQL) {
+        if (PrevProps.linksfromSQL !== this.props.linksfromSQL) {
             this.setState({
-                linksfromSQL: this.props.linksFromSQL
+                linksfromSQL: this.props.linksfromSQL
             })
         }
         
@@ -101,6 +102,7 @@ componentDidMount(){
 
     //הוספת לינקים
     Addlinks = () => {
+        console.log(this.state.linksfromSQL);
         const fullLinkList = [];
         const linksToSQL = [];
         let link;
@@ -122,8 +124,9 @@ componentDidMount(){
                 guidegCode: this.state.user.gCode
             }
         }
-        for (let i = 0; i < this.state.linksfromSQL.length; i++) {
-            const element = this.state.linksfromSQL[i];
+        let linkSQL = JSON.parse(localStorage.getItem('linksFromSQL'));
+        for (let i = 0; i < linkSQL.length; i++) {
+            const element = linkSQL[i];
             linksToSQL.push(element);
         }
     
@@ -134,8 +137,8 @@ componentDidMount(){
             })
         }
 
-
         console.log(this.state.linksfromSQL);
+        console.log(linksToSQL);
         this.props.updateLinks(linksToSQL);
     }
 

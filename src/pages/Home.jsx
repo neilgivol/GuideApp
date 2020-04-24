@@ -42,7 +42,6 @@ class Home extends Component {
             namePage: 'Profile Details',
             local: this.props.local,
             navbar: this.props.navbarOpenCheck,
-            //allUsers: this.props.Allusers,
             Guide: '',
             GuideLanguages: [],
             GuideAreas: [],
@@ -128,7 +127,6 @@ class Home extends Component {
                 Guide: this.props.location.state.GuideTemp
             })
         }
-        this.getLinksFromSQL(Guidetemp);
     }
     componentDidMount() {
         this.GetHobbiesGuideList(this.state.Guide);
@@ -164,6 +162,7 @@ class Home extends Component {
 
     //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
     orgenzie = (links) => {
+        localStorage.setItem('linksFromSQL', JSON.stringify(links));
         console.log(links);
         let templink = "";
         let temparraylinks = [];
@@ -185,7 +184,6 @@ class Home extends Component {
     updateAreasGuides = (areas) => {
         //מביא את רשימת האזורים של המדריך 
         this.GetAreasGuideList(this.state.Guide);
-
     }
     updateLanguageGuides = () => {
         //מביא את רשימת השפות של המדריך 

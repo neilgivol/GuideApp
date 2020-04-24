@@ -41,13 +41,17 @@ class ProfileDetails extends Component {
 
     componentDidMount() {
         let dateBirth = new Date(this.props.GuideDetails.BirthDay);
+        let linkSQL = JSON.parse(localStorage.getItem('linksFromSQL'));
+        console.log(linkSQL);
         this.setState({
             user: this.props.GuideDetails,
             size: this.props.GuideDetails.Gender,
             BirthDay: dateBirth,
             phone: this.props.GuideDetails.Phone,
-            fulllink: this.props.GuideLinks
+            fulllink: this.props.GuideLinks,
+            linksfromSQL:linkSQL
         })
+        console.log(this.state.linksfromSQL);
     }
     componentDidUpdate(PrevProps, state) {
         if (PrevProps.GuideLinks !== this.props.GuideLinks) {
@@ -82,9 +86,7 @@ class ProfileDetails extends Component {
         this.setState({
             user: { ...this.state.user, LastName: e.target.value },
             lastNameIsValid: e.target.validity.valid
-        });
-       // console.log(this.state.lastNameIsValid)
-   
+        });   
     }
     onChangePhone = (e) => {
         this.setState({
@@ -351,7 +353,7 @@ class ProfileDetails extends Component {
                                             />
                                         </Col>
                                     </Row>
-                                    <Links linksFromSQL={this.state.linksfromSQL} Guide={this.state.user} updateLinks={this.updateLinks} GuideLinks={this.props.GuideLinks} />
+                                    <Links linksfromSQL={this.state.linksfromSQL} Guide={this.state.user} updateLinks={this.updateLinks} GuideLinks={this.props.GuideLinks} />
                                     <Row>
                                         <Col>
                                             <Form.Group controlId="exampleForm.ControlTextarea1">

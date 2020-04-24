@@ -149,6 +149,7 @@ class Expertise extends Component {
 
     //עדכון רשימת ההתמחויות החדשה על המסך לאחר שהוכנסו למסד הנתונים
     UpdateList = (result) => {
+        this.props.updateExpertises();
         let temp = [];
         console.log(result);
         for (let i = 0; i < result.length; i++) {
@@ -173,7 +174,6 @@ class Expertise extends Component {
                 let elementCart = temp[j];
                 console.log(elementCart);
                 if (elementArray.id === elementCart.id) {
-                    console.log("WHAT???");
                     boolifExist = true;
                 }
             }

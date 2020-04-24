@@ -297,7 +297,7 @@ class ProfileCard extends Component {
                 </CardBody>
 
                 <CardBody>
-                    <CardLink href="/">Logout</CardLink>
+                    <CardLink><Link to="/"> Logout</Link></CardLink>
                 </CardBody>
             </Card>
         );

@@ -4,6 +4,7 @@ import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
+import '../Css/Language.css';
 
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 

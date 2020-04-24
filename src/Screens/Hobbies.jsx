@@ -8,21 +8,6 @@ import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
 
-// import art from '../Img/Hobbies/artMuseums.jpg';
-// import camping from '../Img/Hobbies/camping.jfif';
-// import classicMusic from '../Img/Hobbies/classicMusic.jpg';
-// import computerGamer from '../Img/Hobbies/computerGamer.jpg';
-// import cooking from '../Img/Hobbies/cooking.jpg';
-// import drawing from '../Img/Hobbies/drawing.jfif';
-// import diving from '../Img/Hobbies/diving.jpg';
-// import geopolitics from '../Img/Hobbies/geopolitics.jpg';
-// import paintball from '../Img/Hobbies/paintball.jpg';
-// import rafting from '../Img/Hobbies/rafting.jpg';
-// import rappelling from '../Img/Hobbies/rappelling.jpg';
-// import Sports2 from '../Img/Hobbies/Sports2.png';
-// import theater from '../Img/Hobbies/theater.jpg';
-// import photography from '../Img/Hobbies/photography.jfif';
-// import hiking from '../Img/Hobbies/hiking.jfif';
 
 class Hobbies extends Component {
     constructor(props) {
@@ -166,6 +151,7 @@ class Hobbies extends Component {
 
     //עדכון רשימת התחביבים החדשה על המסך לאחר שהוכנסו למסד הנתונים
     UpdateList = (result) => {
+        this.props.updateHobbies();
         let temp = [];
         console.log(result);
         for (let i = 0; i < result.length; i++) {
@@ -192,7 +178,6 @@ class Hobbies extends Component {
                 let elementCart = temp[j];
                 console.log(elementCart);
                 if (elementArray.id === elementCart.id) {
-                    console.log("WHAT???");
                     boolifExist = true;
                 }
             }
@@ -206,6 +191,7 @@ class Hobbies extends Component {
 
     }
     render() {
+        const { itemsArray, itemsInCart, ListFromSQL } = this.state;
         return (
             <Card className="cardDivCenter">
                 {/* <Card.Header>Hobbies</Card.Header> */}

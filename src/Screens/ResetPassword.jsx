@@ -78,7 +78,7 @@ class ResetPassword extends Component {
 
     GetGuideFromSQL = () => {
         let email = this.state.email; 
-        fetch('http://localhost:49948/api/Guide?email=' + email, {
+        fetch('http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide?email=' + email, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json; charset=UTF-8',
