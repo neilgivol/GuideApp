@@ -21,6 +21,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import { Container, Row, Col } from "shards-react";
+import firebase from '../services/firebase';
 
 function Copyright() {
     return (
@@ -134,8 +135,27 @@ class Home extends Component {
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
+        this.ConnectFirebase();
     }
+    ConnectFirebase=async()=>{
+        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email,this.state.Guide.PasswordGuide)
+        .then(async result =>{
+            let user = result.user;
+            if (user) {
+                await firebase.firestore().collection('users')
+                .where('id', "==", user.uid)
+                .get()
+                .then(function(querySnapshot){
+                    querySnapshot.forEach(function(doc){
+                        const currentdata = doc.data()
+                        localStorage.setItem('docId',doc.id);
+                        localStorage.setItem('idChat',currentdata.id);
+                    })
+                })
+            }
+        })
 
+    }
     //מביא את הלינקים של המדריך הספציפי
     getLinksFromSQL = (TempGuide) => {
         fetch(this.apiUrl + "Link/" + TempGuide.gCode, {

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2039a9b0b9b5a4134f90cf2ec4441fe1",
+    "revision": "577a07a6ee0290d8f4895cf260e02cba",
     "url": "/bgroup10/prod/guideapp/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/bgroup10/prod/guideapp/static/css/2.54a20c6a.chunk.css"
   },
   {
-    "revision": "32f4b4efbd2ff1fee52d",
+    "revision": "b6c418b3b2d3535bad0e",
     "url": "/bgroup10/prod/guideapp/static/css/main.1ee4c614.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/bgroup10/prod/guideapp/static/js/2.ec7dde9c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "32f4b4efbd2ff1fee52d",
-    "url": "/bgroup10/prod/guideapp/static/js/main.5da35ffc.chunk.js"
+    "revision": "b6c418b3b2d3535bad0e",
+    "url": "/bgroup10/prod/guideapp/static/js/main.92a31281.chunk.js"
   },
   {
     "revision": "52cfd33f637b7ef49eca",

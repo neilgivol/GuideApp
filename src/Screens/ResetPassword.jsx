@@ -36,7 +36,7 @@ class ResetPassword extends Component {
 
         }
      
-        let local =true;
+        let local =this.state.local;
         this.apiUrl = 'http://localhost:49948/api/Guide';
         if (!local) {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide';
@@ -78,7 +78,7 @@ class ResetPassword extends Component {
 
     GetGuideFromSQL = () => {
         let email = this.state.email; 
-        fetch('http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide?email=' + email, {
+        fetch(this.apiUrl + '?email=' + email, {
           method: 'GET',
           headers: new Headers({
             'Content-Type': 'application/json; charset=UTF-8',

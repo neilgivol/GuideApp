@@ -50,7 +50,7 @@ this.state={
         const data= new FormData();
         data.append("UploadedFile",file.file);
         //גישה לקונטרולר
-        fetch('http://proj.ruppin.ac.il/bgroup10/PROD/api/Guide/PostPic', {
+        fetch(this.apiUrl + '/Guide/PostPic', {
             method: 'post',
             contentType: false,
             processData: false,

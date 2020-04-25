@@ -21,7 +21,8 @@ import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import MainFooter from './Components/MainFooter';
 import FileUpload from './Components/fileUpload.jsx';
 import $ from "jquery";
-
+import { toast, toastContainer, ToastContainer } from 'react-toastify';
+import firebase from './services/firebase';
 const navLinks = [
   {
     text: 'Profile',
@@ -57,7 +58,12 @@ class App extends Component {
       AllExpertises: [],
       GuidesFromGovIL: [],
       LanguagesList: [],
-      LanguagesListOrgenized:[]
+      LanguagesListOrgenized: [],
+      authentucated: false,
+      loading: false,
+      name:'',
+      password:'',
+      email:''
 
     }
     let local = this.state.local;
@@ -65,6 +71,7 @@ class App extends Component {
     if (!local) {
       this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
     }
+
   }
   //מביא את כל האזורים, התחביבים וההתמחויות שנמצאות במסד נתונים
   componentDidMount() {
@@ -74,8 +81,23 @@ class App extends Component {
     this.GetAllExpertises();
     this.GetGuidesGOVFromSQL();
     this.GetAllLanguages();
+    //this.ConnectFirebase();
     // this.GetGuidesFromSQL();
   }
+
+  showToast = (type, message) => {
+    switch (type) {
+      case 0:
+        toast.warning(message)
+        break;
+      case 1:
+        toast.success(message)
+      default:
+        break;
+    }
+  }
+
+ 
 
   //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות. 
   navbarCheck = (nav) => {
@@ -122,7 +144,7 @@ class App extends Component {
   GetGuidesGOVFromSQL = () => {
     var data = {
       resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
-      limit:10000
+      limit: 10000
     };
     let listGov = [];
     $.ajax({
@@ -255,15 +277,15 @@ class App extends Component {
         for (let i = 0; i < DescriptionGuide.length; i++) {
           const element = DescriptionGuide[i];
           let templine = element.split("</p>");
-          if (i == 0 || i == DescriptionGuide.length-1) {
+          if (i == 0 || i == DescriptionGuide.length - 1) {
             tempDescription += templine[0];
           }
-          else{
+          else {
             tempDescription += templine[0] + " ";
           }
         }
         DescriptionGuide = tempDescription;
-        DescriptionGuide = DescriptionGuide.replace("'","`")
+        DescriptionGuide = DescriptionGuide.replace("'", "`")
         console.log(DescriptionGuide);
         let SignDate = new Date();
         let signDateCorrect = SignDate.toLocaleDateString('en-US');
@@ -305,10 +327,10 @@ class App extends Component {
             })
             this.AddLanguages(this.state.tempGuide, Languages);
           }
-          else{
+          else {
             alert("Error")
           }
-         
+
         },
         (error) => {
           console.log("err post=", error);
@@ -413,8 +435,6 @@ class App extends Component {
         (result) => {
           this.setState({
             tempGuide: result,
-
-
           })
           this.MoveToHomePage(this.state.tempGuide);
         },
@@ -452,12 +472,40 @@ class App extends Component {
         });
     console.log(this.state.tempGuide);
   }
-
+AddtoFirebase=(e)=>{
+  console.log("fff")
+  const name = e.FirstName + " " + e.LastName;
+  const email = e.Email;
+  const password = e.PasswordGuide;
+  try {
+    firebase.auth().createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
+      .then(async result => {
+        firebase.firestore().collection('users')
+          .add({
+           name,
+            id: result.user.uid,
+           email,
+           password,
+            URL: '',
+            messages: [{ notificationId: "", number: 0 }]
+          }).then((docRef) => {
+            localStorage.setItem('idChat', docRef.id);
+          })
+          .catch((error)=>{
+            console.error("Error adding document",error)
+          })
+      })
+  }
+  catch(error){
+    document.getElementById('1').innerHTML = "Error in singing up please try again"
+  }
+}
   //  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
   MoveToHomePage = (e) => {
+    this.AddtoFirebase(e);
     console.log(e)
     if (e !== null) {
-      localStorage.setItem('Guide', JSON.stringify(e))
+      localStorage.setItem('Guide', JSON.stringify(e));
       this.props.history.push({
         pathname: '/home/',
         state: { GuideTemp: e }
@@ -544,21 +592,21 @@ class App extends Component {
   }
 
   //מסדר את השפות לפי ID ו label
-OrgenizeLanguages = (result) =>{
-  let tempArrayList = [];
-  for (let i = 0; i < result.length; i++) {
-    const element = result[i];
-    let Language = {
-      id:i+1,
-      label: element.LNameEnglish + " / " + element.LName
+  OrgenizeLanguages = (result) => {
+    let tempArrayList = [];
+    for (let i = 0; i < result.length; i++) {
+      const element = result[i];
+      let Language = {
+        id: i + 1,
+        label: element.LNameEnglish + " / " + element.LName
+      }
+      tempArrayList.push(Language);
     }
-    tempArrayList.push(Language);
+    console.log(tempArrayList);
+    this.setState({
+      LanguagesListOrgenized: tempArrayList
+    })
   }
-console.log(tempArrayList);
-  this.setState({
-    LanguagesListOrgenized:tempArrayList
-  })
-}
   //מביא את כל האזורים הקיימים במסד נתונים
   GetAllAreas = () => {
     fetch(this.apiUrl + "Area", {
@@ -582,98 +630,107 @@ console.log(tempArrayList);
   }
 
   render() {
-    return (
-      <div className="app">
-        <Switch>
-          <Route path="/upload" >
-            <FileUpload local={this.state.local} />
-          </Route>
-          <Route path="/check" >
-            <Check
-              color="#008ae6"
-              type="spin" />
-          </Route>
-          <Route exact path="/reset" >
-            <ResetPassword local={this.state.local} />
-          </Route>
-          <Route exact path="/" >
-            <SignIn GovList={this.checkIfGuideExistInGovilList} checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local} />
-          </Route>
-          <Route path="/signUp">
-            <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
-          </Route>
-          <Route path="/home">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#fff"
-              hoverBackground="#A2D4FF"
-              linkColor="#1988ff"
-            />
-            <Home AllLanguages={this.state.LanguagesListOrgenized} local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
-            <MainFooter className="hidden-xs" />
-          </Route>
-          <Route path="/chat">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#fff"
-              hoverBackground="#A2D4FF"
-              linkColor="#1988ff"
-            />
-            <Chat navbarOpenCheck={this.state.navbarCheckOpen} />
-            <MainFooter className="hidden-xs" />
-          </Route>
-
-          <Route path="/portfolio">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
-            />
-            <Portfolio />
-          </Route>
-          <Route path="/blog">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
-            />
-            <Blog />
-          </Route>
-          <Route path="/about">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
-            />
-            <About />
-          </Route>
-          <Route path="/details">
-            <ResponsiveNavigation
-              navbarCheckFunc={this.navbarCheck}
-              navLinks={navLinks}
-              logo={menu}
-              background="#0099cc"
-              hoverBackground="#ddd"
-              linkColor="#777"
-            />
-            <ProfileDetails />
-          </Route>
-        </Switch>
+    return this.state.loading === true ? (
+      <div className="spinner-border text-success" role='status'>
+        <span className="sr-only">Loading...</span>
       </div>
-    );
+    ) : (
+        <div className="app">
+          <ToastContainer
+            autoClose={2000}
+            hideProgressBar={true}
+            position={toast.POSITION.BOTTOM_CENTER}
+          />
+          <Switch>
+            <Route path="/upload" >
+              <FileUpload local={this.state.local} />
+            </Route>
+            <Route path="/check" >
+              <Check
+                color="#008ae6"
+                type="spin" />
+            </Route>
+            <Route exact path="/reset" >
+              <ResetPassword local={this.state.local} />
+            </Route>
+            <Route exact path="/" >
+              <SignIn GovList={this.checkIfGuideExistInGovilList} checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local} />
+            </Route>
+            <Route path="/signUp">
+              <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
+            </Route>
+            <Route path="/home">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#fff"
+                hoverBackground="#A2D4FF"
+                linkColor="#1988ff"
+              />
+              <Home AllLanguages={this.state.LanguagesListOrgenized} local={this.state.local} ReloadHobbies={this.GetAllHobbies} Allusers={this.state.guides} AllExpertises={this.state.AllExpertises} AllHobbies={this.state.AllHobbies} AllAreas={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} GetGuidesFromSQL={this.GetGuidesFromSQL} />
+              <MainFooter className="hidden-xs" />
+            </Route>
+            <Route path="/chat">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#fff"
+                hoverBackground="#A2D4FF"
+                linkColor="#1988ff"
+              />
+              <Chat showToast={this.showToast} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
+              <MainFooter className="hidden-xs" />
+            </Route>
+
+            <Route path="/portfolio">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#0099cc"
+                hoverBackground="#ddd"
+                linkColor="#777"
+              />
+              <Portfolio />
+            </Route>
+            <Route path="/blog">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#0099cc"
+                hoverBackground="#ddd"
+                linkColor="#777"
+              />
+              <Blog />
+            </Route>
+            <Route path="/about">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#0099cc"
+                hoverBackground="#ddd"
+                linkColor="#777"
+              />
+              <About />
+            </Route>
+            <Route path="/details">
+              <ResponsiveNavigation
+                navbarCheckFunc={this.navbarCheck}
+                navLinks={navLinks}
+                logo={menu}
+                background="#0099cc"
+                hoverBackground="#ddd"
+                linkColor="#777"
+              />
+              <ProfileDetails />
+            </Route>
+          </Switch>
+        </div>
+      );
   }
 }
 
