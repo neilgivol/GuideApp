@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import '../Css/signUpNavBar.css';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ProfileDetails from "../Screens/ProfileDetails.jsx";
-import Area from '../Screens/Area';
+//import Area from '../Screens/Area';
 import ProfileCard from '../Components/ProfileCard.jsx';
 import NavbarProfile from '../Components/NavbarProfile';
 import Languages from '../Screens/Languages';
@@ -10,31 +10,32 @@ import '../Css/Home.css';
 import Hobbies from '../Screens/Hobbies';
 import Expertise from '../Screens/Expertise';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+//import Box from '@material-ui/core/Box';
 import facebook from '../Img/facebook.png';
 import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
-import MainFooter from '../Components/MainFooter';
+//import MainFooter from '../Components/MainFooter';
 import "bootstrap/dist/css/bootstrap.min.css";
+import ReactLoading from 'react-loading';
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import { Container, Row, Col } from "shards-react";
 import firebase from '../services/firebase';
 
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="#">
-                IsraVisor
-        </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+// function Copyright() {
+//     return (
+//         <Typography variant="body2" color="textSecondary" align="center">
+//             {'Copyright © '}
+//             <Link color="inherit" href="#">
+//                 IsraVisor
+//         </Link>{' '}
+//             {new Date().getFullYear()}
+//             {'.'}
+//         </Typography>
+//     );
+// }
 
 class Home extends Component {
     constructor(props) {
@@ -53,6 +54,7 @@ class Home extends Component {
             AllExpertises: this.props.AllExpertises,
             linksfromSQL: [],
             fullLinks: [],
+            isLoading: true,
             options: [
                 {
                     id: 0,
@@ -64,31 +66,31 @@ class Home extends Component {
                     id: 1,
                     name: 'Instagram',
                     value: 'Instagram',
-                    label: <div><img className="imageicons" src={instegram} /><span>Instagram</span></div>
+                    label: <div><img alt="" className="imageicons" src={instegram} /><span>Instagram</span></div>
                 },
                 {
                     id: 2,
                     name: 'Facebook',
                     value: 'Facebook',
-                    label: <div><img className="imageicons" src={facebook} /><span>Facebook</span></div>
+                    label: <div><img alt="" className="imageicons" src={facebook} /><span>Facebook</span></div>
                 },
                 {
                     id: 3,
                     name: 'Twitter',
                     value: 'Twitter',
-                    label: <div><img className="imageicons" src={twitter} /><span>Twitter</span></div>
+                    label: <div><img alt="" className="imageicons" src={twitter} /><span>Twitter</span></div>
                 },
                 {
                     id: 4,
                     name: 'Linkdin',
                     value: 'Linkdin',
-                    label: <div><img className="imageicons" src={linkdin} /><span>Linkdin</span></div>
+                    label: <div><img alt="" className="imageicons" src={linkdin} /><span>Linkdin</span></div>
                 },
                 {
                     id: 5,
                     name: 'Website',
                     value: 'Website',
-                    label: <div><img className="imageicons" src={website} /><span>Website</span></div>
+                    label: <div><img alt="" className="imageicons" src={website} /><span>Website</span></div>
                 },
             ],
         };
@@ -98,7 +100,7 @@ class Home extends Component {
             this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
         }
     }
-    componentDidUpdate(PrevProps, state) {
+    componentDidUpdate(PrevProps) {
         if (PrevProps.AllExpertises !== this.props.AllExpertises) {
             this.props.ReloadHobbies();
             this.setState({
@@ -129,32 +131,45 @@ class Home extends Component {
             })
         }
     }
+    
     componentDidMount() {
+        console.log(this.state.Guide);
         this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
         this.ConnectFirebase();
-    }
-    ConnectFirebase=async()=>{
-        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email,this.state.Guide.PasswordGuide)
-        .then(async result =>{
-            let user = result.user;
-            if (user) {
-                await firebase.firestore().collection('users')
-                .where('id', "==", user.uid)
-                .get()
-                .then(function(querySnapshot){
-                    querySnapshot.forEach(function(doc){
-                        const currentdata = doc.data()
-                        localStorage.setItem('docId',doc.id);
-                        localStorage.setItem('idChat',currentdata.id);
-                    })
-                })
-            }
+        let docId = localStorage.getItem('docId');
+        let idChat = localStorage.getItem('idChat');
+        console.log(docId);
+        console.log(idChat);
+        this.setState({
+            isLoading: false
         })
-
+    }
+    ConnectFirebase = async () => {
+        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email, this.state.Guide.PasswordGuide)
+            .then(async result => {
+                let user = result.user;
+                console.log(result);
+                if (user) {
+                    await firebase.firestore().collection('users')
+                        .where('id', "==", user.uid)
+                        .get()
+                        .then(function (querySnapshot) {
+                            querySnapshot.forEach(function (doc) {
+                                console.log(doc.id);
+                                const currentdata = doc.data()
+                                console.log(currentdata)
+                                localStorage.setItem('docId', doc.id);
+                                localStorage.setItem('idChat', currentdata.id);
+                            })
+                        })
+                }
+            })
+            console.log(localStorage.getItem('docId'));
+            console.log(localStorage.getItem('idChat'));
     }
     //מביא את הלינקים של המדריך הספציפי
     getLinksFromSQL = (TempGuide) => {
@@ -218,7 +233,7 @@ class Home extends Component {
         //מביא את רשימת ההתמחויות של המדריך 
         this.GetExpertisesGuides(this.state.Guide);
     }
-    updateGuide=()=>{
+    updateGuide = () => {
         this.GetGuideFromSQL(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
 
@@ -338,7 +353,7 @@ class Home extends Component {
                 });
     }
 
-    GetGuideFromSQL=(TempGuide)=>{
+    GetGuideFromSQL = (TempGuide) => {
         fetch(this.apiUrl + "Guide?email=" + TempGuide.Email, {
             method: 'GET',
             headers: new Headers({
@@ -358,7 +373,7 @@ class Home extends Component {
                 });
     }
 
-//אם העמוד הנוכחי הוא עדכון פרופיל אז יופיע כרטיס הפרופיל של המדריך, אם לא אז לא
+    //אם העמוד הנוכחי הוא עדכון פרופיל אז יופיע כרטיס הפרופיל של המדריך, אם לא אז לא
     showProfileCard = () => {
         if (this.state.namePage === "Profile Details") {
             return <Row className="homePage">
@@ -384,6 +399,17 @@ class Home extends Component {
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer">
                 <NavbarProfile ClickPage2={this.ClickPage2} />
                 {this.showProfileCard()}
+                {/* Loading */}
+                {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
             </Container>
         )
     }

@@ -1,13 +1,13 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import '../Css/ProfileCard.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import { Card, CardBody, CardText, CardImg, CardTitle, CardLink, ListGroupItem, ListGroup } from 'shards-react';
+import { Card, CardBody, CardText, CardImg, CardTitle, CardLink } from 'shards-react';
 import StarRatings from 'react-star-ratings';
 import pic from '../Img/Default-welcomer.png';
-import ImageUploader from 'react-images-upload';
+//import ImageUploader from 'react-images-upload';
 import FileUpload from '../Components/fileUpload';
 import { Progress } from "shards-react";
 import { Link, withRouter } from 'react-router-dom';

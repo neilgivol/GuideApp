@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import SignIn from './Screens/SignIn';
-import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import SignUp from './Screens/SignUp';
-import { Router } from '@reach/router'
+//import { Router } from '@reach/router'
 import About from './pages/About.jsx'
 import Chat from './pages/Chat.jsx'
 import Portfolio from './pages/Portfolio.jsx'
@@ -11,9 +11,9 @@ import Blog from './pages/Blog.jsx'
 import Home from './pages/Home.jsx'
 import ResponsiveNavigation from './Components/ResponsiveNavigation.jsx'
 import ResetPassword from './Screens/ResetPassword'
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import ProfileDetails from './Screens/ProfileDetails';
-import Area from './Screens/Area';
+//import Area from './Screens/Area';
 import Check from './Screens/Check';
 import menu from './Img/menu.png';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,8 +21,10 @@ import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import MainFooter from './Components/MainFooter';
 import FileUpload from './Components/fileUpload.jsx';
 import $ from "jquery";
-import { toast, toastContainer, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import firebase from './services/firebase';
+import ReactLoading from 'react-loading'
+
 const navLinks = [
   {
     text: 'Profile',
@@ -60,7 +62,7 @@ class App extends Component {
       LanguagesList: [],
       LanguagesListOrgenized: [],
       authentucated: false,
-      loading: false,
+      isLoading: false,
       name:'',
       password:'',
       email:''
@@ -146,7 +148,6 @@ class App extends Component {
       resource_id: '5f5afc43-639a-4216-8286-d146a8e048fe', // the resource id
       limit: 10000
     };
-    let listGov = [];
     $.ajax({
       url: 'https://data.gov.il/api/action/datastore_search',
       data: data,
@@ -169,7 +170,7 @@ class App extends Component {
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
-      if (num == licenseNum) {
+      if (num === licenseNum) {
         ifExist = true;
       }
     }
@@ -188,8 +189,7 @@ class App extends Component {
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
-      if (num == licenseNum) {
-        let License = element.License_Number;
+      if (num === licenseNum) {
         let fullname = JSON.stringify(element.Name);
         if (fullname !== "") {
           fullname = fullname.split('"');
@@ -198,10 +198,10 @@ class App extends Component {
           if (fullname.length > 2) {
             for (let i = 0; i < fullname.length; i++) {
               const element = fullname[i];
-              if (i == fullname.length - 1) {
+              if (i === fullname.length - 1) {
                 FirstName = element;
               }
-              else if (i == fullname.length - 2) {
+              else if (i === fullname.length - 2) {
                 LastName += element;
               }
               else {
@@ -211,7 +211,7 @@ class App extends Component {
 
             }
           }
-          else if (fullname.length == 2) {
+          else if (fullname.length === 2) {
             FirstName = fullname[1];
             LastName = fullname[0];
           }
@@ -258,11 +258,11 @@ class App extends Component {
         let Languages = [];
         for (let i = 0; i < gLanguages.length; i++) {
           let element = gLanguages[i];
-          if (i == gLanguages.length - 1) {
+          if (i === gLanguages.length - 1) {
             element = element.split('"');
             Languages.push(element[0]);
           }
-          else if (i == 0) {
+          else if (i === 0) {
             element = element.split('"');
             Languages.push(element[1]);
           }
@@ -277,7 +277,7 @@ class App extends Component {
         for (let i = 0; i < DescriptionGuide.length; i++) {
           const element = DescriptionGuide[i];
           let templine = element.split("</p>");
-          if (i == 0 || i == DescriptionGuide.length - 1) {
+          if (i === 0 || i === DescriptionGuide.length - 1) {
             tempDescription += templine[0];
           }
           else {
@@ -307,6 +307,7 @@ class App extends Component {
 
   //מכניס מדריך מאתר משרד התיירות
   PostGuideToSQLFromGovIL = (Guide, Languages) => {
+    this.setState({isLoading:true})
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostGuideFromGovIL', {
       method: 'POST',
@@ -400,7 +401,6 @@ class App extends Component {
             LanguagesList: result
           })
           this.OrgenizeLanguages(result);
-          console.log(result);
         },
         (error) => {
           console.log("err post=", error);
@@ -409,7 +409,7 @@ class App extends Component {
 
   //לוקח את הפרטים מעמוד ההרשמה ובודק האם האימייל נמצא במסד נתונים- אם לא נמצא יוסיף אותו למסד נתונים
   PostGuideToCheckSignUp = (userDetails) => {
-    console.log("enter")
+    this.setState({isLoading:true})
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostToCheck', {
       method: 'POST',
@@ -436,7 +436,8 @@ class App extends Component {
           this.setState({
             tempGuide: result,
           })
-          this.MoveToHomePage(this.state.tempGuide);
+          this.AddtoFirebase(result);
+          //this.MoveToHomePage(this.state.tempGuide);
         },
         (error) => {
           console.log("err post=", error);
@@ -445,6 +446,7 @@ class App extends Component {
 
   //לוקח את פרטי המשתמש מהעמוד ההתחברות(אימייל וסיסמא) ובודק האם נמצא במסד נתונים
   PostGuideToCheckSignIn = (signInUser) => {
+    this.setState({isLoading:true})
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostToCheck', {
       method: 'POST',
@@ -465,17 +467,24 @@ class App extends Component {
           this.setState({
             tempGuide: result
           })
-          this.MoveToHomePage(this.state.tempGuide);
+          console.log(result);
+          console.log(this.state.tempGuide);
+          this.AddtoFirebase(result);
+          //this.MoveToHomePage(this.state.tempGuide);
         },
         (error) => {
           console.log("err post=", error);
         });
     console.log(this.state.tempGuide);
   }
+
+  //הוספה לfirebase
 AddtoFirebase=(e)=>{
   console.log("fff")
-  const name = e.FirstName + " " + e.LastName;
-  const email = e.Email;
+  console.log(e);
+ if (e !== null) {
+ const name = e.FirstName + " " + e.LastName; 
+ const email = e.Email;
   const password = e.PasswordGuide;
   try {
     firebase.auth().createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
@@ -487,6 +496,7 @@ AddtoFirebase=(e)=>{
            email,
            password,
             URL: '',
+            type:'Guide',
             messages: [{ notificationId: "", number: 0 }]
           }).then((docRef) => {
             localStorage.setItem('idChat', docRef.id);
@@ -499,10 +509,17 @@ AddtoFirebase=(e)=>{
   catch(error){
     document.getElementById('1').innerHTML = "Error in singing up please try again"
   }
+  this.MoveToHomePage(e);
+ }
+ else {
+      alert("incorrect login information");
+    }
+
+
+ 
 }
   //  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
   MoveToHomePage = (e) => {
-    this.AddtoFirebase(e);
     console.log(e)
     if (e !== null) {
       localStorage.setItem('Guide', JSON.stringify(e));
@@ -514,6 +531,7 @@ AddtoFirebase=(e)=>{
     else {
       alert("incorrect login information");
     }
+    this.setState({isLoading:false})
   }
 
   //מביא את כל התחביבים שקיימים במסד הנתונים
@@ -539,7 +557,6 @@ AddtoFirebase=(e)=>{
   //מסדר את התחביבים בגייסון הכולל מספר זיהוי,שם ותמונה
   OrgenizeHobbies = (result) => {
     let temp = [];
-    console.log(result);
     for (let i = 0; i < result.length; i++) {
       const element = result[i];
       let hobby = {
@@ -602,7 +619,6 @@ AddtoFirebase=(e)=>{
       }
       tempArrayList.push(Language);
     }
-    console.log(tempArrayList);
     this.setState({
       LanguagesListOrgenized: tempArrayList
     })
@@ -729,6 +745,17 @@ AddtoFirebase=(e)=>{
               <ProfileDetails />
             </Route>
           </Switch>
+             {/* Loading */}
+             {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
         </div>
       );
   }

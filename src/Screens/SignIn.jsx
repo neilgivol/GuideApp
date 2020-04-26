@@ -1,5 +1,5 @@
-import React, { Component, useState, useEffect } from 'react';
-import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBIcon, MDBModalFooter } from 'mdbreact';
+import React, { Component} from 'react';
+import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBModalFooter } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
@@ -34,7 +34,8 @@ class SignIn extends Component {
             password: "",
             checkBoxVal: "unCheck",
             rememberMe: false,
-            lieceneNum: ""
+            lieceneNum: "",
+            isLoading: false,
 
         }
     }
@@ -49,7 +50,6 @@ componentWillMount(){
 }
     //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
     componentDidMount() {
-        console.log(this.props.GOV);
         const rememberMe = localStorage.getItem('rememberMe') === 'true';
         const usernameEntered = rememberMe ? localStorage.getItem('usernameEntered') : '';
         const PasswordEntered = rememberMe ? localStorage.getItem('PasswordEntered') : '';
@@ -124,7 +124,7 @@ componentWillMount(){
                 <MDBContainer>
                     <MDBRow>
                         <MDBCol md="12 text-center">
-                            <img className="LogoDiv" src={logo} />
+                            <img className="LogoDiv" alt="" src={logo} />
                         </MDBCol>
                     </MDBRow>
                     <MDBRow className="RowDivSignIn text-center">

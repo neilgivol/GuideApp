@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../Css/signUpNavBar.css';
-import {Button,Col,Row, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
+import {Button } from 'react-bootstrap';
+import {  Link } from 'react-router-dom';
 class NavbarProfile extends Component {
     state = {
         name: this.props.userNamePage,

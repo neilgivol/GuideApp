@@ -10,7 +10,7 @@ import Select from 'react-select';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
+import { Button, Col, Row} from 'react-bootstrap';
 
 export default class Links extends Component {
     constructor(props) {
@@ -42,19 +42,19 @@ export default class Links extends Component {
                     id: 3,
                     name: 'Twitter',
                     value: 'Twitter',
-                    label: <div><img className="imageicons" src={twitter} /><span>Twitter</span></div>
+                    label: <div><img alt="" className="imageicons" src={twitter} /><span>Twitter</span></div>
                 },
                 {
                     id: 4,
                     name: 'Linkdin',
                     value: 'Linkdin',
-                    label: <div><img className="imageicons" src={linkdin} /><span>Linkdin</span></div>
+                    label: <div><img alt="" className="imageicons" src={linkdin} /><span>Linkdin</span></div>
                 },
                 {
                     id: 5,
                     name: 'Website',
                     value: 'Website',
-                    label: <div><img className="imageicons" src={website} /><span>Website</span></div>
+                    label: <div><img alt="" className="imageicons" src={website} /><span>Website</span></div>
                 },
             ],
             selectedOption: null,

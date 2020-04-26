@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import GoogleLogin from 'react-google-login';
 import { withRouter } from 'react-router-dom';
+import ReactLoading from 'react-loading';
 
 class Google extends Component {
   constructor() {
@@ -10,13 +11,14 @@ class Google extends Component {
       userDetails: {},
       isUserLoggedIn: false,
       guide:"",
-      startDate: new Date()
+      startDate: new Date(),
+      isLoading:false
     };
   }
 
   
   responseGoogle = response => {
-    this.setState({ userDetails: response.profileObj, isUserLoggedIn: true });
+    this.setState({ userDetails: response.profileObj, isUserLoggedIn: true, isLoading:true });
     let signDate = this.state.startDate.toLocaleDateString('en-US');
     const GoogleUser = {
       SignDate:signDate,

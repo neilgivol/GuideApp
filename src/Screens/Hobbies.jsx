@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import ShopItem from '../ShopItem';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Css/Hobbies.css';
 import HobbieAdded from '../Components/HobbieAdded';
 import HobbiesList from '../Components/HobbiesList';
+import ReactLoading from 'react-loading'
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
@@ -16,7 +16,8 @@ class Hobbies extends Component {
             itemsArray: this.props.AllHobbies,
             itemsInCart: [],
             ListFromSQL: [],
-            local: this.props.local
+            local: this.props.local,
+            isLoading: true
         }
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
@@ -29,6 +30,7 @@ class Hobbies extends Component {
             //שולח לפונקציה שמעדכנת את רשימת האזורים של המדריך על המסך
             this.UpdateList(this.props.guideListHobbies);
         }
+       
 
     }
 
@@ -166,7 +168,6 @@ class Hobbies extends Component {
         this.setState({
             itemsInCart: temp
         })
-
 //בדיקה אילו מהתחביבים נמצאים בתוך רשימת התחביבים שנבחרו, יופיע בצד שמאל 
         let tempArray = [];
         let boolifExist = false;
@@ -186,7 +187,8 @@ class Hobbies extends Component {
             }
         }
         this.setState({
-            itemsArray: tempArray
+            itemsArray: tempArray,
+            isLoading:false
         });
 
     }
@@ -219,10 +221,22 @@ class Hobbies extends Component {
                         <Button onClick={() => { this.updateHobbies() }}>Save</Button>
                     </div>
                 </ListGroup>
+                   {/* Loading */}
+                   {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
             </Card>
 
 
         );
+        
     }
 }
 

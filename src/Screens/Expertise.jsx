@@ -6,6 +6,8 @@ import HobbiesList from '../Components/HobbiesList';
 import HobbieAdded from '../Components/HobbieAdded';
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
+import ReactLoading from 'react-loading'
+
 
 
 class Expertise extends Component {
@@ -15,7 +17,8 @@ class Expertise extends Component {
             itemsInCart: [],
             itemsArray: this.props.AllExpertises,
             ListFromSQL: [],
-            local: this.props.local
+            local: this.props.local,
+            isLoading: true
 
         }
         let local = this.state.local;
@@ -28,6 +31,7 @@ class Expertise extends Component {
         if (this.props.GuideExpertises.length !== 0) {
             this.UpdateList(this.props.GuideExpertises);
         }
+
 
     }
 
@@ -182,7 +186,9 @@ class Expertise extends Component {
             }
         }
         this.setState({
-            itemsArray: tempArray
+            itemsArray: tempArray,
+            isLoading: false
+
         });
 
     }
@@ -214,6 +220,17 @@ class Expertise extends Component {
                         <Button onClick={() => { this.UpdateExpertise() }}>Save</Button>
                     </div>
                 </ListGroup>
+                {/* Loading */}
+                {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
             </Card>
 
         );

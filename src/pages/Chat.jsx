@@ -4,23 +4,14 @@ import '../Css/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import { Container, Row, Col } from "shards-react";
-import { auth } from '../services/firebase';
+import { Container } from "shards-react";
 import firebase from '../services/firebase';
 import '../Css/Chat.css';
 import ChatBox from '../Components/ChatBox';
 import WelcomeCard from '../Components/WelcomeCard';
 import profilePic from '../Img/Default-welcomer.png';
-import $ from "jquery";
-// <!-- The core Firebase JS SDK is always required and must be listed first -->
-// <script src="/__/firebase/7.14.2/firebase-app.js"></script>
+import ReactLoading from 'react-loading'
 
-// <!-- TODO: Add SDKs for Firebase products that you want to use
-//      https://firebase.google.com/docs/web/setup#available-libraries -->
-// <script src="/__/firebase/7.14.2/firebase-analytics.js"></script>
-
-// <!-- Initialize Firebase -->
-// <script src="/__/firebase/init.js"></script>
 class Chat extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +21,9 @@ class Chat extends Component {
             Guide: this.props.Guide,
             currentPeerUser: null,
             displayedContactSwitchedNotification: [],
-            discplayedContacts: []
+            discplayedContacts: [],
+            isLoading: true,
+
         }
         this.currentUserIdchat = localStorage.getItem("idChat")
         this.currentUserDocumentId = localStorage.getItem('docId');
@@ -50,7 +43,8 @@ class Chat extends Component {
         this.setState({
             Guide: guideTemp
         })
-        firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
+        if (guideTemp) {
+            firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
             .then((doc) => {
                 doc.data().messages.map((item) => {
                     this.currentUserMessages.push({
@@ -63,6 +57,8 @@ class Chat extends Component {
                 })
             })
         this.getListUser();
+        }
+       
     }
     getListUser = async () => {
         const result = await firebase.firestore().collection('users').get();
@@ -76,13 +72,14 @@ class Chat extends Component {
                     id: item.data().id,
                     name: item.data().name,
                     messages: item.data().messages,
-                    URL: item.data().URL
+                    URL: item.data().URL,
+                    type:item.data().type
                 })
             })
-
         }
         this.renderListUser();
     }
+
     getClassnameforUserandNotification = (itemId) => {
         let number = 0
         let className = ""
@@ -106,10 +103,10 @@ class Chat extends Component {
             else {
                 className = "viewWrapItem"
             }
-
         }
         return className;
     }
+
     notificationErase = (itemId) => {
         this.state.displayedContactSwitchedNotification.forEach((el) => {
             if (el.notificationId.length > 0) {
@@ -123,9 +120,9 @@ class Chat extends Component {
                 }
             }
         })
-        console.log(this.notificationMessagesErase);
         this.updaterenderList();
     }
+
     updaterenderList = () => {
         firebase.firestore().collection('users').doc(this.currentUserDocumentId).update(
             { messages: this.notificationMessagesErase }
@@ -137,6 +134,7 @@ class Chat extends Component {
 
     renderListUser = () => {
         if (this.searchUsers.length > 0) {
+            console.log(this.searchUsers);
             let viewListUser = [];
             let classname = "";
             this.searchUsers.map((item) => {
@@ -155,7 +153,6 @@ class Chat extends Component {
                                 document.getElementById(item.key).style.backgroundColor = '#fff'
                                 if (document.getElementById(item.key)) {
                                     document.getElementById(item.key).style.color = '#fff';
-
                                 }
                             }}
                         >
@@ -179,9 +176,9 @@ class Chat extends Component {
                 }
             })
             this.setState({
-                discplayedContacts: viewListUser
+                discplayedContacts: viewListUser,
+                isLoading:false
             })
-            console.log(viewListUser[0]);
         }
         else {
             console.log("No user is Present")
@@ -196,7 +193,7 @@ class Chat extends Component {
 
     }
 
-    
+
     render() {
         return (
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
@@ -221,6 +218,17 @@ class Chat extends Component {
                             )}
                         </div>
                     </div>
+                        {/* Loading */}
+                {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
                 </div>
             </Container>
         )

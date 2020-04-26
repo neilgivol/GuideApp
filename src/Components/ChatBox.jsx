@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import moment from 'moment'
 import ReactLoading from 'react-loading'
 import 'react-toastify/dist/ReactToastify.css'
-import {Card} from 'react-bootstrap';
-import firebase from '../services/firebase';
+//import {Card} from 'react-bootstrap';
+//import firebase from '../services/firebase';
 import '../Css/ChatBox.css';
 import {myFirestore, myStorage} from '../services/firebase'
 import images from '../Themes/Images'

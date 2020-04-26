@@ -1,9 +1,9 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
 //import DatePicker from 'react-datepicker';
 import DatePicker from 'react-date-picker'
 import "react-datepicker/dist/react-datepicker.css";
-import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 //import { withStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
@@ -16,7 +16,8 @@ import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import '../Css/ProfileDetails.css';
 import Swal from 'sweetalert2';
 import Links from '../Components/Links';
-
+import ReactLoading from 'react-loading';
+import MouseMover from '../Components/MouseMover';
 //import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
@@ -32,7 +33,8 @@ class ProfileDetails extends Component {
             firstNameIsValid: true,
             lastNameIsValid: true,
             licesnseIsValid: true,
-            fullLinks:[]
+            fullLinks:[],
+            isLoading:false
         };
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
@@ -49,7 +51,8 @@ class ProfileDetails extends Component {
             BirthDay: dateBirth,
             phone: this.props.GuideDetails.Phone,
             fullLinks: this.props.fullLinks,
-            linksfromSQL:this.props.linksfromSQL
+            linksfromSQL:this.props.linksfromSQL,
+            isLoading:false
         })
     }
     componentDidUpdate(PrevProps, state) {
@@ -236,6 +239,7 @@ class ProfileDetails extends Component {
     render() {
         return (
             <Card small className="mb-4 profileDetails">
+            <MouseMover/>
                 <Card.Header className="border-bottom">
                     <h6 className="m-0">Profile Details</h6>
                 </Card.Header>
@@ -377,7 +381,16 @@ class ProfileDetails extends Component {
                         </Row>
                     </ListGroupItem>
                 </ListGroup>
-
+                {this.state.isLoading ? (
+                    <div className="viewLoading">
+                        <ReactLoading
+                            type={'spin'}
+                            color={'#203152'}
+                            height={'3%'}
+                            width={'3%'}
+                        />
+                    </div>
+                ) : null}
             </Card>
         );
     }
