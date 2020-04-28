@@ -12,13 +12,12 @@ class Google extends Component {
       isUserLoggedIn: false,
       guide:"",
       startDate: new Date(),
-      isLoading:false
     };
   }
 
   
   responseGoogle = response => {
-    this.setState({ userDetails: response.profileObj, isUserLoggedIn: true, isLoading:true });
+    this.setState({ userDetails: response.profileObj, isUserLoggedIn: true });
     let signDate = this.state.startDate.toLocaleDateString('en-US');
     const GoogleUser = {
       SignDate:signDate,

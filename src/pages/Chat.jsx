@@ -38,33 +38,75 @@ class Chat extends Component {
         this.searchUsers = [];
         this.currentUserMessages = [];
     }
+    ConnectFirebase = async () => {
+        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email, this.state.Guide.PasswordGuide)
+            .then(async result => {
+                let user = result.user;
+                console.log(result);
+                if (user) {
+                    await firebase.firestore().collection('users')
+                        .where('id', "==", user.uid)
+                        .get()
+                        .then(function (querySnapshot) {
+                            querySnapshot.forEach(function (doc) {
+                                console.log(doc.id);
+                                const currentdata = doc.data()
+                                console.log(currentdata)
+                                localStorage.setItem('docId', doc.id);
+                                localStorage.setItem('idChat', currentdata.id);
+                            })
+                        })
+                }
+            })
+        console.log(localStorage.getItem('docId'));
+        console.log(localStorage.getItem('idChat'));
+    }
     componentDidMount() {
         let guideTemp = JSON.parse(localStorage.getItem('Guide'));
         this.setState({
             Guide: guideTemp
         })
-        if (guideTemp) {
+        if (this.currentUserDocumentId !== null) {
             firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
-            .then((doc) => {
-                doc.data().messages.map((item) => {
-                    this.currentUserMessages.push({
-                        notificationId: item.notificationId,
-                        number: item.number
+                .then((doc) => {
+                    doc.data().messages.map((item) => {
+                        this.currentUserMessages.push({
+                            notificationId: item.notificationId,
+                            number: item.number
+                        })
+                    })
+                    this.setState({
+                        displayedContactSwitchedNotification: this.currentUserMessages
                     })
                 })
-                this.setState({
-                    displayedContactSwitchedNotification: this.currentUserMessages
-                })
-            })
-        this.getListUser();
+            this.getListUser();
         }
-       
+        else {
+            this.ConnectFirebase();
+            if (this.currentUserDocumentId !== null) {
+                firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
+                    .then((doc) => {
+                        doc.data().messages.map((item) => {
+                            this.currentUserMessages.push({
+                                notificationId: item.notificationId,
+                                number: item.number
+                            })
+                        })
+                        this.setState({
+                            displayedContactSwitchedNotification: this.currentUserMessages
+                        })
+                    })
+                this.getListUser();
+            }
+        }
+
     }
     getListUser = async () => {
         const result = await firebase.firestore().collection('users').get();
         if (result.docs.length > 0) {
             let listUsers = []
             listUsers = [...result.docs]
+            console.log(listUsers);
             listUsers.forEach((item, index) => {
                 this.searchUsers.push({
                     key: index,
@@ -73,7 +115,7 @@ class Chat extends Component {
                     name: item.data().name,
                     messages: item.data().messages,
                     URL: item.data().URL,
-                    type:item.data().type
+                    type: item.data().type
                 })
             })
         }
@@ -177,7 +219,7 @@ class Chat extends Component {
             })
             this.setState({
                 discplayedContacts: viewListUser,
-                isLoading:false
+                isLoading: false
             })
         }
         else {
@@ -212,23 +254,23 @@ class Chat extends Component {
                         </div>
                         <div className="viewBoard">
                             {this.state.currentPeerUser ? (
-                                <ChatBox currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} />):(<WelcomeCard currentUserName={this.state.Guide.FirstName}
+                                <ChatBox currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
                                     currentUserPhoto={this.state.Guide.ProfilePic}
                                 />
-                            )}
+                                )}
                         </div>
                     </div>
-                        {/* Loading */}
-                {this.state.isLoading ? (
-                    <div className="viewLoading">
-                        <ReactLoading
-                            type={'spin'}
-                            color={'#203152'}
-                            height={'3%'}
-                            width={'3%'}
-                        />
-                    </div>
-                ) : null}
+                    {/* Loading */}
+                    {this.state.isLoading ? (
+                        <div className="viewLoading">
+                            <ReactLoading
+                                type={'spin'}
+                                color={'#203152'}
+                                height={'3%'}
+                                width={'3%'}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </Container>
         )

@@ -16,6 +16,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle'
+import firebase from '../services/firebase';
 
 
 
@@ -219,13 +220,23 @@ class ProfileCard extends Component {
             .then(
                 (result) => {
                     console.log(result);
+                    this.updateInFirebase(result);
                     this.RenderProfilePic(result);
                 },
                 (error) => {
                     console.log("err post=", error);
                 });
 
-
+    }
+    updateInFirebase = (result) => {
+        var user = firebase.auth().currentUser;
+        user.updateProfile({
+            photoURL: result.ProfilePic
+        }).then(function () {
+            // Update successful.
+        }).catch(function (error) {
+            // An error happened.
+        });
     }
     ChangeProfileImage = (newurl) => {
         this.setState({

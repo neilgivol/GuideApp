@@ -35,7 +35,6 @@ class SignIn extends Component {
             checkBoxVal: "unCheck",
             rememberMe: false,
             lieceneNum: "",
-            isLoading: false,
 
         }
     }

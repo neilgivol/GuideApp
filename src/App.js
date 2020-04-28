@@ -24,6 +24,7 @@ import $ from "jquery";
 import { toast, ToastContainer } from 'react-toastify';
 import firebase from './services/firebase';
 import ReactLoading from 'react-loading'
+import BuildTrip from './pages/BuildTrip';
 
 const navLinks = [
   {
@@ -38,7 +39,7 @@ const navLinks = [
   },
   {
     text: 'Trips',
-    path: '/about',
+    path: '/BuildTrip',
     icon: 'ion-ios-map'
   },
   {
@@ -467,8 +468,6 @@ class App extends Component {
           this.setState({
             tempGuide: result
           })
-          console.log(result);
-          console.log(this.state.tempGuide);
           this.AddtoFirebase(result);
           //this.MoveToHomePage(this.state.tempGuide);
         },
@@ -486,6 +485,7 @@ AddtoFirebase=(e)=>{
  const name = e.FirstName + " " + e.LastName; 
  const email = e.Email;
   const password = e.PasswordGuide;
+  const URL = e.ProfilePic;
   try {
     firebase.auth().createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
       .then(async result => {
@@ -495,7 +495,7 @@ AddtoFirebase=(e)=>{
             id: result.user.uid,
            email,
            password,
-            URL: '',
+            URL,
             type:'Guide',
             messages: [{ notificationId: "", number: 0 }]
           }).then((docRef) => {
@@ -512,14 +512,15 @@ AddtoFirebase=(e)=>{
   this.MoveToHomePage(e);
  }
  else {
+  this.setState({isLoading:false})
       alert("incorrect login information");
     }
-
 
  
 }
   //  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
   MoveToHomePage = (e) => {
+    this.setState({isLoading:false})
     console.log(e)
     if (e !== null) {
       localStorage.setItem('Guide', JSON.stringify(e));
@@ -529,9 +530,9 @@ AddtoFirebase=(e)=>{
       });
     }
     else {
+      this.setState({isLoading:false})
       alert("incorrect login information");
     }
-    this.setState({isLoading:false})
   }
 
   //מביא את כל התחביבים שקיימים במסד הנתונים
@@ -661,11 +662,6 @@ AddtoFirebase=(e)=>{
             <Route path="/upload" >
               <FileUpload local={this.state.local} />
             </Route>
-            <Route path="/check" >
-              <Check
-                color="#008ae6"
-                type="spin" />
-            </Route>
             <Route exact path="/reset" >
               <ResetPassword local={this.state.local} />
             </Route>
@@ -699,51 +695,19 @@ AddtoFirebase=(e)=>{
               <Chat showToast={this.showToast} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
               <MainFooter className="hidden-xs" />
             </Route>
-
-            <Route path="/portfolio">
+            <Route path="/BuildTrip">
               <ResponsiveNavigation
                 navbarCheckFunc={this.navbarCheck}
                 navLinks={navLinks}
                 logo={menu}
-                background="#0099cc"
-                hoverBackground="#ddd"
-                linkColor="#777"
+                background="#fff"
+                hoverBackground="#A2D4FF"
+                linkColor="#1988ff"
               />
-              <Portfolio />
+              <BuildTrip showToast={this.showToast} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
+              <MainFooter className="hidden-xs" />
             </Route>
-            <Route path="/blog">
-              <ResponsiveNavigation
-                navbarCheckFunc={this.navbarCheck}
-                navLinks={navLinks}
-                logo={menu}
-                background="#0099cc"
-                hoverBackground="#ddd"
-                linkColor="#777"
-              />
-              <Blog />
-            </Route>
-            <Route path="/about">
-              <ResponsiveNavigation
-                navbarCheckFunc={this.navbarCheck}
-                navLinks={navLinks}
-                logo={menu}
-                background="#0099cc"
-                hoverBackground="#ddd"
-                linkColor="#777"
-              />
-              <About />
-            </Route>
-            <Route path="/details">
-              <ResponsiveNavigation
-                navbarCheckFunc={this.navbarCheck}
-                navLinks={navLinks}
-                logo={menu}
-                background="#0099cc"
-                hoverBackground="#ddd"
-                linkColor="#777"
-              />
-              <ProfileDetails />
-            </Route>
+          
           </Switch>
              {/* Loading */}
              {this.state.isLoading ? (

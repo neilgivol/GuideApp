@@ -39,6 +39,7 @@ this.getListHistory()
     }
     componentDidMount(){
         this.getListHistory();
+        console.log(this.props.currentPeerUser);
     }
     componentWillUnmount(){
         if (this.removeListener) {
@@ -189,7 +190,7 @@ this.getListHistory()
                 <div className="headerChatBoard">
                     <img
                         className="viewAvatarItem"
-                        src={this.currentPeerUser.photoUrl}
+                        src={this.currentPeerUser.photoURL}
                         alt="icon avatar"
                     />
                     <span className="textHeaderChatBoard">

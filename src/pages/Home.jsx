@@ -130,20 +130,17 @@ class Home extends Component {
                 Guide: this.props.location.state.GuideTemp
             })
         }
+
     }
     
     componentDidMount() {
         console.log(this.state.Guide);
+        this.ConnectFirebase();
         this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
-        this.ConnectFirebase();
-        let docId = localStorage.getItem('docId');
-        let idChat = localStorage.getItem('idChat');
-        console.log(docId);
-        console.log(idChat);
         this.setState({
             isLoading: false
         })

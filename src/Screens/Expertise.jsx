@@ -31,6 +31,11 @@ class Expertise extends Component {
         if (this.props.GuideExpertises.length !== 0) {
             this.UpdateList(this.props.GuideExpertises);
         }
+        else{
+            this.setState({
+                isLoading:false
+            })
+        }
 
 
     }

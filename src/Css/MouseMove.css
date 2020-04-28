@@ -1,6 +1,30 @@
 .start{
     position: absolute;
-    left: 50px;
-    top:50px;
+    left: 10%;
+    top:10%;
     z-index: 999;
+}
+.Languages{
+    position: absolute;
+    left: 20%;
+    top:-3%;
+    z-index: 999;
+    transition: 300ms ease all;
+}
+.Expertises{
+    position: absolute;
+    left: 50%;
+    top:-3%;
+    z-index: 999;
+    transition: 300ms ease all;
+}
+.Hobbies{
+    position: absolute;
+    left: 80%;
+    top:-3%;
+    z-index: 999;
+    transition: 300ms ease all;
+}
+.end{
+    display: none;
 }

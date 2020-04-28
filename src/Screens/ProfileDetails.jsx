@@ -239,7 +239,7 @@ class ProfileDetails extends Component {
     render() {
         return (
             <Card small className="mb-4 profileDetails">
-            <MouseMover/>
+            {/* <MouseMover/> */}
                 <Card.Header className="border-bottom">
                     <h6 className="m-0">Profile Details</h6>
                 </Card.Header>

@@ -30,6 +30,11 @@ class Hobbies extends Component {
             //שולח לפונקציה שמעדכנת את רשימת האזורים של המדריך על המסך
             this.UpdateList(this.props.guideListHobbies);
         }
+        else{
+            this.setState({
+                isLoading:false
+            })
+        }
        
 
     }
