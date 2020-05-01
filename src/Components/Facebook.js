@@ -54,20 +54,22 @@ class Facebook extends Component {
 
     render() {
         let fbContent;
-
+//240993680265877
         this.state.isLoggedIn ?
             fbContent = (
                 <div>{this.userEnter()}</div>
             ) :
             fbContent = (
                 <FacebookLoginBtn
-                    appId="240993680265877"
+                    appId="189882132323354"
                     scope="user_gender,user_birthday,public_profile"
                     autoLoad={false}
                     fields="first_name,last_name,email,picture.width(280).height(280),gender,birthday"
                     onClick={this.componentClicked}
                     callback={this.responseFacebook} 
                     cssClass="loginBtn loginBtn--facebook"
+                    cookie={true}
+                    xfbml={true}
                     />
             );
 

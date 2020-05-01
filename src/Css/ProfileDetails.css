@@ -10,6 +10,19 @@ height: 30px;
     width: 20px;
     height: 20px;
 }
+.react-date-picker__wrapper{
+    height: auto;
+    padding: .4375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #e1e5eb;
+    font-weight: 300;
+    will-change: border-color,box-shadow;
+    border-radius: .25rem;
+    box-shadow: none;
+    transition: box-shadow 250ms cubic-bezier(.27,.01,.38,1.06),border 250ms cubic-bezier(.27,.01,.38,1.06);
+}
 
 .LinkList{
     margin:auto;

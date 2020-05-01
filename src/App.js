@@ -25,6 +25,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import firebase from './services/firebase';
 import ReactLoading from 'react-loading'
 import BuildTrip from './pages/BuildTrip';
+import Swal from 'sweetalert2';
 
 const navLinks = [
   {
@@ -78,7 +79,6 @@ class App extends Component {
   }
   //מביא את כל האזורים, התחביבים וההתמחויות שנמצאות במסד נתונים
   componentDidMount() {
-    console.log("DidMount_App");
     this.GetAllAreas();
     this.GetAllHobbies();
     this.GetAllExpertises();
@@ -171,15 +171,20 @@ class App extends Component {
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
-      if (num === licenseNum) {
+      if (num == licenseNum) {
         ifExist = true;
+        this.AddGuideFromGovIL(licenseNum);
+        break;
       }
     }
-    if (ifExist) {
-      this.AddGuideFromGovIL(licenseNum);
-    }
-    else {
-      alert("Error, You Not In Gov IL");
+    if(!ifExist) {
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: ' You Not In Gov',
+        showConfirmButton: false,
+        timer: 1200
+    });
     }
   }
 
@@ -190,7 +195,8 @@ class App extends Component {
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
-      if (num === licenseNum) {
+      if (num == licenseNum) {
+        console.log("yessss")
         let fullname = JSON.stringify(element.Name);
         if (fullname !== "") {
           fullname = fullname.split('"');
@@ -330,7 +336,13 @@ class App extends Component {
             this.AddLanguages(this.state.tempGuide, Languages);
           }
           else {
-            alert("Error")
+            Swal.fire({
+              position: 'center',
+              icon: 'error',
+              title: ' Error',
+              showConfirmButton: false,
+              timer: 1200
+          });
           }
 
         },
@@ -410,7 +422,7 @@ class App extends Component {
 
   //לוקח את הפרטים מעמוד ההרשמה ובודק האם האימייל נמצא במסד נתונים- אם לא נמצא יוסיף אותו למסד נתונים
   PostGuideToCheckSignUp = (userDetails) => {
-    this.setState({isLoading:true})
+    //this.setState({isLoading:true})
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostToCheck', {
       method: 'POST',
@@ -447,7 +459,7 @@ class App extends Component {
 
   //לוקח את פרטי המשתמש מהעמוד ההתחברות(אימייל וסיסמא) ובודק האם נמצא במסד נתונים
   PostGuideToCheckSignIn = (signInUser) => {
-    this.setState({isLoading:true})
+    //this.setState({isLoading:true})
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostToCheck', {
       method: 'POST',
@@ -513,7 +525,13 @@ AddtoFirebase=(e)=>{
  }
  else {
   this.setState({isLoading:false})
-      alert("incorrect login information");
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: ' incorrect login information',
+        showConfirmButton: false,
+        timer: 1200
+    });
     }
 
  
@@ -531,7 +549,13 @@ AddtoFirebase=(e)=>{
     }
     else {
       this.setState({isLoading:false})
-      alert("incorrect login information");
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: ' incorrect login information',
+        showConfirmButton: false,
+        timer: 1200
+    });
     }
   }
 
@@ -704,7 +728,7 @@ AddtoFirebase=(e)=>{
                 hoverBackground="#A2D4FF"
                 linkColor="#1988ff"
               />
-              <BuildTrip showToast={this.showToast} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
+              <BuildTrip showToast={this.showToast} cities={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
               <MainFooter className="hidden-xs" />
             </Route>
           
