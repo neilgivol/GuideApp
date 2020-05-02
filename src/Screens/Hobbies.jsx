@@ -13,6 +13,7 @@ class Hobbies extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            myHobbies: this.props.guideListHobbies,
             itemsArray: this.props.AllHobbies,
             itemsInCart: [],
             ListFromSQL: [],
@@ -26,16 +27,17 @@ class Hobbies extends Component {
         }
     }
     componentDidMount() {
+        console.log("DidMount_Hobbies");
         if (this.props.guideListHobbies.length !== 0) {
-            //שולח לפונקציה שמעדכנת את רשימת האזורים של המדריך על המסך
+            //שולח לפונקציה שמעדכנת את רשימת התחביבים של המדריך על המסך
             this.UpdateList(this.props.guideListHobbies);
         }
-        else{
+        else {
             this.setState({
-                isLoading:false
+                isLoading: false
             })
         }
-       
+
 
     }
 
@@ -48,9 +50,13 @@ class Hobbies extends Component {
             //בדיקה האם התחביב נמצא כבר במערך או לא
             if (newItem.id !== element.id) {
                 tempArr.push(element);
+                console.log(element);
             }
         }
-
+        console.log(tempArr);
+        //let cartTemp = this.state.itemsInCart;
+        //cartTemp.push(newItem);
+        //console.log(cartTemp);
         this.setState({
             itemsInCart: [...this.state.itemsInCart, newItem],
             itemsArray: tempArr,
@@ -72,7 +78,7 @@ class Hobbies extends Component {
         });
     }
 
-//עדכון תחביבים במסד נתונים
+    //עדכון תחביבים במסד נתונים
     updateHobbies = () => {
         let tempArray = [];
         for (let i = 0; i < this.state.itemsInCart.length; i++) {
@@ -86,7 +92,7 @@ class Hobbies extends Component {
         }
 
         //  בדיקה האם למדריך יש  תחביבים מסוימים בסל בעת לחיצה על כפתור השמירה
-        
+
         // אם אין תחביבים בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימים תחביבים - ימחקו כל התחביבים של המדריך
         if (tempArray.length === 0) {
             console.log("del")
@@ -112,8 +118,8 @@ class Hobbies extends Component {
                         console.log("err post=", error);
                     });
 
-        } 
-        
+        }
+
         //אם יש תחביבם ברשימה- הם יוכנסו למסד הנתונים.
         else {
             this.PostLangGuideToSQL(tempArray);
@@ -173,16 +179,14 @@ class Hobbies extends Component {
         this.setState({
             itemsInCart: temp
         })
-//בדיקה אילו מהתחביבים נמצאים בתוך רשימת התחביבים שנבחרו, יופיע בצד שמאל 
+        //בדיקה אילו מהתחביבים נמצאים בתוך רשימת התחביבים שנבחרו, יופיע בצד שמאל 
         let tempArray = [];
         let boolifExist = false;
         for (let i = 0; i < this.state.itemsArray.length; i++) {
             boolifExist = false;
             let elementArray = this.state.itemsArray[i];
-            console.log(elementArray);
             for (let j = 0; j < temp.length; j++) {
                 let elementCart = temp[j];
-                console.log(elementCart);
                 if (elementArray.id === elementCart.id) {
                     boolifExist = true;
                 }
@@ -193,7 +197,7 @@ class Hobbies extends Component {
         }
         this.setState({
             itemsArray: tempArray,
-            isLoading:false
+            isLoading: false
         });
 
     }
@@ -226,8 +230,8 @@ class Hobbies extends Component {
                         <Button onClick={() => { this.updateHobbies() }}>Save</Button>
                     </div>
                 </ListGroup>
-                   {/* Loading */}
-                   {this.state.isLoading ? (
+                {/* Loading */}
+                {this.state.isLoading ? (
                     <div className="viewLoading">
                         <ReactLoading
                             type={'spin'}
@@ -241,7 +245,7 @@ class Hobbies extends Component {
 
 
         );
-        
+
     }
 }
 

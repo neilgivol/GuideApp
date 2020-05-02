@@ -60,9 +60,9 @@ font-size: 14px;
 }
 .CardItem:hover{
     background-color: #b3e0ff;
-    -ms-transform: scale(1.5); /* IE 9 */
-    -webkit-transform: scale(1.5); /* Safari 3-8 */
-    transform: scale(1.5);
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari 3-8 */
+    transform: scale(1.2);
     z-index:999;
 }
 .titleCardDiv h4{
@@ -101,9 +101,7 @@ cursor: pointer;
 .cardDivCenter{
     height: 100%;
 }
-.HobbieAddedList .CardItem h4{
-    padding-left: 10px;
-}
+
 .HobbieAddedList .CardItem{
     max-height: 175px;
 }
@@ -158,9 +156,9 @@ cursor: pointer;
         margin:0 auto;
         text-align: center;
     vertical-align: middle;
-    line-height: 15px;     
+    line-height: 15px;  
     }
-    
+ 
     .titleCardDiv h4:hover{
         color: white;
       }
