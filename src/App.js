@@ -26,6 +26,7 @@ import firebase from './services/firebase';
 import ReactLoading from 'react-loading'
 import BuildTrip from './pages/BuildTrip';
 import Swal from 'sweetalert2';
+import swal from 'sweetalert';
 
 const navLinks = [
   {
@@ -54,7 +55,7 @@ class App extends Component {
     super(props)
     this.state = {
       guides: [],
-      local: false,
+      local: true,
       navbarCheckOpen: "open",
       tempGuide: "",
       AllAreas: [],
@@ -65,9 +66,9 @@ class App extends Component {
       LanguagesListOrgenized: [],
       authentucated: false,
       isLoading: false,
-      name:'',
-      password:'',
-      email:''
+      name: '',
+      password: '',
+      email: ''
 
     }
     let local = this.state.local;
@@ -100,7 +101,7 @@ class App extends Component {
     }
   }
 
- 
+
 
   //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות. 
   navbarCheck = (nav) => {
@@ -164,6 +165,40 @@ class App extends Component {
     })
   }
 
+  //בדיקה אם המדריך ממשרד התיירות נרשם באפליקציה או לא
+CheckIfGuidGovILExistInSQL=(licenseNum)=>{
+  this.setState({ isLoading: true })
+    //pay attention case sensitive!!!! should be exactly as the prop in C#!
+    fetch(this.apiUrl + 'Guide/CheckIfGuideGovIlExistInSQL', {
+      method: 'POST',
+      body: JSON.stringify(licenseNum),
+      headers: new Headers({
+        'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+      })
+    })
+      .then(res => {
+        console.log('res=', res);
+        return res.json()
+      })
+      .then(
+        (result) => {
+          if (result !== null) {
+            this.setState({
+              tempGuide: result
+            })
+            console.log(result);
+            this.AddtoFirebase(result);
+            //this.AddLanguages(this.state.tempGuide, Languages);
+          }
+          else {
+          this.checkIfGuideExistInGovilList(licenseNum);
+          }
+
+        },
+        (error) => {
+          console.log("err post=", error);
+        });
+}
   //בודק אם מדריך שהכניס מספר אישי קיים באתר משרד התירות
   checkIfGuideExistInGovilList = (licenseNum) => {
     let ifExist = false;
@@ -177,126 +212,54 @@ class App extends Component {
         break;
       }
     }
-    if(!ifExist) {
+    if (!ifExist) {
       Swal.fire({
         position: 'center',
         icon: 'error',
         title: ' You Not In Gov',
         showConfirmButton: false,
         timer: 1200
-    });
+      });
+      this.setState({
+        isLoading:false
+      })
     }
   }
 
   //מוסיף מדריך מאתר משרד התיירות
-  AddGuideFromGovIL = (licenseNum) => {
-    let FirstName;
-    let LastName = "";
+  AddGuideFromGovIL = async (licenseNum) => {
     for (let i = 0; i < this.state.GuidesFromGovIL.length; i++) {
       const element = this.state.GuidesFromGovIL[i];
       let num = element.License_Number;
       if (num == licenseNum) {
-        console.log("yessss")
-        let fullname = JSON.stringify(element.Name);
-        if (fullname !== "") {
-          fullname = fullname.split('"');
-          fullname = fullname[1];
-          fullname = fullname.split(" ");
-          if (fullname.length > 2) {
-            for (let i = 0; i < fullname.length; i++) {
-              const element = fullname[i];
-              if (i === fullname.length - 1) {
-                FirstName = element;
-              }
-              else if (i === fullname.length - 2) {
-                LastName += element;
-              }
-              else {
-                LastName += element + " ";
-
-              }
-
-            }
-          }
-          else if (fullname.length === 2) {
-            FirstName = fullname[1];
-            LastName = fullname[0];
-          }
-          else {
-            LastName = "Guide";
-            FirstName = fullname[0];
-          }
-
-          console.log(FirstName);
-          console.log(LastName);
-          console.log(fullname);
-        }
         let Email;
-        if (element.Email !== "") {
-          Email = JSON.stringify(element.Email);
-          Email = Email.split(">");
-          Email = Email[1].split("<");
-          Email = Email[0];
-        }
-        else {
-          Email = "";
-        }
+  if (element.Email !== "") {
+    Email = JSON.stringify(element.Email);
+    Email = Email.split(">");
+    Email = Email[1].split("<");
+    Email = Email[0];
+  }
+  else {
+    const { value: email } = await Swal.fire({
+      title: 'Input email address',
+      input: 'email',
+      inputPlaceholder: 'Enter your email address',
+      confirmButtonText: 'Continue',
+    })
+    Email = email;
 
-        let Phone = JSON.stringify(element.Phone);
-        if (Phone !== "") {
-          Phone = Phone.split(">");
-          Phone = Phone[1].split("<");
-          Phone = Phone[0].split("-");
-          let PhoneTemp = "";
-          for (let i = 0; i < Phone.length; i++) {
-            const element = Phone[i];
-            PhoneTemp += element;
-          }
-          Phone = PhoneTemp;
-          let Phone1 = Phone.slice(0, 4);
-          let Phone2 = Phone.slice(4, 7);
-          let Phone3 = Phone.slice(7, 10);
-          let Phone4 = Phone.slice(10, 13);
-          Phone = Phone1 + " " + Phone2 + " " + Phone3 + " " + Phone4;
-        }
-
-        let gLanguages = JSON.stringify(element.Language);
-        gLanguages = gLanguages.split(";");
-        let Languages = [];
-        for (let i = 0; i < gLanguages.length; i++) {
-          let element = gLanguages[i];
-          if (i === gLanguages.length - 1) {
-            element = element.split('"');
-            Languages.push(element[0]);
-          }
-          else if (i === 0) {
-            element = element.split('"');
-            Languages.push(element[1]);
-          }
-          else {
-            Languages.push(element);
-          }
-        }
-        let DescriptionGuide = JSON.stringify(element.FullDescription);
-        DescriptionGuide = DescriptionGuide.split('"');
-        DescriptionGuide = DescriptionGuide[1].split("<p>");
-        let tempDescription = "";
-        for (let i = 0; i < DescriptionGuide.length; i++) {
-          const element = DescriptionGuide[i];
-          let templine = element.split("</p>");
-          if (i === 0 || i === DescriptionGuide.length - 1) {
-            tempDescription += templine[0];
-          }
-          else {
-            tempDescription += templine[0] + " ";
-          }
-        }
-        DescriptionGuide = tempDescription;
-        DescriptionGuide = DescriptionGuide.replace("'", "`")
-        console.log(DescriptionGuide);
+  
+    //Email = "";
+  }
+        //let Email = this.AddEmailToGovIlGuide(element);
+        if (Email !== "") {
+          let FirstName = this.AddFirstName(element);
+        let LastName = this.AddLastName(element);
+        let DescriptionGuide = this.AddDescription(element);
+        let Phone = this.AddPhoneNumber(element);
+        let Languages = this.AddLanguagesToGovIlGuide(element);
         let SignDate = new Date();
         let signDateCorrect = SignDate.toLocaleDateString('en-US');
-
         let Guide = {
           Email: Email,
           FirstName: FirstName,
@@ -308,13 +271,154 @@ class App extends Component {
         }
         console.log(Guide);
         this.PostGuideToSQLFromGovIL(Guide, Languages);
+        }
+        else{
+          alert("ddcccc")
+        }
+       
       }
     }
   }
 
+//הוספת שם פרטי+משפחה למדריך משרד התיירות
+AddFirstName = (element) => {
+  let FirstName = "";
+  let LastName = "";
+  let fullname = JSON.stringify(element.Name);
+  if (fullname !== "") {
+    fullname = fullname.split('"');
+    fullname = fullname[1];
+    fullname = fullname.split(" ");
+    if (fullname.length > 2) {
+      for (let i = 0; i < fullname.length; i++) {
+        const element = fullname[i];
+        if (i === fullname.length - 1) {
+          FirstName = element;
+        }
+        else if (i === fullname.length - 2) {
+          LastName += element;
+        }
+        else {
+          LastName += element + " ";
+
+        }
+      }
+    }
+    else if (fullname.length === 2) {
+      FirstName = fullname[1];
+      LastName = fullname[0];
+    }
+    else {
+      LastName = "Guide";
+      FirstName = fullname[0];
+    }
+
+  }
+  return FirstName
+}
+
+//הוספת שם פרטי+משפחה למדריך משרד התיירות
+AddLastName = (element) => {
+  let FirstName = "";
+  let LastName = "";
+  let fullname = JSON.stringify(element.Name);
+  if (fullname !== "") {
+    fullname = fullname.split('"');
+    fullname = fullname[1];
+    fullname = fullname.split(" ");
+    if (fullname.length > 2) {
+      for (let i = 0; i < fullname.length; i++) {
+        const element = fullname[i];
+        if (i === fullname.length - 1) {
+          FirstName = element;
+        }
+        else if (i === fullname.length - 2) {
+          LastName += element;
+        }
+        else {
+          LastName += element + " ";
+        }
+
+      }
+    }
+    else if (fullname.length === 2) {
+      FirstName = fullname[1];
+      LastName = fullname[0];
+    }
+    else {
+      LastName = "Guide";
+      FirstName = fullname[0];
+    }
+  }
+  return LastName;
+}
+//הוספת מידע כללי על מדריך
+AddDescription = (element) => {
+  let DescriptionGuide = JSON.stringify(element.FullDescription);
+  DescriptionGuide = DescriptionGuide.split('"');
+  DescriptionGuide = DescriptionGuide[1].split("<p>");
+  let tempDescription = "";
+  for (let i = 0; i < DescriptionGuide.length; i++) {
+    const element = DescriptionGuide[i];
+    let templine = element.split("</p>");
+    if (i === 0 || i === DescriptionGuide.length - 1) {
+      tempDescription += templine[0];
+    }
+    else {
+      tempDescription += templine[0] + " ";
+    }
+  }
+  DescriptionGuide = tempDescription;
+  DescriptionGuide = DescriptionGuide.replace("'", "`")
+  console.log(DescriptionGuide);
+  return DescriptionGuide;
+}
+//הוספת טלפון למדריך מאתר משרד התיירות
+AddPhoneNumber = (element) => {
+  //הוספת טלפון
+  let Phone = JSON.stringify(element.Phone);
+  if (Phone !== "") {
+    Phone = Phone.split(">");
+    Phone = Phone[1].split("<");
+    Phone = Phone[0].split("-");
+    let PhoneTemp = "";
+    for (let i = 0; i < Phone.length; i++) {
+      const element = Phone[i];
+      PhoneTemp += element;
+    }
+    Phone = PhoneTemp;
+    let Phone1 = Phone.slice(0, 4);
+    let Phone2 = Phone.slice(4, 7);
+    let Phone3 = Phone.slice(7, 10);
+    let Phone4 = Phone.slice(10, 13);
+    Phone = Phone1 + " " + Phone2 + " " + Phone3 + " " + Phone4;
+  }
+  return Phone;
+}
+  //הוספת שפות למדריך ממשרד התיירות
+  AddLanguagesToGovIlGuide = (element) => {
+    let gLanguages = JSON.stringify(element.Language);
+    gLanguages = gLanguages.split(";");
+    let Languages = [];
+    for (let i = 0; i < gLanguages.length; i++) {
+      let element = gLanguages[i];
+      if (i === gLanguages.length - 1) {
+        element = element.split('"');
+        Languages.push(element[0]);
+      }
+      else if (i === 0) {
+        element = element.split('"');
+        Languages.push(element[1]);
+      }
+      else {
+        Languages.push(element);
+      }
+    }
+    return Languages;
+  }
   //מכניס מדריך מאתר משרד התיירות
   PostGuideToSQLFromGovIL = (Guide, Languages) => {
-    this.setState({isLoading:true})
+    this.setState({ isLoading: true })
     //pay attention case sensitive!!!! should be exactly as the prop in C#!
     fetch(this.apiUrl + 'Guide/PostGuideFromGovIL', {
       method: 'POST',
@@ -342,7 +446,7 @@ class App extends Component {
               title: ' Error',
               showConfirmButton: false,
               timer: 1200
-          });
+            });
           }
 
         },
@@ -490,55 +594,55 @@ class App extends Component {
   }
 
   //הוספה לfirebase
-AddtoFirebase=(e)=>{
-  console.log("fff")
-  console.log(e);
- if (e !== null) {
- const name = e.FirstName + " " + e.LastName; 
- const email = e.Email;
-  const password = e.PasswordGuide;
-  const URL = e.ProfilePic;
-  try {
-    firebase.auth().createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
-      .then(async result => {
-        firebase.firestore().collection('users')
-          .add({
-           name,
-            id: result.user.uid,
-           email,
-           password,
-            URL,
-            type:'Guide',
-            messages: [{ notificationId: "", number: 0 }]
-          }).then((docRef) => {
-            localStorage.setItem('idChat', docRef.id);
+  AddtoFirebase = (e) => {
+    console.log("fff")
+    console.log(e);
+    if (e !== null) {
+      const name = e.FirstName + " " + e.LastName;
+      const email = e.Email;
+      const password = e.PasswordGuide;
+      const URL = e.ProfilePic;
+      try {
+        firebase.auth().createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
+          .then(async result => {
+            firebase.firestore().collection('users')
+              .add({
+                name,
+                id: result.user.uid,
+                email,
+                password,
+                URL,
+                type: 'Guide',
+                messages: [{ notificationId: "", number: 0 }]
+              }).then((docRef) => {
+                localStorage.setItem('idChat', docRef.id);
+              })
+              .catch((error) => {
+                console.error("Error adding document", error)
+              })
           })
-          .catch((error)=>{
-            console.error("Error adding document",error)
-          })
-      })
-  }
-  catch(error){
-    document.getElementById('1').innerHTML = "Error in singing up please try again"
-  }
-  this.MoveToHomePage(e);
- }
- else {
-  this.setState({isLoading:false})
+      }
+      catch (error) {
+        document.getElementById('1').innerHTML = "Error in singing up please try again"
+      }
+      this.MoveToHomePage(e);
+    }
+    else {
+      this.setState({ isLoading: false })
       Swal.fire({
         position: 'center',
         icon: 'error',
         title: ' incorrect login information',
         showConfirmButton: false,
         timer: 1200
-    });
+      });
     }
 
- 
-}
+
+  }
   //  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
   MoveToHomePage = (e) => {
-    this.setState({isLoading:false})
+    this.setState({ isLoading: false })
     console.log(e)
     if (e !== null) {
       localStorage.setItem('Guide', JSON.stringify(e));
@@ -548,14 +652,14 @@ AddtoFirebase=(e)=>{
       });
     }
     else {
-      this.setState({isLoading:false})
+      this.setState({ isLoading: false })
       Swal.fire({
         position: 'center',
         icon: 'error',
         title: ' incorrect login information',
         showConfirmButton: false,
         timer: 1200
-    });
+      });
     }
   }
 
@@ -690,7 +794,7 @@ AddtoFirebase=(e)=>{
               <ResetPassword local={this.state.local} />
             </Route>
             <Route exact path="/" >
-              <SignIn GovList={this.checkIfGuideExistInGovilList} checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local} />
+              <SignIn GovList={this.CheckIfGuidGovILExistInSQL} checkSignIn={this.PostGuideToCheckSignIn} checkIfexistUsers={this.PostGuideToCheckSignUp} local={this.state.local} />
             </Route>
             <Route path="/signUp">
               <SignUp checkIfExistAndSignUP={this.PostGuideToCheckSignUp} CheckIfGuideExist={this.CheckIfGuideExist} />
@@ -731,19 +835,19 @@ AddtoFirebase=(e)=>{
               <BuildTrip showToast={this.showToast} cities={this.state.AllAreas} navbarOpenCheck={this.state.navbarCheckOpen} Guide={this.state.tempGuide} />
               <MainFooter className="hidden-xs" />
             </Route>
-          
+
           </Switch>
-             {/* Loading */}
-             {this.state.isLoading ? (
-                    <div className="viewLoading">
-                        <ReactLoading
-                            type={'spin'}
-                            color={'#203152'}
-                            height={'3%'}
-                            width={'3%'}
-                        />
-                    </div>
-                ) : null}
+          {/* Loading */}
+          {this.state.isLoading ? (
+            <div className="viewLoading">
+              <ReactLoading
+                type={'spin'}
+                color={'#203152'}
+                height={'3%'}
+                width={'3%'}
+              />
+            </div>
+          ) : null}
         </div>
       );
   }

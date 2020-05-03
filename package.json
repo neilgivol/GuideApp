@@ -68,6 +68,7 @@
     "react-widgets-globalize": "^5.0.20",
     "semantic-ui-react": "^0.88.2",
     "shards-react": "^1.0.3",
+    "sweetalert": "^2.1.2",
     "sweetalert2": "^9.10.6"
   },
   "scripts": {
