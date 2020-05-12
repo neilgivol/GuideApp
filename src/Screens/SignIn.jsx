@@ -13,6 +13,9 @@ import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Swal from 'sweetalert2'
+import logo2 from '../Img/Isravisionlogo.png';
+import logo3 from '../Img/Isravisionlogo1.png';
+import logo4 from '../Img/Isravisionlogo2.png';
 
 function Copyright() {
     return (
@@ -121,9 +124,9 @@ componentWillMount(){
         return (
             <div className="Cont">
                 <MDBContainer>
-                    <MDBRow>
-                        <MDBCol md="12 text-center">
-                            <img className="LogoDiv" alt="" src={logo} />
+                    <MDBRow className="logoRow">
+                        <MDBCol md="12 text-center" >
+                            <img className="LogoDiv" alt="" src={logo3} />
                         </MDBCol>
                     </MDBRow>
                     <MDBRow className="RowDivSignIn text-center">

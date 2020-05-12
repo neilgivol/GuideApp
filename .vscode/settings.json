@@ -1,4 +1,17 @@
 {
-    "javascript.autoClosingTags": false,
-    "typescript.autoClosingTags": false
+    "javascript.autoClosingTags": true,
+    "typescript.autoClosingTags": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "emmet.includeLanguages": {
+    
+    },
+    "eslint.codeAction.disableRuleComment": {
+    "enable": true
+    },
+    "eslint.format.enable": true,
+    "eslint.validate": [
+    ]
 }

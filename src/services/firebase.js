@@ -18,6 +18,10 @@ var firebaseConfig = {
     timestampsInSnapshots: true
 })
 export default firebase;
+export const auth = firebase.auth
 export const myFirebase = firebase
 export const myFirestore = firebase.firestore()
 export const myStorage = firebase.storage()
+export const database = firebase.database()
+
+ 

@@ -16,7 +16,7 @@ class HobbieAdded extends Component {
                         </div>
             </div>
         );
-    }
+  }
 }
 
 export default HobbieAdded;

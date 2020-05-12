@@ -1,16 +1,43 @@
-.modalAddCity{
+.modalAddCity {
+    width: 100%;
     background-color: rgba(255,255,255,0.4);
     border: 1px solid black;
     position: absolute;
-    left:15%;
+    left:50%;
     z-index: 999;
     height: 700px;
 }
+.MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon{
+    width: none;
+}
+.modalAddattraction{
+    width: 100%;
+    background-color: rgba(255,255,255,0.4);
+    border: 1px solid black;
+    position: absolute;
+    left:50%;
+    z-index: 999;
+    height: 700px;
+}
+.modalAddattraction Form{
+    padding:20px;
+    height: 100%;
+    position: relative;
+   
+}
+#list {
+    display: block;
+    max-width: 400px;
+    margin: auto;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+  }
+
 .modalAddCity .BTNSubmit{
     position: absolute;
     top: 500px;
 }
-.modalAddCity Form{
+.modalAddCity Form {
     padding:20px;
     height: 100%;
     position: relative;
@@ -26,6 +53,14 @@
     position: absolute;
     top:20px;
     left: 0px;
+}
+.leftSide{
+    margin-right: 20px;
+}
+.rightSide div {
+    position: absolute;
+   left:30%
+  
 }
 input{
     height: auto;

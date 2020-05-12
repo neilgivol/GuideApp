@@ -10,18 +10,6 @@ class HobbieCard extends Component {
 
     }
 
-    loading = ()=>{
-        return(
-            <div className="viewLoading">
-            <ReactLoading
-                type={'spin'}
-                color={'#203152'}
-                height={'3%'}
-                width={'3%'}
-            />
-        </div>
-        )
-    }
     render() {
         return (
             <div className="CardItem" onClick={()=>this.props.addToCart(this.props.oneItem)}>
