@@ -12,6 +12,5 @@
     "enable": true
     },
     "eslint.format.enable": true,
-    "eslint.validate": [
-    ]
+   
 }

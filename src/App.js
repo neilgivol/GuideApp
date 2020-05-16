@@ -24,6 +24,7 @@ import ReactLoading from "react-loading";
 import BuildTrip from "./pages/BuildTrip";
 import Swal from "sweetalert2";
 import ChatRealTime from "./pages/ChatRealTime";
+import TouristProfile from "./Components/TouristProfile";
 
 const navLinks = [
     {
@@ -52,7 +53,7 @@ class App extends Component {
         super(props);
         this.state = {
             guides: [],
-            local: false,
+            local: true,
             navbarCheckOpen: "open",
             tempGuide: "",
             AllAreas: [],
@@ -67,7 +68,7 @@ class App extends Component {
             password: "",
             email: "",
             Attractions: [],
-            tourists:[]
+            tourist:""
         };
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
@@ -83,10 +84,10 @@ class App extends Component {
         this.GetGuidesGOVFromSQL();
         this.GetAllAttractions();
         this.GetAllLanguages();
+        this.GetAllTourists();
         //this.ConnectFirebase();
         // this.GetGuidesFromSQL();
     }
-
     showToast = (type, message) => {
         switch (type) {
             case 0:
@@ -112,7 +113,8 @@ class App extends Component {
         }
     };
     GetAllTourists = () => {
-        fetch(this.apiUrl + 'Tourist/GetAll', {
+        let id = 204;
+        fetch(this.apiUrl + 'Tourist/GetDetails/' + id, {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json; charset=UTF-8"
@@ -124,14 +126,48 @@ class App extends Component {
             .then(
                 (result) => {
                     this.setState({
-                        tourists: result
+                        tourist: result
                     });
+                    this.OrgenizeTouristDetails(result);
+                    console.log(result);
                 },
                 (error) => {
                     console.log("err post=", error);
                 }
             );
     };
+    OrgenizeTouristDetails = (tourist) =>{
+        tourist.HobbiesNames = [];
+        tourist.ExpertisesNames = [];
+        for (let i = 0; i < this.state.LanguagesListOrgenized.length; i++) {
+            const element = this.state.LanguagesListOrgenized[i];
+            if (element.id === tourist.LanguageCode) {
+                let lang = element.label.split(" / ")
+                tourist.Language = lang[0];
+            }
+        }
+        for (let i = 0; i < tourist.Hobbies.length; i++) {
+            const hobby = tourist.Hobbies[i];
+            for (let j = 0; j < this.state.AllHobbies.length; j++) {
+                const orgenizeHobby = this.state.AllHobbies[j];
+                if (hobby === orgenizeHobby.id) {
+                    tourist.HobbiesNames.push(orgenizeHobby);
+                }
+            }
+        }
+        for (let i = 0; i < tourist.Expertises.length; i++) {
+            const expertise = tourist.Expertises[i];
+            for (let j = 0; j < this.state.AllExpertises.length; j++) {
+                const orgenizeExpertise = this.state.AllExpertises[j];
+                if (expertise === orgenizeExpertise.id) {
+                    tourist.ExpertisesNames.push(orgenizeExpertise);
+                }
+            }
+        }
+        this.setState({
+            tourist:tourist
+        })
+    }
     //?????
     GetGuidesFromSQL = () => {
         fetch(this.apiUrl, {
@@ -897,6 +933,7 @@ class App extends Component {
                             cities={this.state.AllAreas}
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             Guide={this.state.tempGuide}
+                            local={this.state.local}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
@@ -909,9 +946,10 @@ class App extends Component {
                             hoverBackground="#A2D4FF"
                             linkColor="#1988ff"
                         />
-                        <ChatRealTime
+                        <TouristProfile
                             navbarOpenCheck={this.state.navbarCheckOpen}
-                            user={this.state.tempGuide}
+                            //user={this.state.tempGuide}
+                            tourist={this.state.tourist}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>

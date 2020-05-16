@@ -1,29 +1,31 @@
 .modalAddCity {
     width: 100%;
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     border: 1px solid black;
     position: absolute;
-    left:50%;
+    left: 50%;
     z-index: 999;
     height: 700px;
 }
-.MuiAutocomplete-root MuiAutocomplete-hasClearIcon MuiAutocomplete-hasPopupIcon{
-    width: none;
-}
-.modalAddattraction{
+
+
+.modalAddattraction {
     width: 100%;
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     border: 1px solid black;
     position: absolute;
-    left:50%;
+    left: 50%;
     z-index: 999;
     height: 700px;
 }
-.modalAddattraction Form{
-    padding:20px;
+.MuiAutocomplete-input {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.modalAddattraction Form {
+    padding: 20px;
     height: 100%;
     position: relative;
-   
 }
 #list {
     display: block;
@@ -31,69 +33,83 @@
     margin: auto;
     border: 1px solid #dddddd;
     border-radius: 3px;
-  }
-
-.modalAddCity .BTNSubmit{
+}
+.delAttraction i{
+    color:red
+}
+.modalAddCity .BTNSubmit {
     position: absolute;
-    top: 500px;
+    top: 480px;
 }
 .modalAddCity Form {
-    padding:20px;
+    padding: 20px;
     height: 100%;
     position: relative;
 }
-.react-datepicker{
+.react-datepicker {
     display: flex;
 }
-.react-datepicker-wrapper{
+.react-datepicker-wrapper {
     display: flex;
-  
 }
-.react-datepicker-popper{
+.react-datepicker-popper {
     position: absolute;
-    top:20px;
+    top: 20px;
     left: 0px;
 }
-.leftSide{
+.leftSide {
     margin-right: 20px;
 }
 .rightSide div {
     position: absolute;
-   left:30%
-  
+    left: 30%;
 }
-input{
+input {
     height: auto;
-    padding: .4375rem .75rem;
-    font-size: .8125rem;
+    padding: 0.4375rem 0.75rem;
+    font-size: 0.8125rem;
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
     border: 1px solid #e1e5eb;
     font-weight: 300;
-    will-change: border-color,box-shadow;
-    border-radius: .25rem;
+    will-change: border-color, box-shadow;
+    border-radius: 0.25rem;
     box-shadow: none;
-    transition: box-shadow 250ms cubic-bezier(.27,.01,.38,1.06),border 250ms cubic-bezier(.27,.01,.38,1.06);
+    transition: box-shadow 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06),
+        border 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
 }
-.listCities{
+.listCities {
     height: auto;
-    padding: .4375rem .75rem;
-    font-size: .8125rem;
+    padding: 0.4375rem 0.75rem;
+    font-size: 0.8125rem;
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
     border: 1px solid #e1e5eb;
     font-weight: 300;
-    will-change: border-color,box-shadow;
-    border-radius: .25rem;
+    will-change: border-color, box-shadow;
+    border-radius: 0.25rem;
     box-shadow: none;
-    transition: box-shadow 250ms cubic-bezier(.27,.01,.38,1.06),border 250ms cubic-bezier(.27,.01,.38,1.06);
+    transition: box-shadow 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06),
+        border 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
 }
-.open{
+.open {
     height: 700px;
 }
-.open .BTNSubmit{
-    position: absolute;
-    top: 0%;
+.open .BTNSubmit {
+   margin-bottom: 20px;
 }
+
+.react-datepicker__input-container input {
+    height: 57px;
+    margin-top: 16px;
+    border: 1px solid #bfc0c1;
+}
+.ExistDiv {
+    font-size: 20px;
+    margin-left: 95%;
+    height: 30px;
+    width: 30px;
+}
+

@@ -95,5 +95,15 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "http://proj.ruppin.ac.il/bgroup10/prod/guideapp"
+  "homepage": "http://proj.ruppin.ac.il/bgroup10/prod/guideapp",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-standard": "^4.0.1"
+  }
 }

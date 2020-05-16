@@ -22,7 +22,7 @@ import { ListViewComponent } from '@syncfusion/ej2-react-lists';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 const mapStyles = {
     width: '600px',
-    height: '1000px',
+    height: '900px',
 };
 
 const styles = {
@@ -33,6 +33,10 @@ const styles = {
     background: "#f9fafa",
     cursor: "pointer"
 };
+const autoStyle = {
+    margin:'none'
+}
+
 
 export class BuildTrip extends Component {
     constructor(props) {
@@ -42,7 +46,8 @@ export class BuildTrip extends Component {
             open: false,
             CityName: "",
             AttractionName: "",
-            AttractionDate: new Date(),
+            AttractionFromDate: new Date(),
+            AttractionToDate: new Date(),
             CityDate: new Date(),
             NewArrayCities: [],
             listOpenDiv: false,
@@ -54,10 +59,19 @@ export class BuildTrip extends Component {
             items: [],
             openAtrraction: false,
             classnameDivAtt: "modalAddattraction noOpen",
-            newAttractionArray: []
+            newAttractionArray: [],
+            AreaPointInTripArray:[],
+            AttractionPointInTripArray:[],
+            local:this.props.local
         }
-        this.toggle = this.toggle.bind(this);
+        //this.toggle = this.toggle.bind(this);
         this.fields = { groupBy: 'category', tooltip: 'text' };
+
+        let local = this.state.local;
+        this.apiUrl = "http://localhost:49948/api/";
+        if (!local) {
+            this.apiUrl = "http://proj.ruppin.ac.il/bgroup10/PROD/api/";
+        }
     }
     handleInputChange(event, value) {
         //    this.setState({
@@ -65,6 +79,62 @@ export class BuildTrip extends Component {
         //    })
         console.log(value);
         console.log(event.target.value);
+    }
+      
+    componentWillMount(){
+        // this.GetCities();
+        // console.log(this.state.AreaPointInTripArray);
+    }
+    GetCities = ()=>{
+        let id = 119;
+        fetch(this.apiUrl + "BuildTrip/GetCities/" + id , {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        AreaPointInTripArray: result
+                    });
+                    //this.GetToruistAttractions();
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+    GetToruistAttractions = () => {
+        let id = 119;
+        fetch(this.apiUrl + "BuildTrip/GetAttractions/" + id , {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        AreaPointInTripArray: result
+                    });
+                    this.OrgenizeTrip(result);
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+    OrgenizeTrip = (attractions) => {
+
     }
     AddCity = () => {
         let temp = this.state.CityName + " " + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(this.state.CityDate);
@@ -90,8 +160,19 @@ export class BuildTrip extends Component {
             listTrip: tempArray
         })
         console.log(tempArray);
+
+        console.log(this.state.CityDate);
+        console.log(this.state.CityDate.toTimeString());
+        //this.AddCityToSQL();
+
     }
-    toggle() {
+    toggle=()=>{
+        this.setState({
+            open: !this.state.open
+        });
+        console.log(this.state.open)
+    }
+    closeDiv=()=>{
         this.setState({
             open: !this.state.open
         });
@@ -100,6 +181,8 @@ export class BuildTrip extends Component {
     componentDidMount() {
         console.log(this.state.Attractions)
         this.UploadAllCities();
+          this.GetCities();
+        console.log(this.state.AreaPointInTripArray);
     }
     UploadAllCities = () => {
         let NewArrayCities = [];
@@ -132,11 +215,16 @@ export class BuildTrip extends Component {
     }
 
     renderTrip = () => {
-        return this.state.listTrip.map((item) => <div><h4>{item.text}</h4><ul id={item.id}>{this.rendercity(item)}</ul><Button onClick={() => this.AddAtraction(item)}>+</Button></div>);
+        if (this.state.listTrip.length>0) {
+            return this.state.listTrip.map((item) => <div><h4>{item.text}</h4><ul id={item.id}>{this.rendercity(item)}</ul><Button onClick={() => this.AddAtraction(item)}>+</Button></div>);
+        }
+        else{
+            return null;
+        }
     }
     rendercity = (item) => {
         if (item.locations !== null) {
-            return item.locations.map((loc) => <li>{loc} <span onClick={()=> {this.deleteLocation(loc, item)}}><i class="fas fa-minus"></i></span></li>)
+            return item.locations.map((loc) => <li>{loc} <span className="delAttraction" onClick={()=> {this.deleteLocation(loc, item)}}><i class="fas fa-minus"></i></span></li>)
         }
         else {
             return null
@@ -159,7 +247,6 @@ export class BuildTrip extends Component {
         for (let i = 0; i < this.state.Attractions.length; i++) {
             const element = this.state.Attractions[i];
             if (element.City === item.name) {
-                console.log("fff")
                 let elementItem = {
                     id: i,
                     label: element.Name
@@ -190,41 +277,87 @@ export class BuildTrip extends Component {
             }
         }
     }
+AddAttractionToSQL=()=>{
+    fetch(this.apiUrl + "BuildTrip/AddAttraction", {
+            method: "POST",
+            body: JSON.stringify({
+                TripPlan_IdPlan:119,
+                PointInPlanId:5,
+                CityName:this.state.CityName,
+                AttractionName:this.state.AttractionName,
+                AttractionCode:1,
+                fromHour:this.state.AttractionFromDate.toLocaleString(),
+                ToHour:this.state.AttractionToDate.toLocaleString()
+            }),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                console.log("res=", res);
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    if (result !== null) {
+                        this.state.AttractionPointInTripArray.push(result)
+                        console.log(result);
+                        //this.AddLanguages(this.state.tempGuide, Languages);
+                    } else {
+                        // Swal.fire({
+                        //     position: "center",
+                        //     icon: "error",
+                        //     title: " Error",
+                        //     showConfirmButton: false,
+                        //     timer: 1200
+                        // });
+                    }
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+}
 
-    // funcAddAttraction = (array) => {
-    //     return (<div className={this.state.classnameDivAtt}><Form>  <Row form>
-    //         <Col md="6" className="form-group">
-    //             <label htmlFor="feCityName">Attraction Name</label>
-    //             <Autocomplete
-    //                 onChange={(event, value) => this.setState({ AttractionName: value.label })} // prints the selected value
-    //                 id="combo-box-demo"
-    //                 options={array}
-    //                 getOptionLabel={(option) => option.label}
-    //                 style={{ width: 300 }}
-    //                 renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
-    //             />
-
-    //         </Col>
-    //         <Col md="6" className="form-group">
-    //             <label htmlFor="feDate">Date</label>
-    //             <DatePicker
-    //                 selected={this.state.AttractionDate}
-    //                 onChange={(newDate) => this.setState({ AttractionDate: newDate })}
-    //                 showTimeSelect
-    //                 timeFormat="HH:mm"
-    //                 timeIntervals={15}
-    //                 timeCaption="time"
-    //                 dateFormat="MMMM d, yyyy h:mm aa"
-    //             />
-    //         </Col>
-    //     </Row>
-    //         <Row>
-    //             <Col>
-    //                 <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtt(array) }} >Add</Button>
-    //             </Col>
-
-    //         </Row></Form></div>);
-    // }
+    AddCityToSQL=()=>{
+        console.log(this.state.CityDate.toString())
+        fetch(this.apiUrl + "BuildTrip", {
+            method: "POST",
+            body: JSON.stringify({
+                TripPlan_IdPlan:119,
+                FromDate:this.state.CityDate.toLocaleString(),
+                AreaName:this.state.CityName,
+                OrderNumber:1
+            }),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                console.log("res=", res);
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    if (result !== null) {
+                        this.state.AreaPointInTripArray.push(result)
+                        console.log(result);
+                        //this.AddLanguages(this.state.tempGuide, Languages);
+                    } else {
+                        // Swal.fire({
+                        //     position: "center",
+                        //     icon: "error",
+                        //     title: " Error",
+                        //     showConfirmButton: false,
+                        //     timer: 1200
+                        // });
+                    }
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
 
     render() {
         const { open, listOpenDiv } = this.state;
@@ -233,7 +366,7 @@ export class BuildTrip extends Component {
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
                 <div className="row">
                <div className="col-7 leftSide">
-                    {this.state.open ?  <div className="col-7"><div className={this.state.classnameDiv}><Form>  <Row form>
+                    {this.state.open ?<div className="col-7"><div className={this.state.classnameDiv}><div className="ExistDiv"><span onClick={() => this.setState({ open: !this.state.open })} className="ExistSpan"><i  class="fas fa-times"></i></span></div><Form>  <Row form>
                         <Col md="6" className="form-group">
                             <label htmlFor="feCityName">City Name</label>
                             <Autocomplete
@@ -241,10 +374,10 @@ export class BuildTrip extends Component {
                                 id="combo-box-demo"
                                 options={this.state.NewArrayCities}
                                 getOptionLabel={(option) => option.label}
+                               //classes={autoStyle}
                                 //style={{ width: 300 }}
                                 renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
                             />
-
                         </Col>
                         <Col md="6" className="form-group">
                             <label htmlFor="feDate">Date</label>
@@ -256,6 +389,7 @@ export class BuildTrip extends Component {
                                 timeIntervals={15}
                                 timeCaption="time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
+                                //minDate={this.state.CityDate}
                             />
                         </Col>
                     </Row>
@@ -267,7 +401,7 @@ export class BuildTrip extends Component {
                         </Row></Form></div></div> : null}
                         
                         
-                    {this.state.openAtrraction ? <div className="col-7"> <div className={this.state.classnameDivAtt}><Form>  <Row form>
+                    {this.state.openAtrraction ? <div className="col-7"> <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ openAtrraction: !this.state.openAtrraction })} className="ExistSpan"><i  class="fas fa-times"></i></span></div><Form>  <Row form>
                         <Col md="6" className="form-group">
                             <label htmlFor="feCityName">Attraction Name</label>
                             <Autocomplete
@@ -275,21 +409,35 @@ export class BuildTrip extends Component {
                                 id="combo-box-demo"
                                 options={this.state.newAttractionArray}
                                 getOptionLabel={(option) => option.label}
-                                //style={{ width: 300 }}
-                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
+                                //style={}
+                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Attraction" variant="outlined" />}
                             />
 
                         </Col>
-                        <Col md="6" className="form-group">
-                            <label htmlFor="feDate">Date</label>
+                        <Col md="3" className="form-group">
+                            <label htmlFor="feDate">From Date</label>
                             <DatePicker
-                                selected={this.state.AttractionDate}
-                                onChange={(newDate) => this.setState({ AttractionDate: newDate })}
+                                selected={this.state.AttractionFromDate}
+                                onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
                                 showTimeSelect
                                 timeFormat="HH:mm"
                                 timeIntervals={15}
                                 timeCaption="time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
+                                minDate={this.state.CityDate}
+                            />
+                        </Col>
+                        <Col md="3" className="form-group">
+                            <label htmlFor="feDate">To Date</label>
+                            <DatePicker
+                                selected={this.state.AttractionToDate}
+                                onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="time"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                minDate={this.state.CityDate}
                             />
                         </Col>
                     </Row>

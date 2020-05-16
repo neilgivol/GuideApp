@@ -1,0 +1,79 @@
+.TouristImg{
+    height: 120px;
+    width: 120px;
+}
+.profileDetails{
+    margin-bottom: 100px;
+}
+.personalDetails p{
+    margin-bottom: 2.4px;
+}
+.tripDetails p{
+    margin-bottom: 2.4px;
+}
+.tripDetails{
+}
+.profileDetails1{
+    margin-bottom: 20px;
+}
+.hobbiesDivList{ 
+    margin:30px;
+
+}
+.ExpertisesDivList{
+    margin:30px;
+
+}
+
+.colImgDiv{
+    text-align: center;
+}
+.NameToruistDiv h2{
+    /* margin-left: 8%;
+    margin-bottom: 3%;
+    margin-top: 3%; */
+}
+.HobbiesDivTourist{
+    display: flex;
+}
+.HobbiesDivTourist .CardItem{
+height: 216px;
+width: 288px;
+}
+.HobbiesDivTourist .CardItem img{
+    height: 216px;
+    width: 288px;
+    }
+    .titleCardDivTourist h4{
+        text-align: center;
+        vertical-align: middle;
+        margin-top:5px;
+        font-weight: 650;
+    }
+    .titleCardDivTourist{
+        height: 20%;
+        position: absolute;
+        top: 80%;
+        width: 100%;
+        opacity: 0.7;
+        background-color: #b3e0ff;
+        font-weight: bold;
+    }
+    .CardItem:hover .titleCardDivTourist {
+        background-color: #00639d;
+        color: white;
+        cursor: pointer;
+    }
+    .CardItem:hover .titleCardDivTourist h4{
+        color: white;
+    
+    }
+    .HobbiesDivTourist .CardItem:hover {
+        background-color: #b3e0ff;
+        -ms-transform: none;
+        -webkit-transform: none;
+        transform: none;
+        z-index: none;
+        cursor: pointer;
+    }
+ 
