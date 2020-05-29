@@ -15,7 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from '../services/firebase';
 
 
@@ -189,14 +189,6 @@ class ProfileCard extends Component {
                 </DialogActions>
             </Dialog>
         </div>
-
-
-
-        // return <div>
-        //     <h3>Do You Want To Change Your Profile Picture?</h3>
-        //     <Button onClick={this.ChangeProfilePic} className="yesBtn col-4">YES</Button>
-        //     <Button onClick={this.CancelChangesProfilePic} className="noBtn col-4">NO</Button>
-        // </div>
     }
     ChangeProfilePic = () => {
         console.log(this.state.newProfilePicURL);

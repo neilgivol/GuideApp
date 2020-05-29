@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBModalFooter } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -16,6 +16,8 @@ import Swal from 'sweetalert2'
 import logo2 from '../Img/Isravisionlogo.png';
 import logo3 from '../Img/Isravisionlogo1.png';
 import logo4 from '../Img/Isravisionlogo2.png';
+import Dialog from '@material-ui/core/Dialog';
+import logoLast from '../Img/logoadvisor.png';
 
 function Copyright() {
     return (
@@ -38,18 +40,22 @@ class SignIn extends Component {
             checkBoxVal: "unCheck",
             rememberMe: false,
             lieceneNum: "",
+            govILAsk: false,
 
         }
     }
-componentWillMount(){
-    //אם החליף תמונה
-    if (this.props.location.state !== undefined) {
-        this.props.history.push({
-            pathname: '/home/',
-            state: { GuideTemp: this.props.location.state.GuideTemp }
-          });
+    componentWillUnmount() {
+        clearInterval(this.myInterval)
     }
-}
+    componentWillMount() {
+        //אם החליף תמונה
+        if (this.props.location.state !== undefined) {
+            this.props.history.push({
+                pathname: '/home/',
+                state: { GuideTemp: this.props.location.state.GuideTemp }
+            });
+        }
+    }
     //במידה והמשתמש לחץ על כפתור שמור את הפרטים שלי - הפרטים יופיעו על המסך בכל כניסה שלו
     componentDidMount() {
         const rememberMe = localStorage.getItem('rememberMe') === 'true';
@@ -58,9 +64,11 @@ componentWillMount(){
         this.setState({
             email: usernameEntered,
             password: PasswordEntered,
-            rememberMe: rememberMe
+            rememberMe: rememberMe,
+            govILAsk: !this.state.govILAsk
         });
     }
+
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
@@ -101,6 +109,50 @@ componentWillMount(){
             })
         }
     }
+    Exit = () => {
+        console.log("Exist");
+        this.setState({
+            govILAsk: false
+        })
+    }
+    alertGuidesGovILAsk = () => {
+        let licenseNum
+        return (
+            <MDBRow className="divGov">
+                <h5>Do you have an account at the ministry of tourism  website?</h5>
+                <MDBCol className="InputNumber" md="12">
+                    <MDBInput
+                        type="number"
+                        onChange={this.HandelNumberInput}
+                        label="Enter Your Liecnse Number"
+                    />
+                </MDBCol>
+                <MDBCol className="ButtonClass" md="12">
+                    <MDBCol className="ButtonClass" md="6">
+                        <MDBBtn
+                            type="button"
+                            gradient="blue"
+                            rounded
+                            className="btn-block z-depth-1a"
+                            onClick={this.SignInWithGovIL}>
+                            Yes
+                                            </MDBBtn>
+                    </MDBCol>
+                    <MDBCol className="ButtonClass" md="6">
+                        <MDBBtn
+                            type="button"
+                            gradient="peach"
+                            rounded
+                            className="btn-block z-depth-1a"
+                            onClick={this.Exit}>
+                            No
+                                            </MDBBtn>
+                    </MDBCol>
+                </MDBCol>
+
+
+            </MDBRow>)
+    }
 
     //לוקח את פרטי המשתמש ושולח אותם למסד נתונים כדי לבדוק האם קיים משתמש כזה
     SignInFunc = () => {
@@ -117,18 +169,29 @@ componentWillMount(){
     }
 
     SignInWithGovIL = () => {
-        this.props.GovList(this.state.lieceneNum);
+        if (this.state.lieceneNum !== "") {
+            this.props.GovList(this.state.lieceneNum);
+        }
+        else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please insert License Number!',
+              })
+        }
     }
 
     render() {
         return (
             <div className="Cont">
+                {this.state.govILAsk ? <div className="aletGov">{this.alertGuidesGovILAsk()}</div> : null}
                 <MDBContainer>
                     <MDBRow className="logoRow">
                         <MDBCol md="12 text-center" >
-                            <img className="LogoDiv" alt="" src={logo3} />
+                            <img className="LogoDiv" alt="" src={logoLast} />
                         </MDBCol>
                     </MDBRow>
+                    {this.state.govILAsk ? null  :  
                     <MDBRow className="RowDivSignIn text-center">
                         <MDBCol className="ColDivSignIn" md="6">
                             <MDBCard className="CardDivSignIn">
@@ -191,33 +254,33 @@ componentWillMount(){
                                             <Google checkifExistFunc={this.props.checkIfexistUsers} Allusers={this.props.Allusers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                         </MDBCol>
                                     </MDBRow>
-                                    <div>
+                                    {/* <div>
                                         <div className="or-seperator"><i>or</i></div>
 
                                     </div>
                                     <MDBRow className="GOVDIV">
-                                            <h5>Sign In By Liecense Number</h5>
-                                            <MDBCol className="InputNumber" md="6">
-                                                <MDBInput
-                                                    type="number"
-                                                    onChange={this.HandelNumberInput}
-                                                    label="Your Liecnse Number"
-                                                />
-                                            </MDBCol>
-                                            <MDBCol className="ButtonClass" md="6">
-                                                <MDBBtn
-                                                    type="button"
-                                                    gradient="blue"
-                                                    rounded
-                                                    className="btn-block z-depth-1a"
-                                                    onClick={this.SignInWithGovIL}
-                                                >
-                                                    ENTER
+                                        <h5>Sign In By Liecense Number</h5>
+                                        <MDBCol className="InputNumber" md="6">
+                                            <MDBInput
+                                                type="number"
+                                                onChange={this.HandelNumberInput}
+                                                label="Your Liecnse Number"
+                                            />
+                                        </MDBCol>
+                                        <MDBCol className="ButtonClass" md="6">
+                                            <MDBBtn
+                                                type="button"
+                                                gradient="blue"
+                                                rounded
+                                                className="btn-block z-depth-1a"
+                                                onClick={this.SignInWithGovIL}
+                                            >
+                                                ENTER
                                             </MDBBtn>
-                                            </MDBCol>
+                                        </MDBCol>
 
 
-                                    </MDBRow>
+                                    </MDBRow> */}
                                 </MDBCardBody>
                                 <MDBModalFooter className="mx-5 pt-3 mb-1">
                                     <div className="row col-12">
@@ -235,6 +298,7 @@ componentWillMount(){
                             </MDBCard>
                         </MDBCol>
                     </MDBRow>
+                    }
                     <Box mt={8}>
                         <Copyright />
                     </Box>

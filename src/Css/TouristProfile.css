@@ -2,8 +2,9 @@
     height: 120px;
     width: 120px;
 }
-.profileDetails{
-    margin-bottom: 100px;
+.personalDetails{
+    margin-bottom: 20px;
+    text-align: left;
 }
 .personalDetails p{
     margin-bottom: 2.4px;
@@ -12,6 +13,7 @@
     margin-bottom: 2.4px;
 }
 .tripDetails{
+    text-align: left;
 }
 .profileDetails1{
     margin-bottom: 20px;
@@ -23,6 +25,15 @@
 .ExpertisesDivList{
     margin:30px;
 
+}
+.divProfileTourist{
+position: absolute;
+top:7%;
+left:30%;
+opacity: 0.9;
+}
+.divProfileTourist .myForm{
+    width: 100%;
 }
 
 .colImgDiv{
@@ -75,5 +86,11 @@ width: 288px;
         transform: none;
         z-index: none;
         cursor: pointer;
+    }
+    .divProfileTourist h2{
+        text-align: left;
+    } 
+    #nameTourist{
+        text-align: center;
     }
  

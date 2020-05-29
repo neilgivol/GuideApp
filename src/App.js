@@ -21,6 +21,7 @@ import $ from "jquery";
 import { toast, ToastContainer } from "react-toastify";
 import firebase from "./services/firebase";
 import ReactLoading from "react-loading";
+import BuildTrip2 from "./pages/BuildTrip2";
 import BuildTrip from "./pages/BuildTrip";
 import Swal from "sweetalert2";
 import ChatRealTime from "./pages/ChatRealTime";
@@ -39,6 +40,11 @@ const navLinks = [
     },
     {
         text: "Trips",
+        path: "/BuildTrip2",
+        icon: "ion-ios-map"
+    },
+    {
+        text: "Trips2",
         path: "/BuildTrip",
         icon: "ion-ios-map"
     },
@@ -68,7 +74,10 @@ class App extends Component {
             password: "",
             email: "",
             Attractions: [],
-            tourist:""
+            tourist: "",
+            AttractionsArray: [],
+            ListAttractions: [],
+            Cities:[]
         };
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
@@ -82,9 +91,11 @@ class App extends Component {
         this.GetAllHobbies();
         this.GetAllExpertises();
         this.GetGuidesGOVFromSQL();
-        this.GetAllAttractions();
+        this.GetAllAttractionsFromSQL();
+        // this.GetAllAttractions();
         this.GetAllLanguages();
         this.GetAllTourists();
+        this.GetAllCitiesFromGOVIL();
         //this.ConnectFirebase();
         // this.GetGuidesFromSQL();
     }
@@ -114,7 +125,7 @@ class App extends Component {
     };
     GetAllTourists = () => {
         let id = 204;
-        fetch(this.apiUrl + 'Tourist/GetDetails/' + id, {
+        fetch(this.apiUrl + "Tourist/GetDetails/" + id, {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json; charset=UTF-8"
@@ -136,13 +147,13 @@ class App extends Component {
                 }
             );
     };
-    OrgenizeTouristDetails = (tourist) =>{
+    OrgenizeTouristDetails = (tourist) => {
         tourist.HobbiesNames = [];
         tourist.ExpertisesNames = [];
         for (let i = 0; i < this.state.LanguagesListOrgenized.length; i++) {
             const element = this.state.LanguagesListOrgenized[i];
             if (element.id === tourist.LanguageCode) {
-                let lang = element.label.split(" / ")
+                let lang = element.label.split(" / ");
                 tourist.Language = lang[0];
             }
         }
@@ -165,9 +176,9 @@ class App extends Component {
             }
         }
         this.setState({
-            tourist:tourist
-        })
-    }
+            tourist: tourist
+        });
+    };
     //?????
     GetGuidesFromSQL = () => {
         fetch(this.apiUrl, {
@@ -206,6 +217,24 @@ class App extends Component {
             success: this.AddAtractions
         });
     };
+    GetAllCitiesFromGOVIL=()=>{
+        var data = {
+            resource_id: 'eb548bfa-a7ba-45c4-be7d-2e8271f55f70', // the resource id
+            limit: 100
+        };
+        $.ajax({
+            url: 'https://data.gov.il/api/action/datastore_search',
+            data: data,
+            dataType: "json",
+            success: this.AddCities
+        });
+    }
+    AddCities = (data) =>{
+        console.log(data.result.records);
+this.setState({
+    Cities:data.result.records
+})        
+    }
     //מוסיף את רשימת האטרקציות מאתר משרד התיירות
     AddAtractions = (data) => {
         console.log(data);
@@ -216,18 +245,135 @@ class App extends Component {
         for (let i = 0; i < this.state.Attractions.length; i++) {
             const element = this.state.Attractions[i];
             let point = {
-                Name: element.Name,
-                City: element.City,
-                X: element.X,
-                Y: element.Y,
-                Opening_Hours: element.Opening_Hours
+                AttractionName: element.Name,
+                AreaName: element.City,
+                location: {
+                    lng: element.X,
+                    lat: element.Y
+                },
+                Opening_Hours: element.Opening_Hours,
+                FullDescription: element.FullDescription,
+                Address: element.Address,
+                Attraction_Type: element.Attraction_Type,
+                Region: element.Region
             };
+            point.Attraction_Type = point.Attraction_Type.split(";");
+            if (point.AreaName === "") {
+                point.AreaName = element.Region;
+            }
+            if (point.Address.includes("'")) {
+                point.Address = point.Address.replace("'", "`");
+                point.Address = point.Address.replace("'", "`");
+            }
+            if (point.AttractionName.includes("'")) {
+                point.AttractionName = point.AttractionName.replace("'", "`");
+                point.AttractionName = point.AttractionName.replace("'", "`");
+            }
+            if (point.AreaName.includes("'")) {
+                point.AreaName = point.AreaName.replace("'", "`");
+                point.AreaName = point.AreaName.replace("'", "`");
+            }
+            if (point.FullDescription.includes("<p>")) {
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "<p>",
+                    ""
+                );
+            }
+            if (point.FullDescription.includes("</p>")) {
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+                point.FullDescription = point.FullDescription.replace(
+                    "</p>",
+                    ""
+                );
+            }
             NewArray.push(point);
         }
         console.log(NewArray);
         this.setState({
             Attractions: NewArray
         });
+        // if (this.state.AttractionsArray.length === 0) {
+        //     this.postAttractionsToSQL(NewArray);
+        // }
+        // else{
+        //     console.log(this.state.AttractionsArray)
+        //      let tempArray=[];
+        //     let exist = false;
+        // for (let i = 0; i < NewArray.length; i++) {
+        //     const apiattraction = NewArray[i];
+        //     for (let j = 0; j < this.state.AttractionsArray.length; j++) {
+        //         const sqlattraction = this.state.AttractionsArray[j];
+        //     }
+        //     if (!exist) {
+        //     }
+        // }
+        // console.log(tempArray);
+        // }
+
+        this.setState({
+            isLoading: false
+        });
+    };
+
+    postAttractionsToSQL = (attractions) => {
+        fetch(this.apiUrl + "BuildTrip/AddAllAtractions", {
+            method: "POST",
+            body: JSON.stringify(attractions),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                console.log("res=", res);
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
     };
 
     //מביא את כל המדריכים שבאתר משרד התיירות
@@ -591,6 +737,32 @@ class App extends Component {
             );
     };
 
+    GetAllAttractionsFromSQL = () => {
+        this.setState({
+            isLoading: true
+        });
+        fetch(this.apiUrl + "BuildTrip/GetAllAttractions", {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        AttractionsArray: result
+                    });
+                    this.GetAllAttractions();
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    };
+
     //לוקח את הפרטים מעמוד ההרשמה ובודק האם האימייל נמצא במסד נתונים- אם לא נמצא יוסיף אותו למסד נתונים
     PostGuideToCheckSignUp = (userDetails) => {
         //this.setState({isLoading:true})
@@ -846,7 +1018,11 @@ class App extends Component {
                 }
             );
     };
-
+    SaveListAtt = (array) => {
+        this.setState({
+            ListAttractions: array
+        });
+    };
     render() {
         return this.state.loading === true ? (
             <div className="spinner-border text-success" role="status">
@@ -915,6 +1091,29 @@ class App extends Component {
                             showToast={this.showToast}
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             Guide={this.state.tempGuide}
+                            tourist={this.state.tourist}
+                        />
+                        <MainFooter className="hidden-xs" />
+                    </Route>
+                    <Route path="/BuildTrip2">
+                        <ResponsiveNavigation
+                            navbarCheckFunc={this.navbarCheck}
+                            navLinks={navLinks}
+                            logo={menu}
+                            background="#fff"
+                            hoverBackground="#A2D4FF"
+                            linkColor="#1988ff"
+                        />
+                        <BuildTrip2
+                            SaveListAtt={this.SaveListAtt}
+                            Attractions={this.state.Attractions}
+                            showToast={this.showToast}
+                            cities={this.state.Cities}
+                            navbarOpenCheck={this.state.navbarCheckOpen}
+                            Guide={this.state.tempGuide}
+                            local={this.state.local}
+                            ListAttractions={this.state.ListAttractions}
+                            tourist = {this.state.tourist}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>

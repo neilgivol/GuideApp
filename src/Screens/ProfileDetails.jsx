@@ -307,9 +307,8 @@ class ProfileDetails extends Component {
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col md="6" className="form-group">
+                                        <Col md="6" className="form-group birth">
                                             <label htmlFor="feBirth">Birthday</label><br />
-
                                             <DatePicker
                                                 selected={this.state.BirthDay}
                                                 value={this.state.BirthDay}

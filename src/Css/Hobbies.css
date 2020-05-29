@@ -19,8 +19,8 @@
     max-height: 100%;
 }
 .CardItem img {
-    height: 108px;
-    width: 144px;
+    height: 195px;
+    width: 260px;
     max-width: 100%;
     max-height: 100%;
 }
@@ -32,8 +32,8 @@ span.middleLine {
 
 .CardItem {
     position: relative;
-    height: 108px;
-    width: 144px;
+    height: 195px;
+    width: 260px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     margin: 3px;
     position: relative;
@@ -48,14 +48,14 @@ span.middleLine {
 }
 .del {
     position: absolute;
-    bottom: 77%;
-    left: 5%;
+    bottom: 84%;
+    left: 3%;
     color: rgba(0, 0, 0, 0.8);
     font-size: 10px;
 }
 .delSpan i {
     color: black;
-    font-size: 14px;
+    font-size: 20px;
 }
 .del:hover {
     color: white;
@@ -80,17 +80,17 @@ span.middleLine {
 }
 
 .titleCardDiv h4 {
-    font-size: 15px;
+    font-size: 24px;
     text-align: center;
     vertical-align: middle;
-    line-height: 20px;
+    line-height: 34px;
 }
 
 
 .titleCardDiv {
     height: 20%;
     position: absolute;
-    top: 80%;
+    top: 82%;
     width: 100%;
     opacity: 0.7;
     background-color: #b3e0ff;

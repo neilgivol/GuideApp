@@ -160,7 +160,6 @@ class Expertise extends Component {
     UpdateList = (result) => {
         this.props.updateExpertises();
         let temp = [];
-        console.log(result);
         for (let i = 0; i < result.length; i++) {
             const element = result[i];
             let expertise = {
@@ -178,10 +177,8 @@ class Expertise extends Component {
         for (let i = 0; i < this.state.itemsArray.length; i++) {
             boolifExist = false;
             let elementArray = this.state.itemsArray[i];
-            console.log(elementArray);
             for (let j = 0; j < temp.length; j++) {
                 let elementCart = temp[j];
-                console.log(elementCart);
                 if (elementArray.id === elementCart.id) {
                     boolifExist = true;
                 }

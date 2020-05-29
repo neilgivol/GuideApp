@@ -11,7 +11,7 @@ import ChatBox from '../Components/ChatBox';
 import WelcomeCard from '../Components/WelcomeCard';
 import profilePic from '../Img/Default-welcomer.png';
 import ReactLoading from 'react-loading'
-
+import TouristProfile from '../Components/TouristProfile';
 class Chat extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +23,8 @@ class Chat extends Component {
             displayedContactSwitchedNotification: [],
             discplayedContacts: [],
             isLoading: true,
+            tourist:this.props.tourist,
+            openToruist:false
 
         }
         this.currentUserIdchat = localStorage.getItem("idChat")
@@ -232,7 +234,10 @@ class Chat extends Component {
 
 
     onProfileClick = () => {
-
+        this.setState({
+            openToruist:!this.state.openToruist
+        })
+        console.log(this.state.openToruist)
     }
 
 
@@ -247,7 +252,7 @@ class Chat extends Component {
                                     className="ProfilePicture"
                                     alt=""
                                     src={this.state.Guide.ProfilePic}
-                                //onClick={this.onProfileClick}
+                                onClick={this.onProfileClick}
                                 />
                             </div>
                             {this.state.discplayedContacts}
@@ -268,6 +273,14 @@ class Chat extends Component {
                                 color={'#203152'}
                                 height={'3%'}
                                 width={'3%'}
+                            />
+                        </div>
+                    ) : null}
+                     {this.state.openToruist ? (
+                        <div>
+                            <TouristProfile
+                                navbarOpenCheck={this.state.navbar} 
+                                tourist={this.state.tourist}
                             />
                         </div>
                     ) : null}

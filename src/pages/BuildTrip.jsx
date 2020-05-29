@@ -82,6 +82,9 @@ export class BuildTrip extends Component {
     }
       
     componentWillMount(){
+        this.GetCities();
+        console.log(this.state.AreaPointInTripArray);
+        this.GetToruistAttractions();
         // this.GetCities();
         // console.log(this.state.AreaPointInTripArray);
     }
@@ -123,7 +126,7 @@ export class BuildTrip extends Component {
             .then(
                 (result) => {
                     this.setState({
-                        AreaPointInTripArray: result
+                        AttractionPointInTripArray: result
                     });
                     this.OrgenizeTrip(result);
                     console.log(result);
@@ -134,7 +137,20 @@ export class BuildTrip extends Component {
             );
     }
     OrgenizeTrip = (attractions) => {
-
+        for (let i = 0; i < this.state.AreaPointInTripArray.length; i++) {
+            const area = this.state.AreaPointInTripArray[i];
+            const tempArray = [];
+          for (let j = 0; j < attractions.length; j++) {
+              const attraction = attractions[j];
+              if (area.PointInPlanId === attraction.PointInPlanId) {
+                tempArray.push(attraction);
+              }
+              console.log(area.Attractions);
+              area.Attractions = tempArray;
+              console.log(tempArray);
+          }
+        }
+        console.log(attractions);
     }
     AddCity = () => {
         let temp = this.state.CityName + " " + new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(this.state.CityDate);
@@ -163,7 +179,7 @@ export class BuildTrip extends Component {
 
         console.log(this.state.CityDate);
         console.log(this.state.CityDate.toTimeString());
-        //this.AddCityToSQL();
+        this.AddCityToSQL();
 
     }
     toggle=()=>{
@@ -183,6 +199,7 @@ export class BuildTrip extends Component {
         this.UploadAllCities();
           this.GetCities();
         console.log(this.state.AreaPointInTripArray);
+        this.GetToruistAttractions();
     }
     UploadAllCities = () => {
         let NewArrayCities = [];
@@ -230,6 +247,23 @@ export class BuildTrip extends Component {
             return null
         }
     }
+
+    renderTrip2 = () => {
+        if (this.state.AreaPointInTripArray.length>0) {
+            return this.state.AreaPointInTripArray.map((item) => <div><h4>{item.AreaName}</h4><ul id={item.PointInPlanId}>{this.rendercity2(item)}</ul><Button onClick={() => this.AddAtraction2(item)}>+</Button></div>);
+        }
+        else{
+            return null;
+        }
+    }
+    rendercity2 = (item) => {
+        if (item.Attractions !== null) {
+            return item.Attractions.map((loc) => <li>{loc.AttractionName} {loc.fromHour} <span className="delAttraction" onClick={()=> {this.deleteLocation2(loc, item)}}><i class="fas fa-minus"></i></span></li>)
+        }
+        else {
+            return null
+        }
+    }
     deleteLocation = (loc, item) => {
         console.log(loc);
         console.log(item);
@@ -260,7 +294,40 @@ export class BuildTrip extends Component {
         })
         //this.funcAddAttraction(newAttractionsArray);
     }
-    AddAtt = () => {
+    deleteLocation2 = (loc, item) => {
+        console.log(loc);
+        console.log(item);
+        let newArrayTemp = [];
+        for (let i = 0; i < item.Attractions.length; i++) {
+            const element = item.Attractions[i];
+            if (element !== loc) {
+                newArrayTemp.push(element);
+            }
+        }
+        item.Attractions = newArrayTemp;
+    }
+    AddAtraction2 = (item) => {
+        console.log(item)
+        let newAttractionsArray = [];
+        for (let i = 0; i < this.state.Attractions.length; i++) {
+            const element = this.state.Attractions[i];
+            if (element.City === item.AreaName) {
+                let elementItem = {
+                    id: i,
+                    label: element.Name,
+                    point:item.PointInPlanId
+                }
+                newAttractionsArray.push(elementItem);
+            }
+        }
+        this.setState({
+            newAttractionArray: newAttractionsArray,
+            openAtrraction: !this.state.openAtrraction
+        })
+        console.log(newAttractionsArray);
+        //this.funcAddAttraction(newAttractionsArray);
+    }
+    AddAtt = (num) => {
         for (let i = 0; i < this.state.listTrip.length; i++) {
             const element = this.state.listTrip[i];
             console.log(this.state.CityName);
@@ -276,13 +343,16 @@ export class BuildTrip extends Component {
                 break;
             }
         }
+        console.log(num);
+        console.log(this.state.newAttractionArray[0].point)
+        this.AddAttractionToSQL(num);
     }
-AddAttractionToSQL=()=>{
+AddAttractionToSQL=(pointNum)=>{
     fetch(this.apiUrl + "BuildTrip/AddAttraction", {
             method: "POST",
             body: JSON.stringify({
                 TripPlan_IdPlan:119,
-                PointInPlanId:5,
+                PointInPlanId:pointNum,
                 CityName:this.state.CityName,
                 AttractionName:this.state.AttractionName,
                 AttractionCode:1,
@@ -302,7 +372,6 @@ AddAttractionToSQL=()=>{
                     if (result !== null) {
                         this.state.AttractionPointInTripArray.push(result)
                         console.log(result);
-                        //this.AddLanguages(this.state.tempGuide, Languages);
                     } else {
                         // Swal.fire({
                         //     position: "center",
@@ -342,7 +411,6 @@ AddAttractionToSQL=()=>{
                     if (result !== null) {
                         this.state.AreaPointInTripArray.push(result)
                         console.log(result);
-                        //this.AddLanguages(this.state.tempGuide, Languages);
                     } else {
                         // Swal.fire({
                         //     position: "center",
@@ -443,7 +511,7 @@ AddAttractionToSQL=()=>{
                     </Row>
                         <Row>
                             <Col>
-                                <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtt() }} >Add</Button>
+                                <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtt(this.state.newAttractionArray[0].point) }} >Add</Button>
                             </Col>
 
                         </Row></Form></div></div> : null}
@@ -453,7 +521,7 @@ AddAttractionToSQL=()=>{
                             <Button onClick={this.toggle}>Add City</Button>
                         </div>
                         <div className="TripList">
-                            {this.renderTrip()}
+                            {this.renderTrip2()}
                         </div>
                     </div>
                     </div>

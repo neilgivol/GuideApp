@@ -33,6 +33,25 @@
     .logoRow{
         margin:30px
     }
+    .divGov{
+        border:1px solid;
+        position: absolute;
+        top:36%;
+        left:30%;
+        z-index: 999;
+        background-color: white;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        width: 45%;
+        }
+    .divGov h5{
+        flex: auto;
+        text-align: center;
+        font-size: 30px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
     label.active{
       background-color: white;
     }

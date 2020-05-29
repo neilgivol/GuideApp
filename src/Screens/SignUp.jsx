@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Swal from 'sweetalert2';
+import logoLast from '../Img/logoadvisor.png';
+
 //import { easing } from '@material-ui/core';
 function Copyright() {
   return (
@@ -178,9 +180,10 @@ class SignUp extends Component {
 
   render() {
     return (
+        <div className="Cont">
       <MDBContainer>
         <MDBRow className="RowDivSignIn">
-          <MDBCol md="6" className="LogoDiv"><img alt="" src={logo} /></MDBCol>
+          <MDBCol md="6" className="LogoDiv"><img alt="" src={logoLast} /></MDBCol>
 
           <MDBCol className="ColDivSignIn" md="6">
             <MDBCard className="CardDivSignIn">
@@ -311,6 +314,7 @@ class SignUp extends Component {
           <Copyright />
         </Box>
       </MDBContainer>
+      </div>
     );
   }
 }

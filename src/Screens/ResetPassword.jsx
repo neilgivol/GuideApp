@@ -11,6 +11,7 @@ import '../Css/passwordReset.css';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Swal from 'sweetalert2';
+import logoLast from '../Img/logoadvisor.png';
 
 function Copyright() {
     return (
@@ -111,9 +112,10 @@ class ResetPassword extends Component {
     }
     render() {
         return (
+            <div className="Cont">
             <MDBContainer>
                 <MDBRow className="RowDivSignIn">
-                    <MDBCol md="6" className="LogoDiv"><img alt="" src={logo} /></MDBCol>
+                    <MDBCol md="6" className="LogoDiv"><img alt="" src={logoLast} /></MDBCol>
                     <MDBCol className="ColDivSignIn" md="6">
                         <MDBCard className="CardDivSignIn">
                             <MDBCardBody className="mx-4 CardBody cardReset">
@@ -152,6 +154,7 @@ class ResetPassword extends Component {
                     <Copyright />
                 </Box>
             </MDBContainer>
+            </div>
 
         );
     }
