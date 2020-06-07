@@ -19,7 +19,8 @@ import MainFooter from "./Components/MainFooter";
 import FileUpload from "./Components/fileUpload.jsx";
 import $ from "jquery";
 import { toast, ToastContainer } from "react-toastify";
-import firebase from "./services/firebase";
+//import firebase from "./services/firebase";
+import {myFirestore, myStorage,myFirebase} from './services/firebase'
 import ReactLoading from "react-loading";
 import BuildTrip2 from "./pages/BuildTrip2";
 import BuildTrip from "./pages/BuildTrip";
@@ -77,7 +78,9 @@ class App extends Component {
             tourist: "",
             AttractionsArray: [],
             ListAttractions: [],
-            Cities:[]
+            Cities:[],
+            listAtt: [],
+            listAPITypes:[]
         };
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
@@ -96,6 +99,7 @@ class App extends Component {
         this.GetAllLanguages();
         this.GetAllTourists();
         this.GetAllCitiesFromGOVIL();
+       //this.listAPI();
         //this.ConnectFirebase();
         // this.GetGuidesFromSQL();
     }
@@ -111,6 +115,100 @@ class App extends Component {
         }
     };
 
+
+    listAPI=()=>{
+        let arraylist = JSON.parse(localStorage.getItem('ListApi'));
+        if (arraylist !== null) {
+            this.setState({
+                    listAPITypes:arraylist
+
+                })
+        }
+        else{
+            this.setState({
+            loading:true
+        })
+        let arr = ["beaches",
+                "museums",
+                "art",
+                "culture",
+                "history",
+                "wildlife",
+                "adrenaline",
+                "amusementparks",
+                "camping",
+                "climbing",
+                "diving",
+                "rafting",
+                "markets",
+                "poitype-Shopping_centre",
+                "wineries",
+                "zoos",
+                "poitype-Archaeological_site",
+                "district-old_city",
+                "character",
+                "!eatingout"];
+
+                this.setState({
+                    listAPITypes:arr
+
+                })
+
+             this.GetAllPlaces(arr);   
+        }   
+      
+    }
+     //Add Beaches
+     GetAttList = (number, cityName,arr) => {
+        let Type = "&tag_labels="+arr[0];
+      for (let i = 1; i < arr.length; i++) {
+          const element = arr[i];
+          if (element.startsWith('!')) {
+              Type+='&tag_labels='+element
+          }
+          else{
+            Type+= '|'+element;
+          }
+      }
+      console.log(Type);
+        let num = "";
+        if (number !== 0) {
+            num = "&offset=" + number;
+        }
+        $.ajax({
+            url: 'https://www.triposo.com/api/20200405/poi.json?location_id=' + cityName + '&fields=all&count=100' + num + Type + '&order_by=name&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p',
+            dataType: "json",
+            success: this.addMore
+        });
+
+    }
+    addMore = (data) => {
+        console.log(data);
+        for (let i = 0; i < data.results.length; i++) {
+            const element = data.results[i];
+            this.state.listAtt.push(element)
+        }
+        if (data.more) {
+            this.GetAttList(this.state.listAtt.length,'Israel',this.state.listAPITypes)
+        }
+
+        if (!data.more) {
+            console.log("FINISH")
+            console.log(this.state.listAtt);
+            this.setState({
+            loading:false
+        })
+        let arrtemp = this.state.listAtt;
+        // localStorage.setItem('ListApi', JSON.stringify(arrtemp));
+
+        }
+    }
+
+  
+
+    GetAllPlaces = (arr) => {
+                this.GetAttList(0, 'Israel',arr);
+    }
     //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות.
     navbarCheck = (nav) => {
         if (nav) {
@@ -784,7 +882,6 @@ this.setState({
             })
         })
             .then((res) => {
-                console.log("res=", res);
                 return res.json();
             })
             .then(
@@ -831,24 +928,31 @@ this.setState({
                     console.log("err post=", error);
                 }
             );
-        console.log(this.state.tempGuide);
     };
 
     //הוספה לfirebase
     AddtoFirebase = (e) => {
-        console.log("fff");
-        console.log(e);
+        // await myFirebase.auth().signInWithEmailAndPassword(e.Email, e.PasswordGuide)
+        // .then(async result => {
+        //     let user = result.user;
+        //     localStorage.setItem('idChat',user.uid);
+        //     if (user) {
+        //         console.log(user);
+        //     }
+        // })
+
         if (e !== null) {
             const name = e.FirstName + " " + e.LastName;
             const email = e.Email;
             const password = e.PasswordGuide;
             const URL = e.ProfilePic;
             try {
-                firebase
+                myFirebase
                     .auth()
                     .createUserWithEmailAndPassword(e.Email, e.PasswordGuide)
                     .then(async (result) => {
-                        firebase
+                        console.log(result);
+                        myFirebase
                             .firestore()
                             .collection("users")
                             .add({
@@ -868,8 +972,8 @@ this.setState({
                             });
                     });
             } catch (error) {
-                document.getElementById("1").innerHTML =
-                    "Error in singing up please try again";
+                // document.getElementById("1").innerHTML =
+                //     "Error in singing up please try again";
             }
             this.MoveToHomePage(e);
         } else {
@@ -886,7 +990,6 @@ this.setState({
     //  במידה וההתחברות הצליחה, המשתמש יועבר לעמוד הבית.
     MoveToHomePage = (e) => {
         this.setState({ isLoading: false });
-        console.log(e);
         if (e !== null) {
             localStorage.setItem("Guide", JSON.stringify(e));
             this.props.history.push({
@@ -1114,6 +1217,7 @@ this.setState({
                             local={this.state.local}
                             ListAttractions={this.state.ListAttractions}
                             tourist = {this.state.tourist}
+                            listAPI={this.state.listAtt}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>

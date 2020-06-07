@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 //import {Card} from 'react-bootstrap';
 //import firebase from '../services/firebase';
 import '../Css/ChatBox.css';
-import {myFirestore, myStorage} from '../services/firebase'
+import {myFirestore, myStorage,myFirebase} from '../services/firebase'
 import images from '../Themes/Images'
 import {AppString} from './Const'
 export default class ChatBox extends Component {
@@ -63,15 +63,17 @@ this.getListHistory()
         } else {
             this.groupChatId = `${this.currentPeerUser.id}-${this.currentUserId}`
         }
+        console.log(this.groupChatId);
 
         // Get history and listen new data added
-        this.removeListener = myFirestore
+        this.removeListener = myFirebase.firestore()
             .collection(AppString.NODE_MESSAGES)
             .doc(this.groupChatId)
             .collection(this.groupChatId)
             .onSnapshot(
                 snapshot => {
                     snapshot.docChanges().forEach(change => {
+                        console.log(change);
                         if (change.type === AppString.DOC_ADDED) {
                             this.listMessage.push(change.doc.data())
                         }
@@ -89,9 +91,9 @@ this.getListHistory()
     }
 
     onSendMessage = (content, type) => {
-        if (this.state.isShowSticker && type === 2) {
-            this.setState({isShowSticker: false})
-        }
+        // if (this.state.isShowSticker && type === 2) {
+        //     this.setState({isShowSticker: false})
+        // }
 
         if (content.trim() === '') {
             return
@@ -109,7 +111,7 @@ this.getListHistory()
             type: type
         }
 
-        myFirestore
+        myFirebase.firestore()
             .collection(AppString.NODE_MESSAGES)
             .doc(this.groupChatId)
             .collection(this.groupChatId)
@@ -145,7 +147,7 @@ this.getListHistory()
                 .valueOf()
                 .toString()
 
-            const uploadTask = myStorage
+            const uploadTask = firebase.storage()
                 .ref()
                 .child(timestamp)
                 .put(this.currentPhotoFile)

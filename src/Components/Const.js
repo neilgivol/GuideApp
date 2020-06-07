@@ -1,5 +1,5 @@
 export const AppString = {
-    ID: 'id',
+    ID: 'idChat',
     PHOTO_URL: 'photoUrl',
     NICKNAME: 'nickname',
     ABOUT_ME: 'aboutMe',

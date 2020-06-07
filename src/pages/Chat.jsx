@@ -5,13 +5,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import { Container } from "shards-react";
-import firebase from '../services/firebase';
 import '../Css/Chat.css';
 import ChatBox from '../Components/ChatBox';
 import WelcomeCard from '../Components/WelcomeCard';
 import profilePic from '../Img/Default-welcomer.png';
 import ReactLoading from 'react-loading'
 import TouristProfile from '../Components/TouristProfile';
+import moment from 'moment'
+import 'react-toastify/dist/ReactToastify.css'
+import {myFirestore, myStorage,myFirebase} from '../services/firebase'
+//import images from '../Themes/Images'
+//import './ChatBoard.css';
+import AppString from '../Components/Const'
+//import {AppString} from './../Const'
 class Chat extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +31,6 @@ class Chat extends Component {
             isLoading: true,
             tourist:this.props.tourist,
             openToruist:false
-
         }
         this.currentUserIdchat = localStorage.getItem("idChat")
         this.currentUserDocumentId = localStorage.getItem('docId');
@@ -41,12 +46,11 @@ class Chat extends Component {
         this.currentUserMessages = [];
     }
     ConnectFirebase = async () => {
-        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email, this.state.Guide.PasswordGuide)
+        await myFirebase.auth().signInWithEmailAndPassword(this.state.Guide.Email, this.state.Guide.PasswordGuide)
             .then(async result => {
                 let user = result.user;
-                console.log(result);
                 if (user) {
-                    await firebase.firestore().collection('users')
+                    await myFirestore.collection('users')
                         .where('id', "==", user.uid)
                         .get()
                         .then(function (querySnapshot) {
@@ -69,7 +73,7 @@ class Chat extends Component {
             Guide: guideTemp
         })
         if (this.currentUserDocumentId !== null) {
-            firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
+            myFirebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
                 .then((doc) => {
                     doc.data().messages.map((item) => {
                         this.currentUserMessages.push({
@@ -86,7 +90,7 @@ class Chat extends Component {
         else {
             this.ConnectFirebase();
             if (this.currentUserDocumentId !== null) {
-                firebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
+                myFirebase.firestore().collection('users').doc(this.currentUserDocumentId).get()
                     .then((doc) => {
                         doc.data().messages.map((item) => {
                             this.currentUserMessages.push({
@@ -104,7 +108,7 @@ class Chat extends Component {
 
     }
     getListUser = async () => {
-        const result = await firebase.firestore().collection('users').get();
+        const result = await myFirebase.firestore().collection('users').get();
         if (result.docs.length > 0) {
             let listUsers = []
             listUsers = [...result.docs]
@@ -117,7 +121,9 @@ class Chat extends Component {
                     name: item.data().name,
                     messages: item.data().messages,
                     URL: item.data().URL,
-                    type: item.data().type
+                    type: item.data().type,
+                    guideEmail: item.data().guideEmail
+
                 })
             })
         }
@@ -155,7 +161,6 @@ class Chat extends Component {
         this.state.displayedContactSwitchedNotification.forEach((el) => {
             if (el.notificationId.length > 0) {
                 if (el.notificationId !== itemId) {
-                    console.log(el);
                     this.notificationMessagesErase.push({
                         notificationId: el.notificationId,
                         number: el.number
@@ -168,7 +173,7 @@ class Chat extends Component {
     }
 
     updaterenderList = () => {
-        firebase.firestore().collection('users').doc(this.currentUserDocumentId).update(
+        myFirebase.firestore().collection('users').doc(this.currentUserDocumentId).update(
             { messages: this.notificationMessagesErase }
         )
         this.setState({
@@ -178,11 +183,11 @@ class Chat extends Component {
 
     renderListUser = () => {
         if (this.searchUsers.length > 0) {
-            console.log(this.searchUsers);
             let viewListUser = [];
             let classname = "";
             this.searchUsers.map((item) => {
-                if (item.id !== this.currentUserIdchat && item.id !== undefined) {
+                if (item.id !== this.currentUserIdchat && item.id !== undefined && item.type == "Tourist" && item.guideEmail === this.state.Guide.Email) {
+                    console.log(item);
                     classname = this.getClassnameforUserandNotification(item.id);
                     viewListUser.push(
                         <button

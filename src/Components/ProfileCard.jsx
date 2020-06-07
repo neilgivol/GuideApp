@@ -16,7 +16,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import firebase from '../services/firebase';
+import {myFirestore, myStorage,myFirebase} from '../services/firebase'
 
 
 
@@ -130,9 +130,6 @@ class ProfileCard extends Component {
             tempSum = parseInt(tempSum) + 20;
         }
 
-        console.log(this.state.expertise)
-        console.log(this.state.hobbies)
-
         this.setState({
             sum: tempSum
         })
@@ -221,7 +218,7 @@ class ProfileCard extends Component {
 
     }
     updateInFirebase = (result) => {
-        var user = firebase.auth().currentUser;
+        var user = myFirebase.auth().currentUser;
         user.updateProfile({
             photoURL: result.ProfilePic
         }).then(function () {

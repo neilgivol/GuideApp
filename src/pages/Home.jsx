@@ -22,7 +22,8 @@ import ReactLoading from 'react-loading';
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import { Container, Row, Col } from "shards-react";
-import firebase from '../services/firebase';
+import {myFirebase, myFirestore} from '../services/firebase'
+import {AppString} from '../Components/Const'
 
 // function Copyright() {
 //     return (
@@ -124,18 +125,20 @@ class Home extends Component {
             this.setState({
                 Guide: Guidetemp
             })
+            this.ConnectFirebase(Guidetemp);
+
         }
         else {
             this.setState({
                 Guide: this.props.location.state.GuideTemp
             })
+            this.ConnectFirebase(this.props.location.state.GuideTemp);
         }
 
     }
-    
     componentDidMount() {
-        console.log(this.state.Guide);
-        this.ConnectFirebase();
+        //this.onLoginPress();
+        //this.ConnectFirebase();
         this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
         this.GetAreasGuideList(this.state.Guide);
@@ -145,16 +148,17 @@ class Home extends Component {
             isLoading: false
         })
     }
-    ConnectFirebase = async () => {
-        await firebase.auth().signInWithEmailAndPassword(this.state.Guide.Email, this.state.Guide.PasswordGuide)
+    ConnectFirebase = async (Guide) => {
+        await myFirebase.auth().signInWithEmailAndPassword(Guide.Email, Guide.PasswordGuide)
             .then(async result => {
                 let user = result.user;
-                console.log(result);
+                localStorage.setItem('idChat',user.uid);
                 if (user) {
-                    await firebase.firestore().collection('users')
+                    await myFirebase.firestore().collection('users')
                         .where('id', "==", user.uid)
                         .get()
-                        .then(function (querySnapshot) {
+                        .then((querySnapshot) => {
+                            console.log(querySnapshot);
                             querySnapshot.forEach(function (doc) {
                                 console.log(doc.id);
                                 const currentdata = doc.data()
@@ -184,7 +188,6 @@ class Home extends Component {
                     this.setState({
                         linksfromSQL: result
                     })
-                    console.log(result);
                     //שולח את הרשימה לפונקציה שמסדרת את כל הלינקים
                     this.orgenzie(result);
                 },
@@ -196,7 +199,6 @@ class Home extends Component {
     //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
     orgenzie = (links) => {
         localStorage.setItem('linksFromSQL', JSON.stringify(links));
-        console.log(links);
         let templink = "";
         let temparraylinks = [];
         for (let j = 0; j < links.length; j++) {

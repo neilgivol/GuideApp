@@ -64,13 +64,14 @@ class BuildTrip2 extends Component {
             TypeNewAttraction: "",
             cities: this.props.cities,
             Regions: [],
-            all: [],
             allTotal: [],
             item: "",
             activeDrags: 0,
             tourist: this.props.tourist,
             listFavoriteTypes: [],
-            listFavoritesAtt: []
+            listFavoritesAtt: [],
+            numberLength: 0,
+         
         }
 
         let local = this.state.local;
@@ -90,69 +91,13 @@ class BuildTrip2 extends Component {
         })
         this.sortAlpha();
         this.GetTypesList();
-        //this.GetPlace(0,'Haifa');
         this.GetRegionsList();
-        //this.GetAllPlaces();
-        this.GetCitiesByAPI();
         console.log(this.props.tourist);
         console.log(this.state.types);
         this.AddLine();
     }
-    GetAllPlaces = () => {
-        for (let i = 0; i < this.props.cities.length; i++) {
-            const element = this.props.cities[i];
-            this.GetPlace(0, element.Name);
-        }
-    }
-    GetCitiesByAPI = () => {
-        $.ajax({
-            url: 'https://www.triposo.com/api/20200405/location.json?part_of=Israel&fields=all&count=100&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p',
-            dataType: "json",
-            success: this.newCities
-        });
-    }
-    newCities = (d) => {
-        console.log(d);
-    }
 
-    GetPlace = (number, cityName) => {
-        let num = "";
-        if (number !== 0) {
-            num = "&offset=" + number;
-        }
-        //https://www.triposo.com/api/20200405/poi.json?location_id=Haifa&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p
-        //let cityName = 'Haifa';
-        $.ajax({
-            url: 'https://www.triposo.com/api/20200405/poi.json?location_id=' + cityName + '&fields=all&count=100' + num + '&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p',
-            dataType: "json",
-            success: this.newList
-        });
-
-
-    }
-
-
-    newList = (d) => {
-        for (let i = 0; i < d.results.length; i++) {
-            const element = d.results[i];
-            this.state.all.push(element);
-        }
-        if (d.more) {
-            this.GetPlace(this.state.all.length, d.results[0].location_id)
-        }
-        if (!d.more) {
-            let newArray = {
-                Name: d.results[0].location_id,
-                arrayPlaces: this.state.all
-            }
-            this.setState({
-                all: []
-            })
-            this.state.allTotal.push(newArray);
-            console.log(this.state.allTotal);
-        }
-    }
-
+   
     GetTypesList = () => {
         let allTypes = [];
         for (let i = 0; i < this.state.AllAttractions.length; i++) {
@@ -341,10 +286,13 @@ class BuildTrip2 extends Component {
     AddAtractionToArray = () => {
         let AttractionPointInTrip = "";
         let tempArray = [];
-        for (let i = 0; i < this.state.ListTripArray.length; i++) {
+        if (this.state.ListTripArray !== null) {
+            for (let i = 0; i < this.state.ListTripArray.length; i++) {
             const element = this.state.ListTripArray[i];
             tempArray.push(element);
         }
+        }
+      
         if (this.state.newAttraction !== "") {
             let Name = this.state.newAttraction;
             let Region = this.state.RegionNewAttraction;
@@ -395,7 +343,7 @@ class BuildTrip2 extends Component {
         })
     }
     EditNewAttraction = () => {
-       let AttractionPointInTrip = "";
+        let AttractionPointInTrip = "";
         if (this.state.newAttraction !== "") {
             let Name = this.state.newAttraction;
             let Region = this.state.RegionNewAttraction;
@@ -425,7 +373,7 @@ class BuildTrip2 extends Component {
                 ToHour: this.state.AttractionToDate.toLocaleString()
             };
         }
-     
+
         let tempArray = [];
         for (let i = 0; i < this.state.ListTripArray.length; i++) {
             const element = this.state.ListTripArray[i];
@@ -467,14 +415,14 @@ class BuildTrip2 extends Component {
     AddMarkers = () => {
         return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker name={item.Point.AttractionName} position={item.Point.location} />) : null)
     }
-    AddLine = () =>{
+    AddLine = () => {
         let tempArray = [];
         for (let i = 0; i < this.state.ListTripArray.length; i++) {
             const element = this.state.ListTripArray[i];
             tempArray.push(element.Point.location)
         }
         this.setState({
-            pathCoordinates:tempArray
+            pathCoordinates: tempArray
         })
     }
     FilerArray = () => {
@@ -594,112 +542,112 @@ class BuildTrip2 extends Component {
                         {this.state.open ?
                             <Draggable  {...dragHandlers}>
                                 <div className="col-7 drag"> <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ open: !this.state.open })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
-                                <Form>  <Row form>
-                                    <Col md="12" className="form-group">
-                                        <h5>Filter By Type</h5>
-                                        <Col md="8">
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.types}
-                                                getOptionLabel={(option) => option}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                            />
+                                    <Form>  <Row form>
+                                        <Col md="12" className="form-group">
+                                            <h5>Filter By Type</h5>
+                                            <Col md="8">
+                                                <Autocomplete
+                                                    onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
+                                                    id="combo-box-demo"
+                                                    options={this.state.types}
+                                                    getOptionLabel={(option) => option}
+                                                    //style={}
+                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                />
+                                            </Col>
+                                            <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
                                         </Col>
-                                        <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
-                                    </Col>
 
-                                    <Col md="12" className="form-group">
-                                        <label htmlFor="feCityName">Attraction Name</label>
-                                        <Autocomplete
-                                            onChange={(event, value) => this.ifNull(value)} // prints the selected value
-                                            id="combo-box-demo"
-                                            options={this.state.AllAttractions}
-                                            groupBy={(option) => option.Region}
-                                            getOptionLabel={(option) => option.AttractionName}
-                                            //style={}
-                                            renderInput={(params) => <TextField {...params} margin="normal" label="Choose Attraction" variant="outlined" />}
-                                        />
-                                    </Col>
-                                    <Col md="12">
-                                        {this.state.SelectedAttraction ? this.renderAttractionDetails()
-                                            : null}
-                                    </Col>
-                                    {this.state.openNewAttraction ? <Col md="12">
-                                        <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
-                                        {this.state.AddNewAttractionBool ? <div>
-                                            <input
-                                                className="form-control"
-                                                name="NewAttraction"
-                                                id="newAttraction"
-                                                placeholder="Attraction Name"
-                                                value={this.state.newAttraction}
-                                                onChange={this.AddNewAttractionName}
-                                            />
+                                        <Col md="12" className="form-group">
+                                            <label htmlFor="feCityName">Attraction Name</label>
                                             <Autocomplete
-                                                onChange={(event, value) => this.listCities(value)} // prints the selected value
+                                                onChange={(event, value) => this.ifNull(value)} // prints the selected value
                                                 id="combo-box-demo"
-                                                options={this.state.Regions}
+                                                options={this.props.listAPI}
                                                 //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option}
+                                                getOptionLabel={(option) => option.name}
                                                 //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
+                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Attraction" variant="outlined" />}
                                             />
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.cities}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option.Name}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
-                                            />
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.types}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                            />
-                                        </div> : null}
-                                    </Col> : null}
-                                    {this.state.openDates ? <Col md="5" className="form-group">
-                                        <label htmlFor="feDate">From Date</label>
-                                        <DatePicker
-                                            excludeOutOfBoundsTimes
-                                            selected={this.state.AttractionFromDate}
-                                            onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
-                                            showTimeSelect
-                                            timeFormat="HH:mm"
-                                            timeIntervals={15}
-                                            timeCaption="time"
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                            minDate={new Date()}
-                                        />
-                                    </Col> : null}
-                                    {this.state.openDates ? <Col md="5" className="form-group">
-                                        <label htmlFor="feDate">To Date</label>
-                                        <DatePicker
-                                            selected={this.state.AttractionToDate}
-                                            onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
-                                            showTimeSelect
-                                            timeFormat="HH:mm"
-                                            timeIntervals={15}
-                                            timeCaption="time"
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                            //minTime={new Date()}
-                                            minDate={this.state.AttractionFromDate}
-                                        />
-                                    </Col> : null}
-                                </Row>
-                                    <Row>
-                                        <Col>
-                                            <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtractionToArray() }} >Add</Button>
                                         </Col>
-                                    </Row></Form></div></div>
+                                        <Col md="12">
+                                            {this.state.SelectedAttraction ? this.renderAttractionDetails()
+                                                : null}
+                                        </Col>
+                                        {this.state.openNewAttraction ? <Col md="12">
+                                            <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
+                                            {this.state.AddNewAttractionBool ? <div>
+                                                <input
+                                                    className="form-control"
+                                                    name="NewAttraction"
+                                                    id="newAttraction"
+                                                    placeholder="Attraction Name"
+                                                    value={this.state.newAttraction}
+                                                    onChange={this.AddNewAttractionName}
+                                                />
+                                                <Autocomplete
+                                                    onChange={(event, value) => this.listCities(value)} // prints the selected value
+                                                    id="combo-box-demo"
+                                                    options={this.state.Regions}
+                                                    //groupBy={(option) => option.Region}
+                                                    getOptionLabel={(option) => option}
+                                                    //style={}
+                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
+                                                />
+                                                <Autocomplete
+                                                    onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
+                                                    id="combo-box-demo"
+                                                    options={this.state.cities}
+                                                    //groupBy={(option) => option.Region}
+                                                    getOptionLabel={(option) => option.Name}
+                                                    //style={}
+                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
+                                                />
+                                                <Autocomplete
+                                                    onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
+                                                    id="combo-box-demo"
+                                                    options={this.state.types}
+                                                    //groupBy={(option) => option.Region}
+                                                    getOptionLabel={(option) => option}
+                                                    //style={}
+                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                />
+                                            </div> : null}
+                                        </Col> : null}
+                                        {this.state.openDates ? <Col md="5" className="form-group">
+                                            <label htmlFor="feDate">From Date</label>
+                                            <DatePicker
+                                                excludeOutOfBoundsTimes
+                                                selected={this.state.AttractionFromDate}
+                                                onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                timeCaption="time"
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                minDate={new Date()}
+                                            />
+                                        </Col> : null}
+                                        {this.state.openDates ? <Col md="5" className="form-group">
+                                            <label htmlFor="feDate">To Date</label>
+                                            <DatePicker
+                                                selected={this.state.AttractionToDate}
+                                                onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
+                                                showTimeSelect
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                timeCaption="time"
+                                                dateFormat="MMMM d, yyyy h:mm aa"
+                                                //minTime={new Date()}
+                                                minDate={this.state.AttractionFromDate}
+                                            />
+                                        </Col> : null}
+                                    </Row>
+                                        <Row>
+                                            <Col>
+                                                <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtractionToArray() }} >Add</Button>
+                                            </Col>
+                                        </Row></Form></div></div>
                             </Draggable>
                             : null}
                         {this.state.EditAttraction ?
@@ -707,20 +655,20 @@ class BuildTrip2 extends Component {
                                 <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ EditAttraction: !this.state.EditAttraction })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
                                     <Form>
                                         <Row form>
-                                        <Col md="12" className="form-group">
-                                        <h5>Filter By Type</h5>
-                                        <Col md="8">
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.types}
-                                                getOptionLabel={(option) => option}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                            />
-                                        </Col>
-                                        <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
-                                    </Col>
+                                            <Col md="12" className="form-group">
+                                                <h5>Filter By Type</h5>
+                                                <Col md="8">
+                                                    <Autocomplete
+                                                        onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
+                                                        id="combo-box-demo"
+                                                        options={this.state.types}
+                                                        getOptionLabel={(option) => option}
+                                                        //style={}
+                                                        renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                    />
+                                                </Col>
+                                                <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
+                                            </Col>
                                             <Col md="12" className="colAutoName form-group">
                                                 <label htmlFor="feCityName">Attraction Name</label>
                                                 <Autocomplete
@@ -734,77 +682,77 @@ class BuildTrip2 extends Component {
                                                 />
                                             </Col>
                                             <Col md="12">
-                                        {this.state.SelectedAttraction ? this.renderAttractionDetails()
-                                            : null}
-                                    </Col>
-                                    {this.state.openNewAttraction ? <Col md="12">
-                                        <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
-                                        {this.state.AddNewAttractionBool ? <div>
-                                            <input
-                                                className="form-control"
-                                                name="NewAttraction"
-                                                id="newAttraction"
-                                                placeholder="Attraction Name"
-                                                value={this.state.newAttraction}
-                                                onChange={this.AddNewAttractionName}
-                                            />
-                                            <Autocomplete
-                                                onChange={(event, value) => this.listCities(value)} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.Regions}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
-                                            />
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.cities}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option.Name}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
-                                            />
-                                            <Autocomplete
-                                                onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.state.types}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                            />
-                                        </div> : null}
-                                    </Col> : null}
-                                    {this.state.openDates ? <Col md="5" className="form-group">
-                                        <label htmlFor="feDate">From Date</label>
-                                        <DatePicker
-                                            excludeOutOfBoundsTimes
-                                            selected={this.state.AttractionFromDate}
-                                            onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
-                                            showTimeSelect
-                                            timeFormat="HH:mm"
-                                            timeIntervals={15}
-                                            timeCaption="time"
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                            minDate={new Date()}
-                                        />
-                                    </Col> : null}
-                                    {this.state.openDates ? <Col md="5" className="form-group">
-                                        <label htmlFor="feDate">To Date</label>
-                                        <DatePicker
-                                            selected={this.state.AttractionToDate}
-                                            onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
-                                            showTimeSelect
-                                            timeFormat="HH:mm"
-                                            timeIntervals={15}
-                                            timeCaption="time"
-                                            dateFormat="MMMM d, yyyy h:mm aa"
-                                            //minTime={new Date()}
-                                            minDate={this.state.AttractionFromDate}
-                                        />
-                                    </Col> : null}
+                                                {this.state.SelectedAttraction ? this.renderAttractionDetails()
+                                                    : null}
+                                            </Col>
+                                            {this.state.openNewAttraction ? <Col md="12">
+                                                <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
+                                                {this.state.AddNewAttractionBool ? <div>
+                                                    <input
+                                                        className="form-control"
+                                                        name="NewAttraction"
+                                                        id="newAttraction"
+                                                        placeholder="Attraction Name"
+                                                        value={this.state.newAttraction}
+                                                        onChange={this.AddNewAttractionName}
+                                                    />
+                                                    <Autocomplete
+                                                        onChange={(event, value) => this.listCities(value)} // prints the selected value
+                                                        id="combo-box-demo"
+                                                        options={this.state.Regions}
+                                                        //groupBy={(option) => option.Region}
+                                                        getOptionLabel={(option) => option}
+                                                        //style={}
+                                                        renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
+                                                    />
+                                                    <Autocomplete
+                                                        onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
+                                                        id="combo-box-demo"
+                                                        options={this.state.cities}
+                                                        //groupBy={(option) => option.Region}
+                                                        getOptionLabel={(option) => option.Name}
+                                                        //style={}
+                                                        renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
+                                                    />
+                                                    <Autocomplete
+                                                        onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
+                                                        id="combo-box-demo"
+                                                        options={this.state.types}
+                                                        //groupBy={(option) => option.Region}
+                                                        getOptionLabel={(option) => option}
+                                                        //style={}
+                                                        renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                    />
+                                                </div> : null}
+                                            </Col> : null}
+                                            {this.state.openDates ? <Col md="5" className="form-group">
+                                                <label htmlFor="feDate">From Date</label>
+                                                <DatePicker
+                                                    excludeOutOfBoundsTimes
+                                                    selected={this.state.AttractionFromDate}
+                                                    onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
+                                                    showTimeSelect
+                                                    timeFormat="HH:mm"
+                                                    timeIntervals={15}
+                                                    timeCaption="time"
+                                                    dateFormat="MMMM d, yyyy h:mm aa"
+                                                    minDate={new Date()}
+                                                />
+                                            </Col> : null}
+                                            {this.state.openDates ? <Col md="5" className="form-group">
+                                                <label htmlFor="feDate">To Date</label>
+                                                <DatePicker
+                                                    selected={this.state.AttractionToDate}
+                                                    onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
+                                                    showTimeSelect
+                                                    timeFormat="HH:mm"
+                                                    timeIntervals={15}
+                                                    timeCaption="time"
+                                                    dateFormat="MMMM d, yyyy h:mm aa"
+                                                    //minTime={new Date()}
+                                                    minDate={this.state.AttractionFromDate}
+                                                />
+                                            </Col> : null}
                                         </Row>
                                         <Row>
                                             <Col md="12">
@@ -837,7 +785,7 @@ class BuildTrip2 extends Component {
                             locationBoxStyle={'custom-style'}
                             locationListStyle={'custom-style-list'}
                             onChange={(e) => { this.setState({ place: e }) }} /> */}
-                        <LoadScript
+                        {/* <LoadScript
                           //libraries= 'places'
                             googleMapsApiKey='AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'>
                             <GoogleMap
@@ -864,7 +812,7 @@ class BuildTrip2 extends Component {
             />
                             </GoogleMap>
 
-                        </LoadScript>
+                        </LoadScript> */}
                     </div>
                 </div>
             </Container>
