@@ -12,9 +12,9 @@ var firebaseConfig = {
     measurementId: "G-9HKQNSD4JY"
   };
   firebase.initializeApp(firebaseConfig)
-  firebase.firestore().settings({
-      timestampsInSnapshots: true
-  })
+//   firebase.firestore().settings({
+//       timestampsInSnapshots: true
+//   })
   
   export const myFirebase = firebase
   export const myFirestore = firebase.firestore()

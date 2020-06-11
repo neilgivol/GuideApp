@@ -56,6 +56,7 @@ class Home extends Component {
             linksfromSQL: [],
             fullLinks: [],
             isLoading: true,
+            listOfTouristsGuide:[],
             options: [
                 {
                     id: 0,
@@ -98,8 +99,9 @@ class Home extends Component {
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api/';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api/';
+            this.apiUrl = 'https://proj.ruppin.ac.il/bgroup10/PROD/api/';
         }
+        this.currentUserMessages = [];
     }
     componentDidUpdate(PrevProps) {
         if (PrevProps.AllExpertises !== this.props.AllExpertises) {
@@ -144,21 +146,21 @@ class Home extends Component {
         this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
+        this.GetAllTouristsGuide();
         this.setState({
             isLoading: false
         })
     }
     ConnectFirebase = async (Guide) => {
-        await myFirebase.auth().signInWithEmailAndPassword(Guide.Email, Guide.PasswordGuide)
+        const output = await myFirebase.auth().signInWithEmailAndPassword(Guide.Email, Guide.PasswordGuide)
             .then(async result => {
                 let user = result.user;
                 localStorage.setItem('idChat',user.uid);
                 if (user) {
-                    await myFirebase.firestore().collection('users')
+                    await myFirestore.collection('users')
                         .where('id', "==", user.uid)
                         .get()
-                        .then((querySnapshot) => {
-                            console.log(querySnapshot);
+                        .then(function (querySnapshot) {
                             querySnapshot.forEach(function (doc) {
                                 console.log(doc.id);
                                 const currentdata = doc.data()
@@ -171,6 +173,59 @@ class Home extends Component {
             })
             console.log(localStorage.getItem('docId'));
             console.log(localStorage.getItem('idChat'));
+    }
+
+    GetAllTouristsGuide = () =>{
+        fetch(this.apiUrl + 'Guide_Tourist?email=' + this.state.Guide.Email, {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        listOfTouristsGuide: result
+                    });
+this.orgenizeTouristsGuide(result)                    
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+    orgenizeTouristsGuide=(res)=>{
+        for (let i = 0; i < res.length; i++) {
+            const tourist = res[i];
+            let HobbiesNames = [];
+            let ExpertisesNames = [];
+           for (let j = 0; j < tourist.Hobbies.length; j++) {
+               const touristHobby = tourist.Hobbies[j];
+               for (let h = 0; h < this.state.AllHobbies.length; h++) {
+                   const hobby = this.state.AllHobbies[h];
+                   if (hobby.id == touristHobby) {
+                    HobbiesNames.push(hobby.name)
+                   }
+               }
+           }
+           for (let j = 0; j < tourist.Expertises.length; j++) {
+               const touristExpertise = tourist.Expertises[j];
+               for (let h = 0; h < this.state.AllExpertises.length; h++) {
+                   const expertise = this.state.AllExpertises[h];
+                   if (expertise.id == touristExpertise) {
+                    ExpertisesNames.push(expertise.name)
+                   }
+               }
+           }
+           tourist.HobbiesNames = HobbiesNames;
+           tourist.ExpertisesNames = ExpertisesNames;
+        }
+        console.log(res);
+        localStorage.setItem('ListTourists',JSON.stringify(res));
+
     }
     //מביא את הלינקים של המדריך הספציפי
     getLinksFromSQL = (TempGuide) => {

@@ -8,6 +8,8 @@ import '../Css/ChatBox.css';
 import {myFirestore, myStorage,myFirebase} from '../services/firebase'
 import images from '../Themes/Images'
 import {AppString} from './Const'
+import pic from '../Img/Default-welcomer.png';
+import TouristProfile from '../Components/TouristProfile';
 export default class ChatBox extends Component {
     constructor(props){
         super(props);
@@ -16,7 +18,19 @@ export default class ChatBox extends Component {
             isShowStriker:false,
             inputValue:"",
             isLoading: false,
+            tourist:"",
+            showTourist:false,
+            navbar: this.props.navbarOpenCheck,
+            local:this.props.local,
+            LanguagesListOrgenized:this.props.LanguagesListOrgenized,
+            AllHobbies:this.props.AllHobbies,
+            AllExpertises:this.props.AllExpertises
 
+        }
+        let local = this.state.local;
+        this.apiUrl = "http://localhost:49948/api/";
+        if (!local) {
+            this.apiUrl = "https://proj.ruppin.ac.il/bgroup10/PROD/api/";
         }
         this.currentUserId = localStorage.getItem("idChat")
         this.currentUserDocumentId = localStorage.getItem('docId');
@@ -29,7 +43,10 @@ export default class ChatBox extends Component {
     }
     componentWillReceiveProps(newProps){
         if(newProps.currentPeerUser){
+            this.setState({showTourist:false})
 this.currentPeerUser = newProps.currentPeerUser
+console.log(this.currentPeerUser)
+this.GetAllTourists(this.currentPeerUser.email);
 this.getListHistory()
         }
 
@@ -40,6 +57,7 @@ this.getListHistory()
     componentDidMount(){
         this.getListHistory();
         console.log(this.props.currentPeerUser);
+        this.GetAllTourists(this.props.currentPeerUser.email);
     }
     componentWillUnmount(){
         if (this.removeListener) {
@@ -72,13 +90,16 @@ this.getListHistory()
             .collection(this.groupChatId)
             .onSnapshot(
                 snapshot => {
+                    console.log(snapshot);
                     snapshot.docChanges().forEach(change => {
-                        console.log(change);
                         if (change.type === AppString.DOC_ADDED) {
                             this.listMessage.push(change.doc.data())
+                            console.log("push messages");
+                            console.log(this.listMessage);
                         }
                     })
                     this.setState({isLoading: false})
+                    console.log("dddd");
                 },
                 err => {
                     this.props.showToast(0, err.toString())
@@ -184,15 +205,77 @@ this.getListHistory()
         }
     }
 
+    GetAllTourists = (email) => {
+        console.log(email);
+        fetch(this.apiUrl + "Tourist?email=" + email, {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.setState({
+                        tourist: result
+                    });
+                    this.OrgenizeTouristDetails(result);
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    };
+    OrgenizeTouristDetails = (tourist) => {
+        tourist.HobbiesNames = [];
+        tourist.ExpertisesNames = [];
+        for (let i = 0; i < this.state.LanguagesListOrgenized.length; i++) {
+            const element = this.state.LanguagesListOrgenized[i];
+            if (element.id === tourist.LanguageCode) {
+                let lang = element.label.split(" / ");
+                tourist.Language = lang[0];
+            }
+        }
+        for (let i = 0; i < tourist.Hobbies.length; i++) {
+            const hobby = tourist.Hobbies[i];
+            for (let j = 0; j < this.state.AllHobbies.length; j++) {
+                const orgenizeHobby = this.state.AllHobbies[j];
+                if (hobby === orgenizeHobby.id) {
+                    tourist.HobbiesNames.push(orgenizeHobby);
+                }
+            }
+        }
+        for (let i = 0; i < tourist.Expertises.length; i++) {
+            const expertise = tourist.Expertises[i];
+            for (let j = 0; j < this.state.AllExpertises.length; j++) {
+                const orgenizeExpertise = this.state.AllExpertises[j];
+                if (expertise === orgenizeExpertise.id) {
+                    tourist.ExpertisesNames.push(orgenizeExpertise);
+                }
+            }
+        }
+        this.setState({
+            tourist: tourist
+        });
+    };
+    showProfileTourist = () =>{
+        this.setState({
+            showTourist:!this.state.showTourist
+        })
+    }
 
     render() {
         return (
             <div className="viewChatBoard">
                 {/* Header */}
-                <div className="headerChatBoard">
+                <div className="headerChatBoard" onClick={()=>{this.showProfileTourist()}}
+>
                     <img
                         className="viewAvatarItem"
-                        src={this.currentPeerUser.photoURL}
+                        src={pic}
                         alt="icon avatar"
                     />
                     <span className="textHeaderChatBoard">
@@ -267,6 +350,14 @@ this.getListHistory()
                         />
                     </div>
                 ) : null}
+                {this.state.showTourist ? (
+                        <div>
+                            <TouristProfile
+                                navbarOpenCheck={this.state.navbar} 
+                                tourist={this.state.tourist}
+                            />
+                        </div>
+                    ) : null}
             </div>
         )
     }

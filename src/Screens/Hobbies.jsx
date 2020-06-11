@@ -23,7 +23,7 @@ class Hobbies extends Component {
         let local = this.state.local;
         this.apiUrl = 'http://localhost:49948/api';
         if (!local) {
-            this.apiUrl = 'http://proj.ruppin.ac.il/bgroup10/PROD/api';
+            this.apiUrl = 'https://proj.ruppin.ac.il/bgroup10/PROD/api';
         }
     }
     componentDidMount() {

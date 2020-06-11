@@ -140,8 +140,7 @@ class TouristProfile extends Component {
                                         noValidate
                                         onSubmit={this.UpdateDetails}>
                                         <Row>
-                                            <Col
-                                                md="12"
+                                            <div
                                                 className="form-group hobbiesDivList">
                                                 <h2>Hobbies:</h2>
                                                 <div className="HobbiesDivTourist">
@@ -168,7 +167,7 @@ class TouristProfile extends Component {
                                                         )
                                                     )}
                                                 </div>
-                                            </Col>
+                                            </div>
                                         </Row>
                                         <Row>
                                             <Col

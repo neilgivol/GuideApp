@@ -3,15 +3,12 @@ import "./App.css";
 import SignIn from "./Screens/SignIn";
 import { Switch, Route, withRouter } from "react-router-dom";
 import SignUp from "./Screens/SignUp";
-//import { Router } from '@reach/router'
 import Chat from "./pages/Chat.jsx";
 import Portfolio from "./pages/Portfolio.jsx";
 import Home from "./pages/Home.jsx";
 import ResponsiveNavigation from "./Components/ResponsiveNavigation.jsx";
 import ResetPassword from "./Screens/ResetPassword";
-//import logo from './logo.svg';
 import ProfileDetails from "./Screens/ProfileDetails";
-//import Area from './Screens/Area';
 import menu from "./Img/menu.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
@@ -19,15 +16,14 @@ import MainFooter from "./Components/MainFooter";
 import FileUpload from "./Components/fileUpload.jsx";
 import $ from "jquery";
 import { toast, ToastContainer } from "react-toastify";
-//import firebase from "./services/firebase";
-import {myFirestore, myStorage,myFirebase} from './services/firebase'
+import { myFirestore, myStorage, myFirebase } from "./services/firebase";
 import ReactLoading from "react-loading";
 import BuildTrip2 from "./pages/BuildTrip2";
 import BuildTrip from "./pages/BuildTrip";
 import Swal from "sweetalert2";
 import ChatRealTime from "./pages/ChatRealTime";
 import TouristProfile from "./Components/TouristProfile";
-
+import Contact from './pages/Contact';
 const navLinks = [
     {
         text: "Profile",
@@ -45,14 +41,9 @@ const navLinks = [
         icon: "ion-ios-map"
     },
     {
-        text: "Trips2",
-        path: "/BuildTrip",
-        icon: "ion-ios-map"
-    },
-    {
-        text: "Tourist Lists",
-        path: "/blog",
-        icon: "ion-ios-people"
+        text: "Contact Us",
+        path: "/contact",
+        icon: "ion-ios-mail"
     }
 ];
 class App extends Component {
@@ -78,30 +69,44 @@ class App extends Component {
             tourist: "",
             AttractionsArray: [],
             ListAttractions: [],
-            Cities:[],
+            Cities: [],
             listAtt: [],
-            listAPITypes:[]
+            listAPITypes: []
         };
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
         if (!local) {
-            this.apiUrl = "http://proj.ruppin.ac.il/bgroup10/PROD/api/";
+            this.apiUrl = "https://proj.ruppin.ac.il/bgroup10/PROD/api/";
         }
     }
     //מביא את כל האזורים, התחביבים וההתמחויות שנמצאות במסד נתונים
     componentDidMount() {
-        this.GetAllAreas();
         this.GetAllHobbies();
         this.GetAllExpertises();
         this.GetGuidesGOVFromSQL();
-        this.GetAllAttractionsFromSQL();
-        // this.GetAllAttractions();
+        //this.GetAllAttractionsFromSQL();
+        let temparr = JSON.parse(localStorage.getItem("AllAtt"));
+        console.log(temparr);
+        if (temparr !== null) {
+            this.setState({
+                Attractions: temparr
+            });
+        } else {
+            this.GetAllAttractions();
+        }
+        let citiesLocal = JSON.parse(localStorage.getItem("cities"))
+        console.log(citiesLocal)
+        if (citiesLocal !== null) {
+            this.setState({
+                Cities:citiesLocal
+            })
+        }
+        else{
+            this.GetAllCitiesFromGOVIL();
+        }
+
         this.GetAllLanguages();
-        this.GetAllTourists();
-        this.GetAllCitiesFromGOVIL();
-       //this.listAPI();
-        //this.ConnectFirebase();
-        // this.GetGuidesFromSQL();
+        //this.listAPI();
     }
     showToast = (type, message) => {
         switch (type) {
@@ -115,20 +120,18 @@ class App extends Component {
         }
     };
 
-
-    listAPI=()=>{
-        let arraylist = JSON.parse(localStorage.getItem('ListApi'));
+    listAPI = () => {
+        let arraylist = JSON.parse(localStorage.getItem("ListApi"));
         if (arraylist !== null) {
             this.setState({
-                    listAPITypes:arraylist
-
-                })
-        }
-        else{
+                listAPITypes: arraylist
+            });
+        } else {
             this.setState({
-            loading:true
-        })
-        let arr = ["beaches",
+                loading: true
+            });
+            let arr = [
+                "beaches",
                 "museums",
                 "art",
                 "culture",
@@ -147,68 +150,72 @@ class App extends Component {
                 "poitype-Archaeological_site",
                 "district-old_city",
                 "character",
-                "!eatingout"];
+                "!eatingout"
+            ];
 
-                this.setState({
-                    listAPITypes:arr
+            this.setState({
+                listAPITypes: arr
+            });
 
-                })
-
-             this.GetAllPlaces(arr);   
-        }   
-      
-    }
-     //Add Beaches
-     GetAttList = (number, cityName,arr) => {
-        let Type = "&tag_labels="+arr[0];
-      for (let i = 1; i < arr.length; i++) {
-          const element = arr[i];
-          if (element.startsWith('!')) {
-              Type+='&tag_labels='+element
-          }
-          else{
-            Type+= '|'+element;
-          }
-      }
-      console.log(Type);
+            this.GetAllPlaces(arr);
+        }
+    };
+    //Add Beaches
+    GetAttList = (number, cityName, arr) => {
+        let Type = "&tag_labels=" + arr[0];
+        for (let i = 1; i < arr.length; i++) {
+            const element = arr[i];
+            if (element.startsWith("!")) {
+                Type += "&tag_labels=" + element;
+            } else {
+                Type += "|" + element;
+            }
+        }
+        console.log(Type);
         let num = "";
         if (number !== 0) {
             num = "&offset=" + number;
         }
         $.ajax({
-            url: 'https://www.triposo.com/api/20200405/poi.json?location_id=' + cityName + '&fields=all&count=100' + num + Type + '&order_by=name&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p',
+            url:
+                "https://www.triposo.com/api/20200405/poi.json?location_id=" +
+                cityName +
+                "&fields=all&count=100" +
+                num +
+                Type +
+                "&order_by=name&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p",
             dataType: "json",
             success: this.addMore
         });
-
-    }
+    };
     addMore = (data) => {
         console.log(data);
         for (let i = 0; i < data.results.length; i++) {
             const element = data.results[i];
-            this.state.listAtt.push(element)
+            this.state.listAtt.push(element);
         }
         if (data.more) {
-            this.GetAttList(this.state.listAtt.length,'Israel',this.state.listAPITypes)
+            this.GetAttList(
+                this.state.listAtt.length,
+                "Israel",
+                this.state.listAPITypes
+            );
         }
 
         if (!data.more) {
-            console.log("FINISH")
+            console.log("FINISH");
             console.log(this.state.listAtt);
             this.setState({
-            loading:false
-        })
-        let arrtemp = this.state.listAtt;
-        // localStorage.setItem('ListApi', JSON.stringify(arrtemp));
-
+                loading: false
+            });
+            let arrtemp = this.state.listAtt;
+            // localStorage.setItem('ListApi', JSON.stringify(arrtemp));
         }
-    }
-
-  
+    };
 
     GetAllPlaces = (arr) => {
-                this.GetAttList(0, 'Israel',arr);
-    }
+        this.GetAttList(0, "Israel", arr);
+    };
     //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות.
     navbarCheck = (nav) => {
         if (nav) {
@@ -221,62 +228,7 @@ class App extends Component {
             });
         }
     };
-    GetAllTourists = () => {
-        let id = 204;
-        fetch(this.apiUrl + "Tourist/GetDetails/" + id, {
-            method: "GET",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8"
-            })
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then(
-                (result) => {
-                    this.setState({
-                        tourist: result
-                    });
-                    this.OrgenizeTouristDetails(result);
-                    console.log(result);
-                },
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    };
-    OrgenizeTouristDetails = (tourist) => {
-        tourist.HobbiesNames = [];
-        tourist.ExpertisesNames = [];
-        for (let i = 0; i < this.state.LanguagesListOrgenized.length; i++) {
-            const element = this.state.LanguagesListOrgenized[i];
-            if (element.id === tourist.LanguageCode) {
-                let lang = element.label.split(" / ");
-                tourist.Language = lang[0];
-            }
-        }
-        for (let i = 0; i < tourist.Hobbies.length; i++) {
-            const hobby = tourist.Hobbies[i];
-            for (let j = 0; j < this.state.AllHobbies.length; j++) {
-                const orgenizeHobby = this.state.AllHobbies[j];
-                if (hobby === orgenizeHobby.id) {
-                    tourist.HobbiesNames.push(orgenizeHobby);
-                }
-            }
-        }
-        for (let i = 0; i < tourist.Expertises.length; i++) {
-            const expertise = tourist.Expertises[i];
-            for (let j = 0; j < this.state.AllExpertises.length; j++) {
-                const orgenizeExpertise = this.state.AllExpertises[j];
-                if (expertise === orgenizeExpertise.id) {
-                    tourist.ExpertisesNames.push(orgenizeExpertise);
-                }
-            }
-        }
-        this.setState({
-            tourist: tourist
-        });
-    };
+
     //?????
     GetGuidesFromSQL = () => {
         fetch(this.apiUrl, {
@@ -298,15 +250,16 @@ class App extends Component {
                     console.log("err post=", error);
                 }
             );
-        let tempArray = this.state.guides;
-        return tempArray;
     };
 
     //מביא את כל האטרקציות שבאתר משרד התיירות
     GetAllAttractions = () => {
+        this.setState({
+            isLoading: true
+        });
         var data = {
             resource_id: "85e01a85-a1b5-4206-97ce-ba1162cbcd08", // the resource id
-            limit: 700
+            limit: 800
         };
         $.ajax({
             url: "https://data.gov.il/api/action/datastore_search",
@@ -315,24 +268,26 @@ class App extends Component {
             success: this.AddAtractions
         });
     };
-    GetAllCitiesFromGOVIL=()=>{
+    GetAllCitiesFromGOVIL = () => {
+      
         var data = {
-            resource_id: 'eb548bfa-a7ba-45c4-be7d-2e8271f55f70', // the resource id
-            limit: 100
+            resource_id: "eb548bfa-a7ba-45c4-be7d-2e8271f55f70", // the resource id
+            limit: 150
         };
         $.ajax({
-            url: 'https://data.gov.il/api/action/datastore_search',
+            url: "https://data.gov.il/api/action/datastore_search",
             data: data,
             dataType: "json",
             success: this.AddCities
         });
-    }
-    AddCities = (data) =>{
+    };
+    AddCities = (data) => {
         console.log(data.result.records);
-this.setState({
-    Cities:data.result.records
-})        
-    }
+        localStorage.setItem('cities',JSON.stringify(data.result.records))
+        this.setState({
+            Cities: data.result.records
+        });
+    };
     //מוסיף את רשימת האטרקציות מאתר משרד התיירות
     AddAtractions = (data) => {
         console.log(data);
@@ -425,57 +380,44 @@ this.setState({
             }
             NewArray.push(point);
         }
-        console.log(NewArray);
         this.setState({
             Attractions: NewArray
         });
-        // if (this.state.AttractionsArray.length === 0) {
-        //     this.postAttractionsToSQL(NewArray);
-        // }
-        // else{
-        //     console.log(this.state.AttractionsArray)
-        //      let tempArray=[];
-        //     let exist = false;
-        // for (let i = 0; i < NewArray.length; i++) {
-        //     const apiattraction = NewArray[i];
-        //     for (let j = 0; j < this.state.AttractionsArray.length; j++) {
-        //         const sqlattraction = this.state.AttractionsArray[j];
-        //     }
-        //     if (!exist) {
-        //     }
-        // }
-        // console.log(tempArray);
-        // }
+        console.log(NewArray);
+        localStorage.setItem("AllAtt", JSON.stringify(NewArray));
 
         this.setState({
             isLoading: false
         });
     };
 
-    postAttractionsToSQL = (attractions) => {
-        fetch(this.apiUrl + "BuildTrip/AddAllAtractions", {
-            method: "POST",
-            body: JSON.stringify(attractions),
-            headers: new Headers({
-                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
-            })
-        })
-            .then((res) => {
-                console.log("res=", res);
-                return res.json();
-            })
-            .then(
-                (result) => {
-                    console.log(result);
-                },
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    };
+    // postAttractionsToSQL = (attractions) => {
+    //     fetch(this.apiUrl + "BuildTrip/AddAllAtractions", {
+    //         method: "POST",
+    //         body: JSON.stringify(attractions),
+    //         headers: new Headers({
+    //             "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
+    //         })
+    //     })
+    //         .then((res) => {
+    //             console.log("res=", res);
+    //             return res.json();
+    //         })
+    //         .then(
+    //             (result) => {
+    //                 console.log(result);
+    //             },
+    //             (error) => {
+    //                 console.log("err post=", error);
+    //             }
+    //         );
+    // };
 
     //מביא את כל המדריכים שבאתר משרד התיירות
     GetGuidesGOVFromSQL = () => {
+        // this.setState({
+        //     isLoading: true
+        // });
         var data = {
             resource_id: "5f5afc43-639a-4216-8286-d146a8e048fe", // the resource id
             limit: 10000
@@ -493,6 +435,7 @@ this.setState({
         this.setState({
             GuidesFromGovIL: data.result.records
         });
+
     };
 
     //בדיקה אם המדריך ממשרד התיירות נרשם באפליקציה או לא
@@ -913,7 +856,6 @@ this.setState({
             })
         })
             .then((res) => {
-                console.log("res=", res);
                 return res.json();
             })
             .then(
@@ -932,15 +874,6 @@ this.setState({
 
     //הוספה לfirebase
     AddtoFirebase = (e) => {
-        // await myFirebase.auth().signInWithEmailAndPassword(e.Email, e.PasswordGuide)
-        // .then(async result => {
-        //     let user = result.user;
-        //     localStorage.setItem('idChat',user.uid);
-        //     if (user) {
-        //         console.log(user);
-        //     }
-        // })
-
         if (e !== null) {
             const name = e.FirstName + " " + e.LastName;
             const email = e.Email;
@@ -1195,6 +1128,12 @@ this.setState({
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             Guide={this.state.tempGuide}
                             tourist={this.state.tourist}
+                            local={this.state.local}
+                            LanguagesListOrgenized={
+                                this.state.LanguagesListOrgenized
+                            }
+                            AllExpertises={this.state.AllExpertises}
+                            AllHobbies={this.state.AllHobbies}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
@@ -1216,8 +1155,9 @@ this.setState({
                             Guide={this.state.tempGuide}
                             local={this.state.local}
                             ListAttractions={this.state.ListAttractions}
-                            tourist = {this.state.tourist}
+                            tourist={this.state.tourist}
                             listAPI={this.state.listAtt}
+                            GetCities={this.GetAllCitiesFromGOVIL}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
@@ -1240,7 +1180,7 @@ this.setState({
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
-                    <Route path="/blog">
+                    <Route path="/contact">
                         <ResponsiveNavigation
                             navbarCheckFunc={this.navbarCheck}
                             navLinks={navLinks}
@@ -1249,7 +1189,7 @@ this.setState({
                             hoverBackground="#A2D4FF"
                             linkColor="#1988ff"
                         />
-                        <TouristProfile
+                        <Contact
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             //user={this.state.tempGuide}
                             tourist={this.state.tourist}

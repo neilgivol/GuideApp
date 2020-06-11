@@ -29,8 +29,9 @@
 .divProfileTourist{
 position: absolute;
 top:7%;
-left:30%;
+left:7%;
 opacity: 0.9;
+max-width: 90%;
 }
 .divProfileTourist .myForm{
     width: 100%;
@@ -39,12 +40,16 @@ opacity: 0.9;
 .colImgDiv{
     text-align: center;
 }
+.NameToruistDiv{
+    background-color: rgba(0, 128, 255, 0.612);
+}
 .NameToruistDiv h2{
     /* margin-left: 8%;
     margin-bottom: 3%;
     margin-top: 3%; */
 }
 .HobbiesDivTourist{
+    flex-wrap: wrap;
     display: flex;
 }
 .HobbiesDivTourist .CardItem{

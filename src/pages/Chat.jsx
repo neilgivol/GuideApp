@@ -30,7 +30,8 @@ class Chat extends Component {
             discplayedContacts: [],
             isLoading: true,
             tourist:this.props.tourist,
-            openToruist:false
+            openToruist:false,
+            local:this.props.local
         }
         this.currentUserIdchat = localStorage.getItem("idChat")
         this.currentUserDocumentId = localStorage.getItem('docId');
@@ -118,6 +119,7 @@ class Chat extends Component {
                     key: index,
                     documentKey: item.id,
                     id: item.data().id,
+                    email: item.data().email,
                     name: item.data().name,
                     messages: item.data().messages,
                     URL: item.data().URL,
@@ -180,13 +182,13 @@ class Chat extends Component {
             displayedContactSwitchedNotification: this.notificationMessagesErase
         })
     }
-
+// && item.guideEmail === this.state.Guide.Email
     renderListUser = () => {
         if (this.searchUsers.length > 0) {
             let viewListUser = [];
             let classname = "";
             this.searchUsers.map((item) => {
-                if (item.id !== this.currentUserIdchat && item.id !== undefined && item.type == "Tourist" && item.guideEmail === this.state.Guide.Email) {
+                if (item.id !== this.currentUserIdchat && item.id !== undefined && item.type == "Tourist") {
                     console.log(item);
                     classname = this.getClassnameforUserandNotification(item.id);
                     viewListUser.push(
@@ -264,7 +266,7 @@ class Chat extends Component {
                         </div>
                         <div className="viewBoard">
                             {this.state.currentPeerUser ? (
-                                <ChatBox currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
+                                <ChatBox AllExpertises={this.props.AllExpertises} AllHobbies={this.props.AllHobbies} LanguagesListOrgenized={this.props.LanguagesListOrgenized} local={this.props.local} currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} navbarOpenCheck={this.state.navbar} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
                                     currentUserPhoto={this.state.Guide.ProfilePic}
                                 />
                                 )}
@@ -278,14 +280,6 @@ class Chat extends Component {
                                 color={'#203152'}
                                 height={'3%'}
                                 width={'3%'}
-                            />
-                        </div>
-                    ) : null}
-                     {this.state.openToruist ? (
-                        <div>
-                            <TouristProfile
-                                navbarOpenCheck={this.state.navbar} 
-                                tourist={this.state.tourist}
                             />
                         </div>
                     ) : null}

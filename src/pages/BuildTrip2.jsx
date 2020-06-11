@@ -17,6 +17,7 @@ import { ItemContent } from 'semantic-ui-react';
 import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
 import { GoogleComponent } from 'react-google-location'
 import { Input } from '@material-ui/core';
+import Swal from "sweetalert2";
 import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
 const defaultCenter = {
     lat: 32.088780, lng: 34.854863
@@ -52,7 +53,7 @@ class BuildTrip2 extends Component {
             AllAttractions: this.props.Attractions,
             local: this.props.local,
             SelectedAttraction: "",
-            ListTripArray: this.props.ListAttractions,
+            ListTripArray: [],
             types: [],
             SelectedType: "",
             lastDate: "",
@@ -71,13 +72,17 @@ class BuildTrip2 extends Component {
             listFavoriteTypes: [],
             listFavoritesAtt: [],
             numberLength: 0,
-         
+            TouristsList: [],
+            ChooseTourist: false,
+            chosen: '',
+            TripTourist: ''
+
         }
 
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
         if (!local) {
-            this.apiUrl = "http://proj.ruppin.ac.il/bgroup10/PROD/api/";
+            this.apiUrl = "https://proj.ruppin.ac.il/bgroup10/PROD/api/";
         }
         this.toggle = this.toggle.bind(this);
         this.EditNewAttraction = this.EditNewAttraction.bind(this);
@@ -85,19 +90,26 @@ class BuildTrip2 extends Component {
     }
 
     componentDidMount() {
-        const ListTripArray = JSON.parse(localStorage.getItem('ListTripArray'));
-        this.setState({
-            ListTripArray: ListTripArray,
-        })
+        console.log(this.props.cities)
+        let g = JSON.parse(localStorage.getItem('cities'))
+        if (g == null) {
+            this.props.GetCities();
+        }
+        this.GetTouristLists();
         this.sortAlpha();
         this.GetTypesList();
         this.GetRegionsList();
-        console.log(this.props.tourist);
-        console.log(this.state.types);
         this.AddLine();
+
+    }
+    GetTouristLists = () => {
+        let arr = [];
+        arr = JSON.parse(localStorage.getItem('ListTourists'));
+        this.setState({
+            TouristsList: arr
+        })
     }
 
-   
     GetTypesList = () => {
         let allTypes = [];
         for (let i = 0; i < this.state.AllAttractions.length; i++) {
@@ -138,13 +150,17 @@ class BuildTrip2 extends Component {
         this.setState({
             Regions: uniqueTags
         })
+        console.log(uniqueTags)
+    }
+
+    filterTouristHandE = (value) => {
         let HobbiesAndExpertises = [];
-        for (let i = 0; i < this.props.tourist.HobbiesNames.length; i++) {
-            const element = this.props.tourist.HobbiesNames[i];
+        for (let i = 0; i < value.HobbiesNames.length; i++) {
+            const element = value.HobbiesNames[i];
             HobbiesAndExpertises.push(element);
         }
-        for (let i = 0; i < this.props.tourist.ExpertisesNames.length; i++) {
-            const element = this.props.tourist.ExpertisesNames[i];
+        for (let i = 0; i < value.ExpertisesNames.length; i++) {
+            const element = value.ExpertisesNames[i];
             HobbiesAndExpertises.push(element);
         }
         // 4: "Public Parks & Gardens"
@@ -156,7 +172,7 @@ class BuildTrip2 extends Component {
         let tempArray = [];
         for (let i = 0; i < HobbiesAndExpertises.length; i++) {
             const element = HobbiesAndExpertises[i];
-            switch (element.name) {
+            switch (element) {
                 case "Theater":
                     tempArray.push("Amusement and Adventure")
                     break;
@@ -184,6 +200,7 @@ class BuildTrip2 extends Component {
                     tempArray.push("Amusement and Adventure")
                     break;
                 case "Cooking":
+                    tempArray.push("Wineries")
                     break;
                 case "Beach":
                     tempArray.push("Beaches")
@@ -241,9 +258,7 @@ class BuildTrip2 extends Component {
         }
         console.log(tempArray);
         console.log(HobbiesAndExpertises)
-        console.log(uniqueTags)
     }
-
 
     toggle = () => {
         this.setState({
@@ -284,36 +299,69 @@ class BuildTrip2 extends Component {
 
     }
     AddAtractionToArray = () => {
+        // if (this.state.AttractionFromDate  || this.state.AttractionToDate) {
+
+        // }
+        let TripTourist = "";
         let AttractionPointInTrip = "";
         let tempArray = [];
         if (this.state.ListTripArray !== null) {
             for (let i = 0; i < this.state.ListTripArray.length; i++) {
-            const element = this.state.ListTripArray[i];
-            tempArray.push(element);
-        }
-        }
-      
-        if (this.state.newAttraction !== "") {
-            let Name = this.state.newAttraction;
-            let Region = this.state.RegionNewAttraction;
-            let AreaName = this.state.CityNewAttraction;
-            let location = {
-                lng: this.state.CityNewAttraction.X,
-                lat: this.state.CityNewAttraction.Y
-            };
-            let type = this.state.TypeNewAttraction;
-            let p = {
-                AttractionName: Name,
-                AreaName: AreaName.Name,
-                location: location,
-                Attraction_Type: type,
-                Region: Region
+                const element = this.state.ListTripArray[i];
+                tempArray.push(element);
             }
-            AttractionPointInTrip = {
-                Point: p,
-                FromHour: this.state.AttractionFromDate.toLocaleString(),
-                ToHour: this.state.AttractionToDate.toLocaleString()
-            };
+        }
+
+        if (this.state.newAttraction !== "") {
+            if (this.state.CityNewAttraction !== "") {
+                let Name = this.state.newAttraction;
+                let Region = this.state.RegionNewAttraction;
+                let AreaName = this.state.CityNewAttraction;
+                let location = {
+                    lng: this.state.CityNewAttraction.X,
+                    lat: this.state.CityNewAttraction.Y
+                };
+                let type = this.state.TypeNewAttraction;
+                let p = {
+                    AttractionName: Name,
+                    AreaName: AreaName.Name,
+                    location: location,
+                    Attraction_Type: type,
+                    Region: Region
+                }
+                AttractionPointInTrip = {
+                    Point: p,
+                    FromHour: this.state.AttractionFromDate.toLocaleString(),
+                    ToHour: this.state.AttractionToDate.toLocaleString()
+                };
+
+                tempArray.push(AttractionPointInTrip);
+
+                TripTourist = {
+                    TouristEmail: this.state.chosen.Email,
+                    TripListArray: tempArray
+                }
+
+                console.log(tempArray);
+                this.setState({
+                    ListTripArray: tempArray,
+                    open: !this.state.open,
+                    TripTourist: TripTourist
+                })
+                //console.log(this.state.ListTripArray);
+                localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+                //localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
+                //this.props.SaveListAtt(tempArray);
+            }
+            else {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: " Must Insert City Name",
+                    showConfirmButton: false,
+                    timer: 1200
+                });
+            }
         }
         else {
             AttractionPointInTrip = {
@@ -321,19 +369,32 @@ class BuildTrip2 extends Component {
                 FromHour: this.state.AttractionFromDate.toLocaleString(),
                 ToHour: this.state.AttractionToDate.toLocaleString()
             };
+
+            tempArray.push(AttractionPointInTrip);
+
+            TripTourist = {
+                TouristEmail: this.state.chosen.Email,
+                TripListArray: tempArray
+            }
+
+            console.log(tempArray);
+            this.setState({
+                ListTripArray: tempArray,
+                open: !this.state.open,
+                TripTourist: TripTourist
+            })
+            //console.log(this.state.ListTripArray);
+            localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+            //localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
+            //this.props.SaveListAtt(tempArray);
         }
-        tempArray.push(AttractionPointInTrip);
-        console.log(tempArray);
-        this.setState({
-            ListTripArray: tempArray,
-            open: !this.state.open
-        })
-        console.log(this.state.ListTripArray);
-        localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
-        this.props.SaveListAtt(tempArray);
+
     }
     renderListTrip = () => {
-        return this.state.ListTripArray.map((item) => <ListGroup.Item><p>{item.Point.AttractionName} -<b> From: </b><span className="GreenSpan">{item.FromHour}</span> <b> To: </b><span className="GreenSpan">{item.ToHour} </span><span className="editAttraction" onClick={() => { this.EditAttraction(item) }}><i class="fas fa-edit"></i></span><span className="delAttraction" onClick={() => { this.deleteLocation(item) }}><i class="fas fa-minus"></i></span></p></ListGroup.Item>)
+        if (this.state.ListTripArray) {
+            console.log(this.state.ListTripArray)
+            return this.state.ListTripArray.map((item) => <ListGroup.Item><p>{item.Point.AttractionName} -<b> From: </b><span className="GreenSpan">{item.FromHour}</span> <b> To: </b><span className="GreenSpan">{item.ToHour} </span><span className="editAttraction" onClick={() => { this.EditAttraction(item) }}><i class="fas fa-edit"></i></span><span className="delAttraction" onClick={() => { this.deleteLocation(item) }}><i class="fas fa-minus"></i></span></p></ListGroup.Item>)
+        }
     }
     EditAttraction = (item) => {
         console.log(item);
@@ -343,6 +404,7 @@ class BuildTrip2 extends Component {
         })
     }
     EditNewAttraction = () => {
+        let TripTourist = "";
         let AttractionPointInTrip = "";
         if (this.state.newAttraction !== "") {
             let Name = this.state.newAttraction;
@@ -384,12 +446,18 @@ class BuildTrip2 extends Component {
                 tempArray.push(AttractionPointInTrip);
             }
         }
+        TripTourist = {
+            TouristEmail: this.state.chosen.Email,
+            TripListArray: tempArray
+        }
         this.setState({
             ListTripArray: tempArray,
-            EditAttraction: !this.state.EditAttraction
+            EditAttraction: !this.state.EditAttraction,
+            TripTourist: TripTourist
         })
-        localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
-        this.props.SaveListAtt(tempArray);
+        localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+        //localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
+        //this.props.SaveListAtt(tempArray);
         this.clearSelect();
     }
     clearSelect = () => {
@@ -398,6 +466,7 @@ class BuildTrip2 extends Component {
         })
     }
     deleteLocation = (item) => {
+        let TripTourist = "";
         // console.log(item);
         let newArrayTemp = [];
         for (let i = 0; i < this.state.ListTripArray.length; i++) {
@@ -406,24 +475,52 @@ class BuildTrip2 extends Component {
                 newArrayTemp.push(element);
             }
         }
+        TripTourist = {
+            TouristEmail: this.state.chosen.Email,
+            TripListArray: newArrayTemp
+        }
+
         this.setState({
-            ListTripArray: newArrayTemp
+            ListTripArray: newArrayTemp,
+            TripTourist: TripTourist
         })
-        localStorage.setItem('ListTripArray', JSON.stringify(newArrayTemp));
-        this.props.SaveListAtt(newArrayTemp);
+        localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+        //localStorage.setItem('ListTripArray', JSON.stringify(newArrayTemp));
+        // this.props.SaveListAtt(newArrayTemp);
     }
     AddMarkers = () => {
-        return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker name={item.Point.AttractionName} position={item.Point.location} />) : null)
+        if (this.state.ListTripArray) {
+            return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker title={item.Point.AttractionName} position={item.Point.location} />) : null)
+        }
     }
     AddLine = () => {
-        let tempArray = [];
-        for (let i = 0; i < this.state.ListTripArray.length; i++) {
-            const element = this.state.ListTripArray[i];
-            tempArray.push(element.Point.location)
+        if (this.state.ListTripArray) {
+            let pathCoordinates = [];
+            for (let i = 0; i < this.state.ListTripArray.length; i++) {
+                const element = this.state.ListTripArray[i];
+                pathCoordinates.push(element.Point.location)
+            }
+            console.log(pathCoordinates)
+            return (
+                <Polyline
+                    path={pathCoordinates}
+                    geodesic={true}
+                    options={{
+                        strokeColor: "#ff2527",
+                        strokeOpacity: 0.75,
+                        strokeWeight: 2,
+                        icons: [
+                            {
+                                offset: "0",
+                                repeat: "20px"
+                            }
+                        ]
+                    }}
+                />
+            )
         }
-        this.setState({
-            pathCoordinates: tempArray
-        })
+
+
     }
     FilerArray = () => {
         console.log(this.state.SelectedType);
@@ -531,130 +628,182 @@ class BuildTrip2 extends Component {
     onStop = () => {
         this.setState({ activeDrags: --this.state.activeDrags });
     };
-    render() {
+
+    AddTourist = (value) => {
+        this.setState({ chosen: value })
+        this.filterTouristHandE(value);
+        this.GetPointsTouristFromSQL(value.Email);
+    }
+
+    saveTrip = () => {
+        let tempArray = [];
+        for (let i = 0; i < this.state.TripTourist.TripListArray.length; i++) {
+            const element = this.state.TripTourist.TripListArray[i];
+            let TripPoint = {
+                TouristEmail: this.state.chosen.Email,
+                GuideEmail: this.props.Guide.Email,
+                FromHour: element.FromHour,
+                ToHour: element.ToHour,
+                AttractionName: element.Point.AttractionName,
+                Address: element.Point.Address,
+                AreaName: element.Point.AreaName,
+                Region: element.Point.Region,
+                FullDescription: element.Point.FullDescription,
+                Opening_Hours: element.Point.Opening_Hours
+            }
+            tempArray.push(TripPoint);
+        }
+        console.log(tempArray)
+        this.AddTripToSQL(tempArray)
+
+    }
+
+    GetPointsTouristFromSQL = (email) => {
+        fetch(this.apiUrl + "BuildTrip?email=" + email, {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.RenderListFromSQL(result);
+                    this.setState({ ChooseTourist: true })
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    };
+
+    AddTripToSQL = (tripPoints) => {
+        //pay attention case sensitive!!!! should be exactly as the prop in C#!
+        fetch(this.apiUrl + "BuildTrip", {
+            method: "POST",
+            body: JSON.stringify(tripPoints),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                console.log("res=", res);
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    if (result !== null) {
+                        this.RenderListFromSQL(result);
+                    } else {
+                    }
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+
+    RenderListFromSQL = (res) => {
+        console.log(res);
+        let tempArr = [];
+        let AttractionPointInTrip = '';
+        for (let i = 0; i < res.length; i++) {
+            const sqlPoint = res[i];
+
+            let p = this.props.Attractions.find(myFunction)
+            function myFunction(value, index, array) {
+                return value.AttractionName == sqlPoint.AttractionName
+            }
+            if (p == undefined) {
+                console.log(this.props.cities);
+                let p2 = this.props.cities.find(myFunction2)
+                function myFunction2(value, index, array) {
+                    return value.Name == sqlPoint.AreaName
+                }
+                if (p2 !== undefined) {
+                    let f = new Date(sqlPoint.FromHour);
+                    let t = new Date(sqlPoint.ToHour)
+                    let location = {
+                        lng: p2.X,
+                        lat: p2.Y
+                    };
+                    AttractionPointInTrip = {
+                        FromHour: f.toLocaleString(),
+                        ToHour: t.toLocaleString(),
+                        Point: {
+                            AttractionName: sqlPoint.AttractionName,
+                            AreaName: sqlPoint.AreaName,
+                            Region: sqlPoint.Region,
+                            location: location
+                        }
+                    }
+                    console.log(AttractionPointInTrip)
+                    tempArr.push(AttractionPointInTrip);
+                }
+            }
+            else {
+                let f = new Date(sqlPoint.FromHour);
+                let t = new Date(sqlPoint.ToHour)
+                AttractionPointInTrip = {
+                    FromHour: f.toLocaleString(),
+                    ToHour: t.toLocaleString(),
+                    Point: p
+                }
+                console.log(AttractionPointInTrip)
+                tempArr.push(AttractionPointInTrip);
+
+            }
+
+        }
+        console.log(tempArr)
+        let TripTourist = {
+            TouristEmail: this.state.chosen.Email,
+            TripListArray: tempArr
+        }
+        console.log(TripTourist);
+        localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+        //localStorage.setItem('ListTripArray', JSON.stringify(newArrayTemp));
+        this.setState({
+            ListTripArray: tempArr,
+            TripTourist: TripTourist
+        })
+
+    }
+    renderAll = () => {
         const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
+        if (!this.state.ChooseTourist) {
+            if (this.state.TouristsList) {
+                return (
+                    <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
+                        <div className="SelectTourist">
+                            <Row><h1>Choose Tourist:</h1></Row>
+                            <Autocomplete
+                                onChange={(event, value) => this.AddTourist(value)}  // prints the selected value
+                                id="combo-box-demo"
+                                options={this.state.TouristsList}
+                                //groupBy={(option) => option.Region}
+                                getOptionLabel={(option) => option.Email}
+                                //style={}
+                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Tourist" variant="outlined" />}
+                            />
+                        </div>
+                    </Container>
 
-        return (
-            <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
+                )
+            }
 
-                <div className="row">
-                    <div className="col-7 leftSide">
-                        {this.state.open ?
-                            <Draggable  {...dragHandlers}>
-                                <div className="col-7 drag"> <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ open: !this.state.open })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
-                                    <Form>  <Row form>
-                                        <Col md="12" className="form-group">
-                                            <h5>Filter By Type</h5>
-                                            <Col md="8">
-                                                <Autocomplete
-                                                    onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
-                                                    id="combo-box-demo"
-                                                    options={this.state.types}
-                                                    getOptionLabel={(option) => option}
-                                                    //style={}
-                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                                />
-                                            </Col>
-                                            <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
-                                        </Col>
-
-                                        <Col md="12" className="form-group">
-                                            <label htmlFor="feCityName">Attraction Name</label>
-                                            <Autocomplete
-                                                onChange={(event, value) => this.ifNull(value)} // prints the selected value
-                                                id="combo-box-demo"
-                                                options={this.props.listAPI}
-                                                //groupBy={(option) => option.Region}
-                                                getOptionLabel={(option) => option.name}
-                                                //style={}
-                                                renderInput={(params) => <TextField {...params} margin="normal" label="Choose Attraction" variant="outlined" />}
-                                            />
-                                        </Col>
-                                        <Col md="12">
-                                            {this.state.SelectedAttraction ? this.renderAttractionDetails()
-                                                : null}
-                                        </Col>
-                                        {this.state.openNewAttraction ? <Col md="12">
-                                            <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
-                                            {this.state.AddNewAttractionBool ? <div>
-                                                <input
-                                                    className="form-control"
-                                                    name="NewAttraction"
-                                                    id="newAttraction"
-                                                    placeholder="Attraction Name"
-                                                    value={this.state.newAttraction}
-                                                    onChange={this.AddNewAttractionName}
-                                                />
-                                                <Autocomplete
-                                                    onChange={(event, value) => this.listCities(value)} // prints the selected value
-                                                    id="combo-box-demo"
-                                                    options={this.state.Regions}
-                                                    //groupBy={(option) => option.Region}
-                                                    getOptionLabel={(option) => option}
-                                                    //style={}
-                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
-                                                />
-                                                <Autocomplete
-                                                    onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
-                                                    id="combo-box-demo"
-                                                    options={this.state.cities}
-                                                    //groupBy={(option) => option.Region}
-                                                    getOptionLabel={(option) => option.Name}
-                                                    //style={}
-                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
-                                                />
-                                                <Autocomplete
-                                                    onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
-                                                    id="combo-box-demo"
-                                                    options={this.state.types}
-                                                    //groupBy={(option) => option.Region}
-                                                    getOptionLabel={(option) => option}
-                                                    //style={}
-                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
-                                                />
-                                            </div> : null}
-                                        </Col> : null}
-                                        {this.state.openDates ? <Col md="5" className="form-group">
-                                            <label htmlFor="feDate">From Date</label>
-                                            <DatePicker
-                                                excludeOutOfBoundsTimes
-                                                selected={this.state.AttractionFromDate}
-                                                onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
-                                                showTimeSelect
-                                                timeFormat="HH:mm"
-                                                timeIntervals={15}
-                                                timeCaption="time"
-                                                dateFormat="MMMM d, yyyy h:mm aa"
-                                                minDate={new Date()}
-                                            />
-                                        </Col> : null}
-                                        {this.state.openDates ? <Col md="5" className="form-group">
-                                            <label htmlFor="feDate">To Date</label>
-                                            <DatePicker
-                                                selected={this.state.AttractionToDate}
-                                                onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
-                                                showTimeSelect
-                                                timeFormat="HH:mm"
-                                                timeIntervals={15}
-                                                timeCaption="time"
-                                                dateFormat="MMMM d, yyyy h:mm aa"
-                                                //minTime={new Date()}
-                                                minDate={this.state.AttractionFromDate}
-                                            />
-                                        </Col> : null}
-                                    </Row>
-                                        <Row>
-                                            <Col>
-                                                <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtractionToArray() }} >Add</Button>
-                                            </Col>
-                                        </Row></Form></div></div>
-                            </Draggable>
-                            : null}
-                        {this.state.EditAttraction ?
-                            <Draggable {...dragHandlers}>
-                                <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ EditAttraction: !this.state.EditAttraction })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
-                                    <Form>
-                                        <Row form>
+        }
+        else {
+            return (
+                <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
+                    <div className="row">
+                        <div className="col-7 leftSide">
+                            {this.state.open ?
+                                <Draggable  {...dragHandlers}>
+                                    <div className="col-7 drag"> <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ open: !this.state.open })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
+                                        <Form>  <Row form>
                                             <Col md="12" className="form-group">
                                                 <h5>Filter By Type</h5>
                                                 <Col md="8">
@@ -669,7 +818,8 @@ class BuildTrip2 extends Component {
                                                 </Col>
                                                 <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
                                             </Col>
-                                            <Col md="12" className="colAutoName form-group">
+
+                                            <Col md="12" className="form-group">
                                                 <label htmlFor="feCityName">Attraction Name</label>
                                                 <Autocomplete
                                                     onChange={(event, value) => this.ifNull(value)} // prints the selected value
@@ -678,7 +828,7 @@ class BuildTrip2 extends Component {
                                                     groupBy={(option) => option.Region}
                                                     getOptionLabel={(option) => option.AttractionName}
                                                     //style={}
-                                                    renderInput={(params) => <TextField {...params} margin="normal" label={this.state.item.Point.AttractionName} variant="outlined" />}
+                                                    renderInput={(params) => <TextField {...params} margin="normal" label="Choose Attraction" variant="outlined" />}
                                                 />
                                             </Col>
                                             <Col md="12">
@@ -754,69 +904,179 @@ class BuildTrip2 extends Component {
                                                 />
                                             </Col> : null}
                                         </Row>
-                                        <Row>
-                                            <Col md="12">
-                                                <Button className="BTNSubmit" variant="primary" onClick={this.EditNewAttraction} >Add</Button>
-                                            </Col>
-                                        </Row>
-                                    </Form>
+                                            <Row>
+                                                <Col>
+                                                    <Button className="BTNSubmit" variant="primary" onClick={() => { this.AddAtractionToArray() }} >Add</Button>
+                                                </Col>
+                                            </Row></Form></div></div>
+                                </Draggable>
+                                : null}
+                            {this.state.EditAttraction ?
+                                <Draggable {...dragHandlers}>
+                                    <div className={this.state.classnameDivAtt}><div className="ExistDiv"><span onClick={() => this.setState({ EditAttraction: !this.state.EditAttraction })} className="ExistSpan"><i class="fas fa-times"></i></span></div>
+                                        <Form>
+                                            <Row form>
+                                                <Col md="12" className="form-group">
+                                                    <h5>Filter By Type</h5>
+                                                    <Col md="8">
+                                                        <Autocomplete
+                                                            onChange={(event, value) => this.setState({ SelectedType: value })} // prints the selected value
+                                                            id="combo-box-demo"
+                                                            options={this.state.types}
+                                                            getOptionLabel={(option) => option}
+                                                            //style={}
+                                                            renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                        />
+                                                    </Col>
+                                                    <Col className="FilterButton" md="4"><Button onClick={() => { this.FilerArray() }}>Filter</Button></Col>
+                                                </Col>
+                                                <Col md="12" className="colAutoName form-group">
+                                                    <label htmlFor="feCityName">Attraction Name</label>
+                                                    <Autocomplete
+                                                        onChange={(event, value) => this.ifNull(value)} // prints the selected value
+                                                        id="combo-box-demo"
+                                                        options={this.state.AllAttractions}
+                                                        groupBy={(option) => option.Region}
+                                                        getOptionLabel={(option) => option.AttractionName}
+                                                        //style={}
+                                                        renderInput={(params) => <TextField {...params} margin="normal" label={this.state.item.Point.AttractionName} variant="outlined" />}
+                                                    />
+                                                </Col>
+                                                <Col md="12">
+                                                    {this.state.SelectedAttraction ? this.renderAttractionDetails()
+                                                        : null}
+                                                </Col>
+                                                {this.state.openNewAttraction ? <Col md="12">
+                                                    <span>Want to Add a New Attraction?</span> <Button onClick={() => { this.setState({ AddNewAttractionBool: !this.state.AddNewAttractionBool }) }} variant="info">Click Here</Button>
+                                                    {this.state.AddNewAttractionBool ? <div>
+                                                        <input
+                                                            className="form-control"
+                                                            name="NewAttraction"
+                                                            id="newAttraction"
+                                                            placeholder="Attraction Name"
+                                                            value={this.state.newAttraction}
+                                                            onChange={this.AddNewAttractionName}
+                                                        />
+                                                        <Autocomplete
+                                                            onChange={(event, value) => this.listCities(value)} // prints the selected value
+                                                            id="combo-box-demo"
+                                                            options={this.state.Regions}
+                                                            //groupBy={(option) => option.Region}
+                                                            getOptionLabel={(option) => option}
+                                                            //style={}
+                                                            renderInput={(params) => <TextField {...params} margin="normal" label="Choose Region" variant="outlined" />}
+                                                        />
+                                                        <Autocomplete
+                                                            onChange={(event, value) => this.setState({ CityNewAttraction: value })} // prints the selected value
+                                                            id="combo-box-demo"
+                                                            options={this.state.cities}
+                                                            //groupBy={(option) => option.Region}
+                                                            getOptionLabel={(option) => option.Name}
+                                                            //style={}
+                                                            renderInput={(params) => <TextField {...params} margin="normal" label="Choose City" variant="outlined" />}
+                                                        />
+                                                        <Autocomplete
+                                                            onChange={(event, value) => this.setState({ TypeNewAttraction: value })} // prints the selected value
+                                                            id="combo-box-demo"
+                                                            options={this.state.types}
+                                                            //groupBy={(option) => option.Region}
+                                                            getOptionLabel={(option) => option}
+                                                            //style={}
+                                                            renderInput={(params) => <TextField {...params} margin="normal" label="Choose Type" variant="outlined" />}
+                                                        />
+                                                    </div> : null}
+                                                </Col> : null}
+                                                {this.state.openDates ? <Col md="5" className="form-group">
+                                                    <label htmlFor="feDate">From Date</label>
+                                                    <DatePicker
+                                                        excludeOutOfBoundsTimes
+                                                        selected={this.state.AttractionFromDate}
+                                                        onChange={(newDate) => this.setState({ AttractionFromDate: newDate })}
+                                                        showTimeSelect
+                                                        timeFormat="HH:mm"
+                                                        timeIntervals={15}
+                                                        timeCaption="time"
+                                                        dateFormat="MMMM d, yyyy h:mm aa"
+                                                        minDate={new Date()}
+                                                    />
+                                                </Col> : null}
+                                                {this.state.openDates ? <Col md="5" className="form-group">
+                                                    <label htmlFor="feDate">To Date</label>
+                                                    <DatePicker
+                                                        selected={this.state.AttractionToDate}
+                                                        onChange={(newDate) => this.setState({ AttractionToDate: newDate })}
+                                                        showTimeSelect
+                                                        timeFormat="HH:mm"
+                                                        timeIntervals={15}
+                                                        timeCaption="time"
+                                                        dateFormat="MMMM d, yyyy h:mm aa"
+                                                        //minTime={new Date()}
+                                                        minDate={this.state.AttractionFromDate}
+                                                    />
+                                                </Col> : null}
+                                            </Row>
+                                            <Row>
+                                                <Col md="12">
+                                                    <Button className="BTNSubmit" variant="primary" onClick={this.EditNewAttraction} >Add</Button>
+                                                </Col>
+                                            </Row>
+                                        </Form>
+                                    </div>
+                                </Draggable>
+                                : null}
+                            <div className="col-9">
+                                <h2>{this.state.chosen.FirstName} {this.state.chosen.LastName} - Trip</h2>
+                                <div>
+                                    <Button onClick={this.toggle}>Add Attraction</Button>
                                 </div>
-                            </Draggable>
-                            : null}
-                        <div className="col-9">
-                            <h3>Trip Details</h3>
-                            <div>
-                                <Button onClick={this.toggle}>Add Attraction</Button>
-                            </div>
-                            <div className="TripList">
-                                {this.state.ListTripArray ? <ListGroup variant="flush" className="listGroupTrip">
-                                    {this.renderListTrip()}</ListGroup> : null}
+                                <div className="TripList">
+                                    {this.state.ListTripArray ? <ListGroup variant="flush" className="listGroupTrip">
+                                        {this.renderListTrip()}</ListGroup> : null}
+                                </div>
+                                <Button onClick={() => this.setState({ ChooseTourist: false })}>Logout Tourist Trip</Button>
+                                <Button onClick={() => this.saveTrip()}>Save Trip</Button>
                             </div>
                         </div>
+                        {/* AIzaSyCna1GfDry3zMNWiD9GlUK4VzUc1bu6_Wk */}
+
+                        <div className="col-3 rightSide">
+                            {/* <GoogleComponent
+                                apiKey={'AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'}
+                                language={'en'}
+                                country={'country:in|country:il'}
+                                coordinates={true}
+                                locationBoxStyle={'custom-style'}
+                                locationListStyle={'custom-style-list'}
+                                onChange={(e) => { this.setState({ place: e }), console.log(e) }} /> */}
+                            <LoadScript
+                                //libraries= 'places'
+                                googleMapsApiKey='AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'>
+                                <GoogleMap
+                                    mapContainerStyle={mapStyles}
+                                    zoom={8}
+                                    center={defaultCenter}
+                                >
+
+                                    {this.AddMarkers()}
+                                    {this.AddLine()}
+                                </GoogleMap>
+
+                            </LoadScript>
+                        </div>
                     </div>
-                    {/* AIzaSyCna1GfDry3zMNWiD9GlUK4VzUc1bu6_Wk */}
 
-                    <div className="col-3 rightSide">
-                        {/* <GoogleComponent
-                            apiKey={'AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'}
-                            language={'en'}
-                            country={'country:in|country:il'}
-                            coordinates={true}
-                            locationBoxStyle={'custom-style'}
-                            locationListStyle={'custom-style-list'}
-                            onChange={(e) => { this.setState({ place: e }) }} /> */}
-                        {/* <LoadScript
-                          //libraries= 'places'
-                            googleMapsApiKey='AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'>
-                            <GoogleMap
-                                mapContainerStyle={mapStyles}
-                                zoom={8}
-                                center={defaultCenter}
-                            >
+                </Container>
+            )
+        }
+    }
+    render() {
+        const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
 
-                                {this.AddMarkers()}
-                                <Polyline
-                path={this.state.pathCoordinates}
-                geodesic={true}
-                options={{
-                    strokeColor: "#ff2527",
-                    strokeOpacity: 0.75,
-                    strokeWeight: 2,
-                    icons: [
-                        {
-                            offset: "0",
-                            repeat: "20px"
-                        }
-                    ]
-                }}
-            />
-                            </GoogleMap>
 
-                        </LoadScript> */}
-                    </div>
-                </div>
-            </Container>
-
+        return (
+            <div>
+                {this.renderAll()}
+            </div>
         );
     }
 }
