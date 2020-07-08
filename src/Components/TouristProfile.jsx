@@ -11,17 +11,34 @@ import {
 } from "react-bootstrap";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import "../Css/ProfileDetails.css";
-import "../Css/Home.css";
+import "../Profile/Css/ProfileDetails.css";
+import "../Profile/Css/Home.css";
 import pic from "../Img/Default-welcomer.png";
 import "../Css/TouristProfile.css";
-import "../Css/Hobbies.css";
+import '../Profile/Css/Hobbies.css';
 class TouristProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tourist: this.props.tourist
+            tourist: this.props.tourist,
+            pic: ""
         };
+        this.pic = 'http://proj.ruppin.ac.il/bgroup10/PROD/Images/Default-welcomer.png';
+
+    }
+    componentDidMount() {
+        console.log(this.props.tourist);
+        if (this.props.tourist.ProfilePic == "" || this.props.tourist.ProfilePic == null) {
+            this.setState({
+                pic: this.pic
+            })
+
+        }
+        else {
+            this.setState({
+                pic: this.props.tourist.ProfilePic
+            })
+        }
     }
     render() {
         return (
@@ -33,6 +50,9 @@ class TouristProfile extends Component {
                             {this.state.tourist.FirstName}{" "}
                             {this.state.tourist.LastName}
                         </h2>
+                        <div className='delProfileTourist' onClick={() => this.props.ExitProfile('close')}>
+                            <span className='delSpanTour'><i class="fas fa-times"></i></span>
+                        </div>
                     </Card.Header>
                     <ListGroup flush>
                         <ListGroupItem className="p-3">
@@ -46,19 +66,22 @@ class TouristProfile extends Component {
                                                 <Card.Img
                                                     className="TouristImg"
                                                     src={
-                                                        this.state.tourist
-                                                            .ProfilePic
+                                                        this.state.pic
+
                                                     }
                                                 />
                                             ) : (
-                                                <Card.Img
-                                                    className="TouristImg"
-                                                    src={pic}
-                                                />
-                                            )}
+                                                    <Card.Img
+                                                        className="TouristImg"
+                                                        src={pic}
+                                                    />
+                                                )}
                                         </Col>
                                         <Col
                                             md="4"
+                                            sm="5"
+                                            xs="5"
+
                                             className="form-group personalDetails">
                                             <p>
                                                 <b>Email:</b>{" "}
@@ -79,23 +102,25 @@ class TouristProfile extends Component {
                                         </Col>
                                         <Col
                                             md="5"
+                                            sm="5"
+                                            xs="5"
                                             className="form-group tripDetails">
                                             {this.state.tourist
                                                 .FirstTimeInIsrael ? (
-                                                <p>
-                                                    <b>
-                                                        First Time In Israel?:{" "}
-                                                    </b>{" "}
+                                                    <p>
+                                                        <b>
+                                                            First Time In Israel?:{" "}
+                                                        </b>{" "}
                                                     yes
-                                                </p>
-                                            ) : (
-                                                <p>
-                                                    <b>
-                                                        First Time In Israel?:{" "}
-                                                    </b>{" "}
+                                                    </p>
+                                                ) : (
+                                                    <p>
+                                                        <b>
+                                                            First Time In Israel?:{" "}
+                                                        </b>{" "}
                                                     no{" "}
-                                                </p>
-                                            )}
+                                                    </p>
+                                                )}
                                             <p>
                                                 <b>Trip Type: </b>
                                                 {this.state.tourist.TripType}
@@ -113,16 +138,16 @@ class TouristProfile extends Component {
                                                     }
                                                 </p>
                                             ) : (
-                                                <p>
-                                                    From{" "}
-                                                    {
-                                                        this.state.tourist
-                                                            .FromDate
-                                                    }{" "}
+                                                    <p>
+                                                        From{" "}
+                                                        {
+                                                            this.state.tourist
+                                                                .FromDate
+                                                        }{" "}
                                                     To{" "}
-                                                    {this.state.tourist.ToDate}
-                                                </p>
-                                            )}
+                                                        {this.state.tourist.ToDate}
+                                                    </p>
+                                                )}
                                         </Col>
                                     </Row>
                                 </Form>
@@ -135,10 +160,6 @@ class TouristProfile extends Component {
                         <ListGroupItem className="p-3">
                             <Row>
                                 <Col>
-                                    <Form
-                                        className="myForm needs-validation"
-                                        noValidate
-                                        onSubmit={this.UpdateDetails}>
                                         <Row>
                                             <div
                                                 className="form-group hobbiesDivList">
@@ -170,9 +191,7 @@ class TouristProfile extends Component {
                                             </div>
                                         </Row>
                                         <Row>
-                                            <Col
-                                                md="12"
-                                                className="form-group ExpertisesDivList">
+                                        <div   className="form-group hobbiesDivList">
                                                 <h2>Expertises:</h2>
                                                 <div className="HobbiesDivTourist">
                                                     {this.state.tourist.ExpertisesNames.map(
@@ -198,9 +217,8 @@ class TouristProfile extends Component {
                                                         )
                                                     )}
                                                 </div>
-                                            </Col>
+                                                </div>
                                         </Row>
-                                    </Form>
                                 </Col>
                             </Row>
                         </ListGroupItem>

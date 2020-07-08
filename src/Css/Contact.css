@@ -1,0 +1,15 @@
+
+
+.contactHead{
+    background-color: #e0eef9;
+    text-align: center;
+}
+.MessageBody textarea{
+    height: 250px;
+}
+
+@media only screen and (max-width: 600px) {
+    .DetailsContact{
+        margin-bottom: 60px;
+    }
+}

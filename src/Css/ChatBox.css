@@ -28,9 +28,11 @@
     border-bottom: 1px solid #e8e8e8;
     padding: 5px;
     display: flex;
-    
-    
-    background-color: #ededed;
+    border-top-left-radius: 8px;
+
+    border-top-right-radius: 8px;
+
+    background-color: #dcf0ff;
     
 }
 .aboutme{
@@ -190,6 +192,15 @@ input::placeholder {
     margin-bottom: -15px;
    
 }
+.viewWrapItemRight {
+    width: 300px;
+    text-align: right;
+    align-self: flex-end;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: -15px;
+   
+}
 
 .viewWrapItemLeft2 {
     width: 300px;
@@ -322,6 +333,13 @@ input::placeholder {
     margin-left: 50px;
 }
 
+.textTimeRight {
+    color: #808888;
+    font-size: 12px;
+    font-style: italic;
+    display: flex;
+}
+
 /* Stickers */
 
 .viewStickers {
@@ -371,4 +389,18 @@ input::placeholder {
     width: 40px;
     height: 40px;
     margin-left: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    .viewChatBoard{
+        margin-left:-10px
+    }
+    .viewBoard{
+        margin-left:-35px
+
+    }
+    .headerChatBoard img{
+        margin-left:70px
+    }
+
 }

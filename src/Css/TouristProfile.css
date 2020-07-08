@@ -1,72 +1,136 @@
-.TouristImg{
+.TouristImg {
     height: 120px;
     width: 120px;
 }
-.personalDetails{
+.personalDetails {
     margin-bottom: 20px;
     text-align: left;
 }
-.personalDetails p{
+.personalDetails p {
     margin-bottom: 2.4px;
 }
-.tripDetails p{
+.tripDetails p {
     margin-bottom: 2.4px;
 }
-.tripDetails{
+.tripDetails {
     text-align: left;
 }
-.profileDetails1{
+.profileDetails1 {
     margin-bottom: 20px;
 }
-.hobbiesDivList{ 
-    margin:30px;
-
+.hobbiesDivList {
+    margin: 30px;
 }
-.ExpertisesDivList{
-    margin:30px;
-
+.ExpertisesDivList {
+    margin: 30px;
 }
-.divProfileTourist{
-position: absolute;
-top:7%;
-left:7%;
-opacity: 0.9;
-max-width: 90%;
+.divProfileTourist {
+    z-index: 999;
+    position: absolute;
+    top: 7%;
+    left: 7%;
+    opacity: 0.95;
+    max-width: 90%;
+    margin-bottom: 50px;
 }
-.divProfileTourist .myForm{
+.divProfileTourist .myForm {
     width: 100%;
 }
 
-.colImgDiv{
+.colImgDiv {
     text-align: center;
 }
-.NameToruistDiv{
+.NameToruistDiv {
     background-color: rgba(0, 128, 255, 0.612);
 }
-.NameToruistDiv h2{
+.NameToruistDiv h2 {
     /* margin-left: 8%;
     margin-bottom: 3%;
     margin-top: 3%; */
 }
-.HobbiesDivTourist{
+.HobbiesDivTourist {
     flex-wrap: wrap;
     display: flex;
 }
-.HobbiesDivTourist .CardItem{
-height: 216px;
-width: 288px;
-}
-.HobbiesDivTourist .CardItem img{
+.HobbiesDivTourist .CardItem {
     height: 216px;
     width: 288px;
+}
+.HobbiesDivTourist .CardItem img {
+    height: 216px;
+    width: 288px;
+}
+.titleCardDivTourist h4 {
+    text-align: center;
+    vertical-align: middle;
+    margin-top: 5px;
+    font-weight: 650;
+}
+.titleCardDivTourist {
+    height: 20%;
+    position: absolute;
+    top: 80%;
+    width: 100%;
+    opacity: 0.7;
+    background-color: #b3e0ff;
+    font-weight: bold;
+}
+.CardItem:hover .titleCardDivTourist {
+    background-color: #00639d;
+    color: white;
+    cursor: pointer;
+}
+.CardItem:hover .titleCardDivTourist h4 {
+    color: white;
+}
+.HobbiesDivTourist .CardItem:hover {
+    background-color: #b3e0ff;
+    -ms-transform: none;
+    -webkit-transform: none;
+    transform: none;
+    z-index: none;
+    cursor: pointer;
+}
+.divProfileTourist h2 {
+    text-align: left;
+}
+#nameTourist {
+    text-align: center;
+}
+.delProfileTourist {
+    position: absolute;
+    bottom: 84%;
+    left: 97%;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 30px;
+}
+.delSpanTour i {
+    font-size: 30px;
+    color: black;
+}
+
+@media only screen and (max-width: 600px) {
+    .delSpanTour i {
+        font-size: 22px;
+        color: black;
     }
-    .titleCardDivTourist h4{
+    .HobbiesDivTourist .CardItem {
+        height: 108px;
+        width: 144px;
+    }
+    .HobbiesDivTourist .CardItem img {
+        height: 108px;
+        width: 144px;
+    }
+
+    .titleCardDivTourist h4 {
         text-align: center;
         vertical-align: middle;
-        margin-top:5px;
         font-weight: 650;
+        font-size: 14px;
+        margin-top: -10px;
     }
-    .titleCardDivTourist{
+    .titleCardDivTourist {
         height: 20%;
         position: absolute;
         top: 80%;
@@ -75,27 +139,32 @@ width: 288px;
         background-color: #b3e0ff;
         font-weight: bold;
     }
-    .CardItem:hover .titleCardDivTourist {
-        background-color: #00639d;
-        color: white;
-        cursor: pointer;
+    .divProfileTourist {
+        z-index: 999;
+        position: absolute;
+        top: 10%;
+        max-width: 96%;
+        opacity: 0.95;
     }
-    .CardItem:hover .titleCardDivTourist h4{
-        color: white;
-    
+
+    .delProfileTourist {
+        position: absolute;
+        bottom: 92%;
+        left: 93%;
+        color: rgba(0, 0, 0, 0.8);
+        font-size: 16px;
     }
-    .HobbiesDivTourist .CardItem:hover {
-        background-color: #b3e0ff;
-        -ms-transform: none;
-        -webkit-transform: none;
-        transform: none;
-        z-index: none;
-        cursor: pointer;
+    .ExpertisesDivList {
+        margin: 0px;
     }
-    .divProfileTourist h2{
-        text-align: left;
-    } 
-    #nameTourist{
-        text-align: center;
+    .hobbiesDivList {
+        margin: 0px;
     }
- 
+    .tripDetails {
+        padding-right: 0px;
+    }
+    .personalDetails {
+        padding-right: 10px;
+        margin-left: 10px;
+    }
+}

@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/bgroup10/prod/guideapp/static/css/main.48a89ffc.chunk.css",
-    "main.js": "/bgroup10/prod/guideapp/static/js/main.ecfc50cf.chunk.js",
-    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.ecfc50cf.chunk.js.map",
+    "main.css": "/bgroup10/prod/guideapp/static/css/main.7384599d.chunk.css",
+    "main.js": "/bgroup10/prod/guideapp/static/js/main.09f9cf56.chunk.js",
+    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.09f9cf56.chunk.js.map",
     "runtime-main.js": "/bgroup10/prod/guideapp/static/js/runtime-main.cd561631.js",
     "runtime-main.js.map": "/bgroup10/prod/guideapp/static/js/runtime-main.cd561631.js.map",
-    "static/css/2.c20a4fdd.chunk.css": "/bgroup10/prod/guideapp/static/css/2.c20a4fdd.chunk.css",
-    "static/js/2.836debd2.chunk.js": "/bgroup10/prod/guideapp/static/js/2.836debd2.chunk.js",
-    "static/js/2.836debd2.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.836debd2.chunk.js.map",
+    "static/css/2.bd0216a2.chunk.css": "/bgroup10/prod/guideapp/static/css/2.bd0216a2.chunk.css",
+    "static/js/2.82dd41fc.chunk.js": "/bgroup10/prod/guideapp/static/js/2.82dd41fc.chunk.js",
+    "static/js/2.82dd41fc.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.82dd41fc.chunk.js.map",
     "index.html": "/bgroup10/prod/guideapp/index.html",
-    "precache-manifest.6c627900a07e80e61a16698ae089bb76.js": "/bgroup10/prod/guideapp/precache-manifest.6c627900a07e80e61a16698ae089bb76.js",
+    "precache-manifest.9539ab98e557a3921490ad6aed6d8733.js": "/bgroup10/prod/guideapp/precache-manifest.9539ab98e557a3921490ad6aed6d8733.js",
     "service-worker.js": "/bgroup10/prod/guideapp/service-worker.js",
-    "static/css/2.c20a4fdd.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.c20a4fdd.chunk.css.map",
-    "static/css/main.48a89ffc.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.48a89ffc.chunk.css.map",
-    "static/js/2.836debd2.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.836debd2.chunk.js.LICENSE.txt",
+    "static/css/2.bd0216a2.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.bd0216a2.chunk.css.map",
+    "static/css/main.7384599d.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.7384599d.chunk.css.map",
+    "static/js/2.82dd41fc.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.82dd41fc.chunk.js.LICENSE.txt",
     "static/media/Default-welcomer.png": "/bgroup10/prod/guideapp/static/media/Default-welcomer.9d1403c3.png",
     "static/media/Isravisionlogo.png": "/bgroup10/prod/guideapp/static/media/Isravisionlogo.11365271.png",
     "static/media/Isravisionlogo1.png": "/bgroup10/prod/guideapp/static/media/Isravisionlogo1.05948844.png",
@@ -30,9 +30,9 @@
   },
   "entrypoints": [
     "static/js/runtime-main.cd561631.js",
-    "static/css/2.c20a4fdd.chunk.css",
-    "static/js/2.836debd2.chunk.js",
-    "static/css/main.48a89ffc.chunk.css",
-    "static/js/main.ecfc50cf.chunk.js"
+    "static/css/2.bd0216a2.chunk.css",
+    "static/js/2.82dd41fc.chunk.js",
+    "static/css/main.7384599d.chunk.css",
+    "static/js/main.09f9cf56.chunk.js"
   ]
 }

@@ -1,0 +1,27 @@
+.AdminContainer{
+    background-image: url(../Img/back7.png);
+    min-height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+.logoDivAdmin{
+    text-align: center;
+
+}
+.logoDivAdmin img{
+width: 50%;
+}
+.BackAdmin{
+    margin:12px;
+}
+.EditPages{
+    margin-left: 200px;
+    flex-direction: column;
+    margin-top: 50px;
+    font-size: 40px;
+}

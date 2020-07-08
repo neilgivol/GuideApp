@@ -5,28 +5,31 @@ import 'react-toastify/dist/ReactToastify.css'
 //import {Card} from 'react-bootstrap';
 //import firebase from '../services/firebase';
 import '../Css/ChatBox.css';
-import {myFirestore, myStorage,myFirebase} from '../services/firebase'
+import { myFirestore, myStorage, myFirebase } from '../services/firebase'
 import images from '../Themes/Images'
-import {AppString} from './Const'
-import pic from '../Img/Default-welcomer.png';
+import { AppString } from './Const'
 import TouristProfile from '../Components/TouristProfile';
+const picprof = require('../Img/Default-welcomer.png');
 export default class ChatBox extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            Guide:this.props.Guide,
-            isShowStriker:false,
-            inputValue:"",
+            Guide: this.props.Guide,
+            isShowStriker: false,
+            inputValue: "",
             isLoading: false,
-            tourist:"",
-            showTourist:false,
+            tourist: "",
+            showTourist: false,
             navbar: this.props.navbarOpenCheck,
-            local:this.props.local,
-            LanguagesListOrgenized:this.props.LanguagesListOrgenized,
-            AllHobbies:this.props.AllHobbies,
-            AllExpertises:this.props.AllExpertises
+            local: this.props.local,
+            LanguagesListOrgenized: this.props.LanguagesListOrgenized,
+            AllHobbies: this.props.AllHobbies,
+            AllExpertises: this.props.AllExpertises,
+            profileTourPic: "",
+            oldMessages: []
 
         }
+        this.pic = 'http://proj.ruppin.ac.il/bgroup10/PROD/Images/Default-welcomer.png';
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
         if (!local) {
@@ -36,43 +39,69 @@ export default class ChatBox extends Component {
         this.currentUserDocumentId = localStorage.getItem('docId');
         this.stateChanged = localStorage.getItem('stateChange');
         this.currentPeerUser = this.props.currentPeerUser;
-        this.listMessage = []
-        this.groupChatId = null
-        this.removeListener = null
-        this.currentPhotoFile = null
+        this.listMessage = [];
+        this.groupChatId = null;
+        this.removeListener = null;
+        this.currentPhotoFile = null;
+        this.currentPerrUserMessages = [];
+
+        console.log(this.listMessage);
+
+        myFirestore.collection('users').doc(this.currentPeerUser.documentKey).get()
+            .then((docRef) => {
+                this.currentPerrUserMessages = docRef.data().messages;
+            })
     }
-    componentWillReceiveProps(newProps){
-        if(newProps.currentPeerUser){
-            this.setState({showTourist:false})
-this.currentPeerUser = newProps.currentPeerUser
-console.log(this.currentPeerUser)
-this.GetAllTourists(this.currentPeerUser.email);
-this.getListHistory()
+    componentWillReceiveProps(newProps) {
+        if (newProps.currentPeerUser) {
+            this.setState({ showTourist: false })
+            this.currentPeerUser = newProps.currentPeerUser
+            console.log(this.currentPeerUser)
+            this.GetAllTourists(this.currentPeerUser.email);
+            this.getListHistory()
         }
 
     }
-    componentDidUpdate(){
+
+    componentDidUpdate() {
         this.scrollToBottom()
     }
-    componentDidMount(){
+    componentDidMount() {
+        this.GetAllTourists(this.props.currentPeerUser.email);
         this.getListHistory();
         console.log(this.props.currentPeerUser);
-        this.GetAllTourists(this.props.currentPeerUser.email);
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         if (this.removeListener) {
             this.removeListener()
         }
     }
-    renderStricker=()=>{
+    renderStricker = () => {
 
     }
+
+    checkIfExistProfilePic = (tourist) => {
+        let pictureTourist
+        if (tourist.ProfilePic == null || tourist.ProfilePic == "") {
+            pictureTourist = this.pic
+        }
+        else {
+            pictureTourist = tourist.ProfilePic
+        }
+
+        this.setState({
+            profileTourPic: pictureTourist
+        })
+    }
+
+
     getListHistory = () => {
+        let notificationMessages = [];
         if (this.removeListener) {
             this.removeListener()
         }
         this.listMessage.length = 0
-        this.setState({isLoading: true})
+        this.setState({ isLoading: true })
         if (
             this.hashString(this.currentUserId) <=
             this.hashString(this.currentPeerUser.id)
@@ -81,7 +110,6 @@ this.getListHistory()
         } else {
             this.groupChatId = `${this.currentPeerUser.id}-${this.currentUserId}`
         }
-        console.log(this.groupChatId);
 
         // Get history and listen new data added
         this.removeListener = myFirebase.firestore()
@@ -90,28 +118,55 @@ this.getListHistory()
             .collection(this.groupChatId)
             .onSnapshot(
                 snapshot => {
-                    console.log(snapshot);
                     snapshot.docChanges().forEach(change => {
                         if (change.type === AppString.DOC_ADDED) {
                             this.listMessage.push(change.doc.data())
-                            console.log("push messages");
-                            console.log(this.listMessage);
                         }
                     })
-                    this.setState({isLoading: false})
-                    console.log("dddd");
+
+                    localStorage.setItem('listOldMessages', JSON.stringify(this.listMessage));
+                   
+                    if (this.currentPerrUserMessages.length > 0) {
+                        this.currentPerrUserMessages.map((item) => {
+                            if (item.notificationId != this.currentUserId) {
+                                    notificationMessages.push(
+                                        {
+                                            notificationId: item.notificationId,
+                                            number: item.number
+                                        }
+                                    )
+                                }
+                        })
+                        myFirebase.firestore()
+                        .collection('users')
+                        .doc(this.currentPeerUser.id)
+                        .update(
+                            {
+                                messages: notificationMessages
+                            }
+                        )
+                        .then((data) => { })
+                        .catch(err => {
+                            this.props.showToast(0, err.toString())
+                        })
+                    }
+                   
+                    this.setState({ isLoading: false })
                 },
                 err => {
                     this.props.showToast(0, err.toString())
                 }
             )
+
+
     }
 
     openListSticker = () => {
-        this.setState({isShowSticker: !this.state.isShowSticker})
+        this.setState({ isShowSticker: !this.state.isShowSticker })
     }
 
     onSendMessage = (content, type) => {
+        let notificationMessages = [];
         // if (this.state.isShowSticker && type === 2) {
         //     this.setState({isShowSticker: false})
         // }
@@ -139,27 +194,64 @@ this.getListHistory()
             .doc(timestamp)
             .set(itemMessage)
             .then(() => {
-                this.setState({inputValue: ''})
+                this.setState({ inputValue: '' })
             })
+            if (this.currentPerrUserMessages.length > 0) {
+                this.currentPerrUserMessages.map((item) => {
+                    if (item.notificationId != this.currentUserId) {
+                        notificationMessages.push(
+                            {
+                                notificationId: item.notificationId,
+                                number: item.number
+                            }
+                        )
+                    }
+                    else{
+                        notificationMessages.push({
+                            notificationId: this.currentUserId,
+                                number: this.listMessage.length
+                        })
+                    }
+                })
+            }
+            else{
+                notificationMessages.push({
+                    notificationId: this.currentUserId,
+                        number: this.listMessage.length
+                })
+            }
+      
+
+        myFirebase.firestore()
+            .collection('users')
+            .doc(this.currentPeerUser.documentKey)
+            .update(
+                {
+                    messages: notificationMessages
+                }
+            )
+            .then((data) => { })
             .catch(err => {
                 this.props.showToast(0, err.toString())
             })
+
+        //this.SendNotification(this.state.tourist.Token, content.trim())
     }
 
     onChoosePhoto = event => {
         if (event.target.files && event.target.files[0]) {
-            this.setState({isLoading: true})
+            this.setState({ isLoading: true })
             this.currentPhotoFile = event.target.files[0]
             // Check this file is an image?
             const prefixFiletype = event.target.files[0].type.toString()
             if (prefixFiletype.indexOf(AppString.PREFIX_IMAGE) === 0) {
                 this.uploadPhoto()
             } else {
-                this.setState({isLoading: false})
+                this.setState({ isLoading: false })
                 this.props.showToast(0, 'This file is not an image')
             }
         } else {
-            this.setState({isLoading: false})
+            this.setState({ isLoading: false })
         }
     }
     uploadPhoto = () => {
@@ -177,18 +269,18 @@ this.getListHistory()
                 AppString.UPLOAD_CHANGED,
                 null,
                 err => {
-                    this.setState({isLoading: false})
+                    this.setState({ isLoading: false })
                     this.props.showToast(0, err.message)
                 },
                 () => {
                     uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-                        this.setState({isLoading: false})
+                        this.setState({ isLoading: false })
                         this.onSendMessage(downloadURL, 1)
                     })
                 }
             )
         } else {
-            this.setState({isLoading: false})
+            this.setState({ isLoading: false })
             this.props.showToast(0, 'File is null')
         }
     }
@@ -229,6 +321,13 @@ this.getListHistory()
                 }
             );
     };
+    ExitProfile = (res) => {
+        if (res == 'close') {
+            this.setState({
+                showTourist: false
+            })
+        }
+    }
     OrgenizeTouristDetails = (tourist) => {
         tourist.HobbiesNames = [];
         tourist.ExpertisesNames = [];
@@ -260,34 +359,67 @@ this.getListHistory()
         this.setState({
             tourist: tourist
         });
+        this.checkIfExistProfilePic(tourist);
+
     };
-    showProfileTourist = () =>{
+    showProfileTourist = () => {
         this.setState({
-            showTourist:!this.state.showTourist
+            showTourist: !this.state.showTourist
         })
+    }
+
+    SendNotification = (token, text) => {
+
+        if (token !== null) {
+        }
+        let message = {
+            to: token,
+            title: 'Chat message',
+            body: text,
+            data: { path: 'Chat' }
+        }
+        console.log(message);
+        fetch(this.apiUrl + 'Tourist/Push', {
+            method: 'POST',
+            body: JSON.stringify(message),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8", 'Accept-encoding': 'gzip, deflate' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
     }
 
     render() {
         return (
             <div className="viewChatBoard">
                 {/* Header */}
-                <div className="headerChatBoard" onClick={()=>{this.showProfileTourist()}}
->
+                <div className="headerChatBoard" onClick={() => { this.showProfileTourist() }}
+                >
                     <img
                         className="viewAvatarItem"
-                        src={pic}
+                        src={this.currentPeerUser.URL}
                         alt="icon avatar"
                     />
                     <span className="textHeaderChatBoard">
-            {this.currentPeerUser.name}
-          </span>
+                        {this.currentPeerUser.name}
+                    </span>
                 </div>
 
                 {/* List message */}
                 <div className="viewListContentChat">
                     {this.renderListMessage()}
                     <div
-                        style={{float: 'left', clear: 'both'}}
+                        style={{ float: 'left', clear: 'both' }}
                         ref={el => {
                             this.messagesEnd = el
                         }}
@@ -327,7 +459,7 @@ this.getListHistory()
                         placeholder="Type your message..."
                         value={this.state.inputValue}
                         onChange={event => {
-                            this.setState({inputValue: event.target.value})
+                            this.setState({ inputValue: event.target.value })
                         }}
                         onKeyPress={this.onKeyboardPress}
                     />
@@ -351,16 +483,19 @@ this.getListHistory()
                     </div>
                 ) : null}
                 {this.state.showTourist ? (
-                        <div>
-                            <TouristProfile
-                                navbarOpenCheck={this.state.navbar} 
-                                tourist={this.state.tourist}
-                            />
-                        </div>
-                    ) : null}
+                    <div>
+                        <TouristProfile
+                            ExitProfile={this.ExitProfile}
+                            navbarOpenCheck={this.state.navbar}
+                            tourist={this.state.tourist}
+                        />
+                    </div>
+                ) : null}
             </div>
         )
     }
+
+
 
     renderListMessage = () => {
         if (this.listMessage.length > 0) {
@@ -370,9 +505,15 @@ this.getListHistory()
                     // Item right (my message)
                     if (item.type === 0) {
                         viewListMessage.push(
-                            <div className="viewItemRight" key={item.timestamp}>
-                                <span className="textContentItem">{item.content}</span>
+                            <div className="viewWrapItemRight" key={item.timestamp}>
+                                <div className="viewItemRight" key={item.timestamp}>
+                                    <span className="textContentItem">{item.content}</span>
+                                </div>
+                                <span className="textTimeRight">
+                                    {moment(Number(item.timestamp)).format('LLL')}
+                                </span>
                             </div>
+
                         )
                     } else if (item.type === 1) {
                         viewListMessage.push(
@@ -403,21 +544,21 @@ this.getListHistory()
                                 <div className="viewWrapItemLeft3">
                                     {this.isLastMessageLeft(index) ? (
                                         <img
-                                            src={this.currentPeerUser.photoUrl}
+                                            src={this.currentPeerUser.URL}
                                             alt="avatar"
                                             className="peerAvatarLeft"
                                         />
                                     ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
+                                            <div className="viewPaddingLeft" />
+                                        )}
                                     <div className="viewItemLeft">
                                         <span className="textContentItem">{item.content}</span>
                                     </div>
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
-                  </span>
+                                        {moment(Number(item.timestamp)).format('LLL')}
+                                    </span>
                                 ) : null}
                             </div>
                         )
@@ -427,13 +568,13 @@ this.getListHistory()
                                 <div className="viewWrapItemLeft3">
                                     {this.isLastMessageLeft(index) ? (
                                         <img
-                                            src={this.currentPeerUser.photoUrl}
+                                            src={this.currentPeerUser.URL}
                                             alt="avatar"
                                             className="peerAvatarLeft"
                                         />
                                     ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
+                                            <div className="viewPaddingLeft" />
+                                        )}
                                     <div className="viewItemLeft2">
                                         <img
                                             className="imgItemLeft"
@@ -444,8 +585,8 @@ this.getListHistory()
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
-                  </span>
+                                        {moment(Number(item.timestamp)).format('LLL')}
+                                    </span>
                                 ) : null}
                             </div>
                         )
@@ -455,13 +596,13 @@ this.getListHistory()
                                 <div className="viewWrapItemLeft3">
                                     {this.isLastMessageLeft(index) ? (
                                         <img
-                                            src={this.currentPeerUser.photoUrl}
+                                            src={this.currentPeerUser.URL}
                                             alt="avatar"
                                             className="peerAvatarLeft"
                                         />
                                     ) : (
-                                        <div className="viewPaddingLeft"/>
-                                    )}
+                                            <div className="viewPaddingLeft" />
+                                        )}
                                     <div className="viewItemLeft3" key={item.timestamp}>
                                         <img
                                             className="imgItemLeft"
@@ -472,8 +613,8 @@ this.getListHistory()
                                 </div>
                                 {this.isLastMessageLeft(index) ? (
                                     <span className="textTimeLeft">
-                    {moment(Number(item.timestamp)).format('ll')}
-                  </span>
+                                        {moment(Number(item.timestamp)).format('LLL')}
+                                    </span>
                                 ) : null}
                             </div>
                         )

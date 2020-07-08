@@ -8,6 +8,11 @@
     left: 50%;
     z-index: 999;
 }
+
+.btn{
+    font-weight: 600;
+    font-size: 16px;
+}
 .FilterButton{
     margin-top: 20px;
 }
@@ -22,15 +27,19 @@
     border-left:0px solid #004a8a;
 }
 
+#addAttphone{
+    position: absolute;
+    left: -43%;
+    width: 95%;
+    bottom: -84%;
+    z-index: 999;
+}
+
 .modalAddattraction {
     width: 100%;
-    background-color: rgba(242, 246, 255, 0.9);
-    -webkit-box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15);
-    box-shadow: 0 5px 11px 0 rgba(85, 182, 255, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15); 
         position: absolute;
     left: 50%;
     z-index: 999;
-    border-radius: 8px;
     max-width: 550px;
 }
 .MuiAutocomplete-input {
@@ -50,8 +59,21 @@
     border-radius: 3px;
 }
 .delAttraction i{
-    color:red
+    margin-left:4px
 }
+.editAttraction i{
+    margin-left:6px
+}
+.delAttraction i:hover{
+    margin-left:4px;
+    color: rgb(200,200,200);
+}
+.editAttraction i:hover{
+    margin-left:6px;
+    color: rgb(200,200,200);
+
+}
+
 .modalAddCity .BTNSubmit {
     position: absolute;
     top: 480px;
@@ -77,7 +99,9 @@
 }
 .rightSide div {
     position: absolute;
-    left: 30%;
+    left: 10%;
+}
+.rightSide{
 }
 input {
     height: auto;
@@ -93,6 +117,13 @@ input {
     box-shadow: none;
     transition: box-shadow 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06),
         border 250ms cubic-bezier(0.27, 0.01, 0.38, 1.06);
+}
+.showTrip{
+}
+.zindex{
+    position: absolute;
+    z-index: 999;
+    width: 95%;
 }
 .listCities {
     height: auto;
@@ -122,8 +153,10 @@ input {
     border: 1px solid #bfc0c1;
 }
 .ExistDiv {
+    position: absolute;
+    top:0;
+    left:90%;
     font-size: 20px;
-    margin-left: 95%;
     height: 30px;
     width: 30px;
 }
@@ -152,9 +185,97 @@ cursor: pointer;
 .TripList{
     -webkit-box-shadow: 0 5px 11px 0 rgba(80, 87, 93, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15);
     box-shadow: 0 5px 11px 0 rgba(60, 74, 84, 0.28), 0 4px 15px 0 rgba(36, 133, 255, 0.15); 
+    margin-bottom: 30px;
 }
 
 .SelectTourist{
     margin-left: 30px;
     width: 40%;
+}
+.list-group-flush:last-child .list-group-item:last-child{
+    /* border-bottom: 2px solid #e4e6e9; */
+  
+}
+#attInTrip1{
+    font-size: 24px;
+padding:2px;
+margin:0px;
+-webkit-box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+-moz-box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+}
+#attInTrip2{
+    font-size: 24px;
+    border-top:3px solid #d7dbe2;
+    padding:2px;
+    margin:0px;
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+    box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+    }
+.DayTrip{
+         border-bottom: 2px solid #d7dbe2; 
+    border-radius: 4px 4px 0px 0px;
+    padding:2px;
+    background-color: rgb(163, 212, 255);
+    text-align: center;
+  
+}
+.titleDivTrip{
+    margin-bottom: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .btn{
+        font-weight: 400;
+        font-size: 12px;
+    }
+    .titleDivTrip h2{
+        font-size: 30px;
+    }
+    #attInTrip1{
+        font-size: 18px;
+    padding:2px;
+    margin:0px;
+    -webkit-box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+    -moz-box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+    box-shadow: 0px -3px 9px -4px rgba(204,204,204,1);
+    }
+    #attInTrip2{
+        font-size: 18px;
+        border-top:3px solid #d7dbe2;
+        padding:2px;
+        margin:0px;
+        -webkit-box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+        -moz-box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+        box-shadow: 0px 3px 5px 0px rgba(140,140,140,1);
+        }
+    .showTrip{
+        overflow-y: scroll;
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
+    .addAttDiv{
+        position: absolute;
+        left: -45%;
+        top: 35%;
+        z-index: 999;
+    }
+    .SelectTourist{
+        margin-top: 80px;
+        width: 80%;
+    }
+    .leftSide{
+        margin-right: 0px;
+    }
+    .drag{
+        z-index: 999;
+        position: absolute;
+        top:100px;
+        
+    }
+    .ExistDiv {
+        
+    }
+
 }

@@ -1,0 +1,192 @@
+.titleDataTable{
+    margin-top: 60px;
+    margin-bottom: 100px;
+    flex: auto;
+    text-align: center;
+}
+.EditButtons{
+    margin:30px;
+    text-align: center;
+}
+
+.titleDataTable h3{
+    font-size: 60px;
+    font-weight: 600;
+
+}
+
+#title {
+    text-align: center;
+    font-family: arial, sans-serif;
+  }
+  
+  #languages {
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 3px solid #ddd;
+    width: 100%;
+  }
+  
+  #languages td, #languages th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #languages tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #languages tr:hover {background-color: #ddd;}
+  
+  #languages th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+  }
+  .dataTable img{
+      height: 90px;
+      width: 120px;
+  }
+  .dataTable{
+      text-align: center;
+      margin-bottom: 100px;
+  }
+  .dataTable select{
+    height: 40px;
+  }
+
+  .btnAddDataTable{
+      margin-right: 280px;
+      font-size: 20px;
+    align-content: flex-end
+  }
+  .BTNCLASS{
+    font-size: 20px;
+    color: #00639d;
+
+  }
+  .imageEditDiv img{
+      height: 250px;
+      width: 310px;
+      border-radius: 8px;
+  }
+  .imageEditDivChange{
+      text-align: center;
+  }
+  .imageEditDivChange img{
+    height: 290px;
+    width: 360px;
+  }
+  .EditTableBody{
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 100px;
+      margin-top:50px;
+      margin-left:100px;
+  }
+  .imageEditDiv{
+    position: relative;
+      height: 250px;
+      width: 310px;
+      margin:10px;
+      border-radius: 8px;
+      box-shadow: 0 0.125rem 9.375rem rgba(90, 97, 105, 0.1),
+      0 0.25rem 0.5rem rgba(90, 97, 105, 0.12),
+      0 0.9375rem 1.375rem rgba(90, 97, 105, 0.1),
+      0 0.4375rem 2.1875rem rgba(165, 182, 201, 0.1);
+  }
+  .imageEditDiv img:hover{
+border: 8px;
+  }
+  .imageEditDiv:hover{
+    border: 8px;
+      }
+
+  .imageEditDiv:hover .fotterItemEdit {
+    transition: transform 0.9s;
+    background-color: #00639d;
+    color: white;
+    cursor: pointer;
+    border-radius: 0px 0px 8px 8px;
+}
+.imageEditDiv:hover .fotterItemEdit h4{
+    color: white;
+
+}
+
+  .fotterItemEdit{
+      width: 100%;
+      height: 60px;
+      text-align: center;
+      background-color: #b3e0ff;
+      color:white;
+      position: absolute;
+      top: 76%;
+      opacity: 0.85;
+      font-weight: bold;
+      border-radius: 0px 0px 8px 8px;
+
+  }
+  .editIcon span i{
+      margin-top:20px;
+      font-size: 24px;
+      color: white;
+  }
+  .delIcon span i{
+    margin-top:20px;
+    font-size: 24px;
+    color: white;
+  }
+  .titleImage{
+    margin-top:20px;
+  }
+  .titleImage h5{
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+
+  }
+
+  .editFormDiv{
+    height: 600px;
+    width: 600px;
+    position: absolute;
+    left: 30%;
+    top: 20%;
+    z-index: 111;
+    background-color: #fff;
+    
+  }
+  
+.uploadPicIconEdit {
+    font-size: 24px;
+    position: absolute;
+    top: 88%;
+    left: 77%;
+    color: rgb(255, 255, 255);
+  }
+  .uploadPicIconEdit i {
+      border-radius: 50%;
+      padding:12px;
+      border:2px solid white;
+      background-color: #3188dc;
+  }
+  .uploadPicIconEdit i:hover {
+      border-radius: 50%;
+      padding:12px;
+      border:2px solid white;
+      background-color: #1f70bb;
+  }
+
+
+  .uploadDivEdit{
+    width: 250px;
+    height: 310px;
+    overflow: auto;
+    position: absolute;
+    left:40%;
+    top:43%;
+    z-index: 999;
+  }
+ 

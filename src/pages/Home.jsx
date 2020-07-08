@@ -1,48 +1,59 @@
-import React, { Component } from 'react'
-import '../Css/signUpNavBar.css';
+import React, { Component,useState } from 'react'
 import { withRouter } from 'react-router-dom';
-import ProfileDetails from "../Screens/ProfileDetails.jsx";
-//import Area from '../Screens/Area';
-import ProfileCard from '../Components/ProfileCard.jsx';
-import NavbarProfile from '../Components/NavbarProfile';
-import Languages from '../Screens/Languages';
-import '../Css/Home.css';
-import Hobbies from '../Screens/Hobbies';
-import Expertise from '../Screens/Expertise';
-import Typography from '@material-ui/core/Typography';
-//import Box from '@material-ui/core/Box';
+import ProfileDetails from "../Profile/ProfileDetails.jsx";
+import ProfileCard from '../Profile/Components/ProfileCard.jsx';
+import NavbarProfile from '../Profile/Components/NavbarProfile';
+import Languages from '../Profile/Languages';
+import Hobbies from '../Profile/Hobbies';
+import Expertise from '../Profile/Expertise';
 import facebook from '../Img/facebook.png';
 import twitter from '../Img/twitter.png';
 import website from '../Img/website.png';
 import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
-//import MainFooter from '../Components/MainFooter';
-import "bootstrap/dist/css/bootstrap.min.css";
 import ReactLoading from 'react-loading';
+import { Container, Row, Col } from "shards-react";
+import {myFirestore } from '../services/firebase'
+import TouristProfile from '../Components/TouristProfile';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
+import Modal from 'react-modal';
+import { Button } from 'react-bootstrap';
+import '../Profile/Css/signUpNavBar.css';
+import '../Profile/Css/Home.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import { Container, Row, Col } from "shards-react";
-import {myFirebase, myFirestore} from '../services/firebase'
-import {AppString} from '../Components/Const'
+import first from '../Img/profileDetails.jpeg';
+import second from '../Img/language.jpeg';
+import three from '../Img/expertise.jpeg';
 
-// function Copyright() {
-//     return (
-//         <Typography variant="body2" color="textSecondary" align="center">
-//             {'Copyright © '}
-//             <Link color="inherit" href="#">
-//                 IsraVisor
-//         </Link>{' '}
-//             {new Date().getFullYear()}
-//             {'.'}
-//         </Typography>
-//     );
-// }
-
+const customStyles = {
+    content : {
+      top                   : '50%',
+      left                  : '50%',
+      right                 : 'auto',
+      bottom                : 'auto',
+      marginRight           : '-50%',
+      marginTop           : '40px',
+      marginBottom           : '40px',
+      transform             : 'translate(-50%, -50%)',
+      height: '570px',
+        width:'1000px'
+    }
+  };
+  
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             namePage: 'Profile Details',
+            docId:"",
+            idChat:"",
             local: this.props.local,
             navbar: this.props.navbarOpenCheck,
             Guide: '',
@@ -53,10 +64,20 @@ class Home extends Component {
             AllAreas: this.props.AllAreas,
             AllHobbies: this.props.AllHobbies,
             AllExpertises: this.props.AllExpertises,
+            AllLanguages: this.props.LanguagesListOrgenized,
             linksfromSQL: [],
+            isOpenTouristProfile: false,
+            tourist: "",
+            tutorialExpertises: false,
+            tutorialStart: this.props.openTutorial,
+            tutorialHobbies: false,
+            tutorialTrip: false,
             fullLinks: [],
             isLoading: true,
-            listOfTouristsGuide:[],
+            showRequest: false,
+            listOfTouristsGuide: [],
+            requestTouristEmails: [],
+            notificationsMessages:[],
             options: [
                 {
                     id: 0,
@@ -124,58 +145,427 @@ class Home extends Component {
     componentWillMount() {
         const Guidetemp = JSON.parse(localStorage.getItem('Guide'));
         if (this.props.location.state === undefined) {
+            let idChat = localStorage.getItem('idChat');
+            let docId = localStorage.getItem('docId');
             this.setState({
-                Guide: Guidetemp
+                Guide: Guidetemp,
+                idChat:idChat,
+                docId:docId
             })
-            this.ConnectFirebase(Guidetemp);
-
+            //this.ConnectFirebase(Guidetemp);
         }
         else {
             this.setState({
-                Guide: this.props.location.state.GuideTemp
+                Guide: this.props.location.state.GuideTemp,
+                idChat:this.props.location.state.idChat,
+                docId:this.props.location.state.docId
             })
-            this.ConnectFirebase(this.props.location.state.GuideTemp);
+            //this.ConnectFirebase(this.props.location.state.GuideTemp);
         }
-
     }
     componentDidMount() {
-        //this.onLoginPress();
+        this.setState({
+            isLoading: true
+        })
+        this.CheckMessagesNotifications();
+        this.GetAllTouristsGuide();
+        this.CheckRequests();
         //this.ConnectFirebase();
         this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
-        this.GetAreasGuideList(this.state.Guide);
+        //this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
-        this.GetAllTouristsGuide();
         this.setState({
-            isLoading: false
+            isLoading: false,
+           // tutorialStart: true
         })
-    }
-    ConnectFirebase = async (Guide) => {
-        const output = await myFirebase.auth().signInWithEmailAndPassword(Guide.Email, Guide.PasswordGuide)
-            .then(async result => {
-                let user = result.user;
-                localStorage.setItem('idChat',user.uid);
-                if (user) {
-                    await myFirestore.collection('users')
-                        .where('id', "==", user.uid)
-                        .get()
-                        .then(function (querySnapshot) {
-                            querySnapshot.forEach(function (doc) {
-                                console.log(doc.id);
-                                const currentdata = doc.data()
-                                console.log(currentdata)
-                                localStorage.setItem('docId', doc.id);
-                                localStorage.setItem('idChat', currentdata.id);
-                            })
-                        })
-                }
-            })
-            console.log(localStorage.getItem('docId'));
-            console.log(localStorage.getItem('idChat'));
+
+        console.log(new Date().toLocaleDateString())
     }
 
-    GetAllTouristsGuide = () =>{
+  
+
+    //מציג הקדמה לאפליקציה
+    FirstEnter = () => {
+        return (
+            <div>
+            <Modal
+             isOpen={true}
+          //onAfterOpen={afterOpenModal}
+          //onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+                <div>
+                    <img className="imageDiv" src={first} />
+                </div>
+                <div className="buttonsTutorial">
+                    <Button onClick={() => { this.setState({ tutorialStart: false });this.props.QuestionFunc(false) }} variant="danger" autoFocus> Skip</Button>
+                    <Button onClick={() => { this.setState({ tutorialStart: false, tutorialExpertises: true }) }} variant="primary" autoFocus>Next</Button>
+                          </div>
+            </Modal>
+            </div>
+            )
+    }
+
+    //הקדמה התמחויות ותחביבים
+    nextToExper = () => {
+        return <div>
+           <Modal
+             isOpen={true}
+          //onAfterOpen={afterOpenModal}
+          //onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+                <div>
+                <img className="imageDiv" src={second} />
+                </div>
+                <div className="buttonsTutorial">
+                    <Button onClick={() => { this.setState({ tutorialExpertises: false }) }} variant="danger" autoFocus> Skip</Button>
+                    <Button onClick={() => { this.setState({ tutorialExpertises: false, tutorialTrip: true }) }} variant="primary" autoFocus>Next</Button>
+                </div>
+            </Modal>
+        </div>
+    }
+
+    //הקדמה התמחויות ותחביבים
+    nextToBuildTrip = () => {
+        return <div>
+            <Modal
+             isOpen={true}
+          //onAfterOpen={afterOpenModal}
+          //onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+                    <div>
+                    <img className="imageDiv" src={three} />
+                </div>
+                <div className="buttonsTutorial">
+                    {/* <Button onClick={() => {this.setState({tutorialTrip:false})}} variant="danger" autoFocus> Skip</Button> */}
+                    <Button onClick={() => { this.setState({ tutorialTrip: false });this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
+                </div>
+            </Modal>
+        </div>
+    }
+
+    CheckMessagesNotifications=()=>{
+        let DocumentIdUser = this.state.docId;
+        let messagesNotificationUser = [];
+        if (localStorage.getItem('docId')) {
+            DocumentIdUser = localStorage.getItem('docId');
+            myFirestore.collection('users').doc(DocumentIdUser).get()
+            .then((docRef) => {
+                messagesNotificationUser = docRef.data().messages;
+               this.orgenizeNotifications(messagesNotificationUser);
+            })
+        }
+    }
+
+    orgenizeNotifications=(notifications)=>{
+        console.log(notifications);
+        let arr =[];
+        let users = [];
+        if (notifications.length>0) {
+            notifications.map(item=>arr.push(item.notificationId));
+            for (let i = 0; i < arr.length; i++) {
+                const documentId = arr[i];
+                  myFirestore.collection('users')
+                     .where('id', "==", documentId)
+                     .get()
+                     .then(function (querySnapshot) {
+                         querySnapshot.forEach(function (doc) {
+                           users.push(doc.data());
+                         })
+                         console.log(users)
+                     })
+                     .then((data)=>{
+                         this.setState({
+                             notificationsMessages:users
+                         })
+                         this.props.numOfNotifications(users);
+                     })
+            }
+        }
+        else{
+            this.props.numOfNotifications(0);
+
+        }
+      
+    }
+   
+    //בודק אם יש בקשות חברות חדשות
+    CheckRequests = () => {
+        fetch(this.apiUrl + "BuildTrip/GetRequests?email=" + this.state.Guide.Email, {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json; charset=UTF-8"
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    this.ChandeRequest(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+
+    //מציג את בקשות החברות החדשות
+    ShowRequestsAlert = () => {
+        for (let i = 0; i < this.state.requestTouristEmails.length; i++) {
+            const element = this.state.requestTouristEmails[i];
+            return <div>
+                <Dialog
+                    open={true}
+                    onClose={false}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">{"You Have Request Alert From " + element}</DialogTitle>
+                    <DialogContent>
+                        {/* <DialogContentText id="alert-dialog-description">
+                        by clicking yes your picture will be changed
+          </DialogContentText> */}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => { this.showProfileTour(element) }} variant="info">
+                            Show Profile
+          </Button>
+                        <Button onClick={() => { this.DeclineChat(element) }} variant="danger" autoFocus>
+                            Decline
+          </Button>
+                        <Button onClick={() => { this.AcceptChat(element) }} variant="primary" autoFocus>
+                            Accept
+          </Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        }
+
+    }
+
+    ///מציג פרופיל תייר
+    showProfileTour = (email) => {
+        for (let i = 0; i < this.state.listOfTouristsGuide.length; i++) {
+            const element = this.state.listOfTouristsGuide[i];
+            if (element.Email == email) {
+                this.setState({
+                    tourist: element,
+                    showRequest: false,
+                    isOpenTouristProfile: true
+                })
+            }
+        }
+    }
+
+    //מציג בקשות חדשות
+    ChandeRequest = (res) => {
+        let touristDetails = '';
+        let ArrayTouristRequest = [];
+        this.setState({
+            showRequest: false
+        })
+        if (res !== null) {
+            for (let i = 0; i < res.length; i++) {
+                const element = res[i];
+                if (element.Status == 'send request') {
+                    ArrayTouristRequest.push(element.TouristEmail)
+                    for (let j = 0; j < this.state.listOfTouristsGuide.length; j++) {
+                        const tourist = this.state.listOfTouristsGuide[j];
+                        if (tourist.Email == element.TouristEmail) {
+                            touristDetails = tourist;
+                        }
+                    }
+                    this.setState({
+                        requestTouristEmails: ArrayTouristRequest,
+                        showRequest: true
+                    })
+                }
+                else if (element.Status == 'Start Chat' || element.Status == 'Decline Chat') {
+                    // this.setState({
+                    //     showRequest:false
+                    // })
+
+                }
+            }
+        }
+        else {
+            this.setState({
+                showRequest: false
+            })
+        }
+    }
+
+    //מאשר בקשת חברות
+    AcceptChat = (element) => {
+        fetch(this.apiUrl + 'BuildTrip', {
+            method: 'PUT',
+            body: JSON.stringify({
+                TouristEmail: element,
+                GuideEmail: this.state.Guide.Email,
+                Status: 'Accept Request'
+            }),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                   // this.SendNotificationStartChat(element);
+                    this.ChandeRequest(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+    }
+
+    //לא מאשר בקשת חברות
+    DeclineChat = (element) => {
+        fetch(this.apiUrl + 'BuildTrip', {
+            method: 'PUT',
+            body: JSON.stringify({
+                TouristEmail: element,
+                GuideEmail: this.state.Guide.Email,
+                Status: 'Decline Chat'
+            }),
+            headers: new Headers({
+                'Content-type': 'application/json; charset=UTF-8' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then(res => {
+                return res.json()
+            })
+            .then(
+                (result) => {
+                   // this.SendNotificationDeclineChat(element);
+                    this.ChandeRequest(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                });
+        this.setState({ showRequest: false })
+    }
+
+    //שולח פוש לתייר לאישור בקשה
+    SendNotificationStartChat = (touristEmail) => {
+        let GuideChatId = localStorage.getItem('idChat');
+        let guide = {
+            chatId: GuideChatId,
+            Email: this.state.Guide.Email,
+            TouristEmail: touristEmail
+        }
+        let token = "";
+        for (let i = 0; i < this.state.listOfTouristsGuide.length; i++) {
+            const element = this.state.listOfTouristsGuide[i];
+            if (element.Email == touristEmail) {
+                token = element.Token;
+            }
+        }
+        if (token !== null) {
+        }
+        let message = {
+            to: token,
+            title: 'Accept Request',
+            body: this.state.Guide.Email + ' Accept your request',
+            data: { path: "myProfile", info: JSON.stringify(guide) }
+        }
+
+        fetch(this.apiUrl + 'Tourist/Push', {
+            method: 'POST',
+            body: JSON.stringify(message),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8", 'Accept-encoding': 'gzip, deflate' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+
+    //שולח פוש לתייר לביטול בקשה
+    SendNotificationDeclineChat = (touristEmail) => {
+        let GuideChatId = localStorage.getItem('idChat');
+        let guide = {
+            chatId: GuideChatId,
+            Email: this.state.Guide.Email
+        }
+        let token = "";
+        for (let i = 0; i < this.state.listOfTouristsGuide.length; i++) {
+            const element = this.state.listOfTouristsGuide[i];
+            if (element.Email == touristEmail) {
+                token = element.Token;
+            }
+        }
+        if (token !== null) {
+        }
+        let message = {
+            to: token,
+            title: 'Decline Request',
+            body: this.state.Guide.Email + ' Decline your request',
+            data: { path: "Decline", info: JSON.stringify(guide) }
+        }
+
+        fetch(this.apiUrl + 'Tourist/Push', {
+            method: 'POST',
+            body: JSON.stringify(message),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8", 'Accept-encoding': 'gzip, deflate' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    console.log(result);
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
+    }
+
+    ConnectFirebase = async (Guide) => {
+        // const output = await myFirebase.auth().signInWithEmailAndPassword(Guide.Email, Guide.PasswordGuide)
+        //     .then(async result => {
+        //         let user = result.user;
+        //         localStorage.setItem('idChat', user.uid);
+        //         if (user) {
+        //             await myFirestore.collection('users')
+        //                 .where('id', "==", user.uid)
+        //                 .get()
+        //                 .then(function (querySnapshot) {
+        //                     querySnapshot.forEach(function (doc) {
+        //                         const currentdata = doc.data()
+        //                         localStorage.setItem('docId', doc.id);
+        //                         localStorage.setItem('idChat', currentdata.id);
+        //                     })
+        //                 })
+        //         }
+        //     })
+    }
+
+
+    //מביא את כל התיירים של המדריך
+    GetAllTouristsGuide = () => {
         fetch(this.apiUrl + 'Guide_Tourist?email=' + this.state.Guide.Email, {
             method: "GET",
             headers: new Headers({
@@ -190,43 +580,58 @@ class Home extends Component {
                     this.setState({
                         listOfTouristsGuide: result
                     });
-this.orgenizeTouristsGuide(result)                    
+                    this.orgenizeTouristsGuide(result)
                 },
                 (error) => {
                     console.log("err post=", error);
                 }
             );
     }
-    orgenizeTouristsGuide=(res)=>{
+
+    //מסדר תיירים
+    orgenizeTouristsGuide = (res) => {
         for (let i = 0; i < res.length; i++) {
             const tourist = res[i];
             let HobbiesNames = [];
             let ExpertisesNames = [];
-           for (let j = 0; j < tourist.Hobbies.length; j++) {
-               const touristHobby = tourist.Hobbies[j];
-               for (let h = 0; h < this.state.AllHobbies.length; h++) {
-                   const hobby = this.state.AllHobbies[h];
-                   if (hobby.id == touristHobby) {
-                    HobbiesNames.push(hobby.name)
-                   }
-               }
-           }
-           for (let j = 0; j < tourist.Expertises.length; j++) {
-               const touristExpertise = tourist.Expertises[j];
-               for (let h = 0; h < this.state.AllExpertises.length; h++) {
-                   const expertise = this.state.AllExpertises[h];
-                   if (expertise.id == touristExpertise) {
-                    ExpertisesNames.push(expertise.name)
-                   }
-               }
-           }
-           tourist.HobbiesNames = HobbiesNames;
-           tourist.ExpertisesNames = ExpertisesNames;
+            for (let j = 0; j < tourist.Hobbies.length; j++) {
+                const touristHobby = tourist.Hobbies[j];
+                for (let h = 0; h < this.state.AllHobbies.length; h++) {
+                    const hobby = this.state.AllHobbies[h];
+                    if (hobby.id == touristHobby) {
+                        HobbiesNames.push(hobby)
+                    }
+                }
+            }
+            for (let j = 0; j < tourist.Expertises.length; j++) {
+                const touristExpertise = tourist.Expertises[j];
+                for (let h = 0; h < this.state.AllExpertises.length; h++) {
+                    const expertise = this.state.AllExpertises[h];
+                    if (expertise.id == touristExpertise) {
+                        ExpertisesNames.push(expertise)
+                    }
+                }
+            }
+            tourist.HobbiesNames = HobbiesNames;
+            tourist.ExpertisesNames = ExpertisesNames;
         }
-        console.log(res);
-        localStorage.setItem('ListTourists',JSON.stringify(res));
+        this.setState({
+            listOfTouristsGuide: res
+        })
+        localStorage.setItem('ListTourists', JSON.stringify(res));
 
     }
+
+    //יציאה מפרופיל תייר
+    ExitProfile = (res) => {
+        if (res == 'close') {
+            this.setState({
+                isOpenTouristProfile: false
+            })
+            this.CheckRequests();
+        }
+    }
+
     //מביא את הלינקים של המדריך הספציפי
     getLinksFromSQL = (TempGuide) => {
         fetch(this.apiUrl + "Link/" + TempGuide.gCode, {
@@ -249,6 +654,10 @@ this.orgenizeTouristsGuide(result)
                 (error) => {
                     console.log("err post=", error);
                 });
+    }
+
+    checkIfExistNewMessages = () => {
+        this.props.showToast(1, "You have new message")
     }
 
     //יוצר מערך חדש הכולל את שם הלינק(אינסטגרם למשל) ואת הכתובת של הלינק
@@ -290,7 +699,6 @@ this.orgenizeTouristsGuide(result)
     updateGuide = () => {
         this.GetGuideFromSQL(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
-
     }
     //שינוי עמוד
     ClickPage2 = (e) => {
@@ -306,7 +714,7 @@ this.orgenizeTouristsGuide(result)
     renderMainPage = () => {
         const namePage2 = this.state.namePage;
         if (namePage2 === "Profile Details") {
-            return <ProfileDetails updateLinksSQL={this.updateLinks} updateGuide={this.updateGuide} local={this.state.local} GuideDetails={this.state.Guide} linksfromSQL={this.state.linksfromSQL} fullLinks={this.state.fullLinks} />
+            return <ProfileDetails updateLinksSQL={this.updateLinks} orgenizeLinks={this.orgenzie} updateGuide={this.updateGuide} local={this.state.local} GuideDetails={this.state.Guide} linksfromSQL={this.state.linksfromSQL} fullLinks={this.state.fullLinks} />
         }
         // else if (namePage2 === "Area Knowledge") {
         //     return <Area updateArea={this.updateAreasGuides} guideListAreas={this.state.GuideAreas} GuideDetails={this.state.Guide} AreasArray={this.state.AllAreas} />
@@ -431,16 +839,17 @@ this.orgenizeTouristsGuide(result)
     showProfileCard = () => {
         if (this.state.namePage === "Profile Details") {
             return <Row className="homePage">
-                <Col className="ProfilecardDiv col-lg-3 col-md-2">
+                <Col lg='3' sm='12' className="ProfilecardDiv">
                     {this.funcGoogleFacebook()}
                 </Col>
-                <Col className="col-lg-9 col-md-10 col-sm-12 main-content p-0 centerDiv">
+                <Col lg='9' md='12' sm='12' className="main-content p-0 centerDiv">
+
                     {this.renderMainPage()}
                 </Col>
             </Row>
         }
         else {
-            return <Row className="homePage">
+            return <Row className="homePage" id="phoneHome">
                 <Col className="cardDiv col-12">
                     {this.renderMainPage()}
                 </Col>
@@ -450,21 +859,47 @@ this.orgenizeTouristsGuide(result)
 
     render() {
         return (
-            <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer">
-                <NavbarProfile ClickPage2={this.ClickPage2} />
-                {this.showProfileCard()}
-                {/* Loading */}
-                {this.state.isLoading ? (
-                    <div className="viewLoading">
-                        <ReactLoading
-                            type={'spin'}
-                            color={'#203152'}
-                            height={'3%'}
-                            width={'3%'}
-                        />
-                    </div>
-                ) : null}
-            </Container>
+            <div>
+                <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer hidden-sm hidden-xs">
+                    <NavbarProfile ClickPage2={this.ClickPage2} />
+                    {this.props.openTutorial ? this.FirstEnter() : null}
+                    {this.state.tutorialExpertises ? this.nextToExper() : null}
+                    {this.state.tutorialTrip ? this.nextToBuildTrip() : null}
+                    {this.state.showRequest ? this.ShowRequestsAlert() : null}
+                    {this.state.isOpenTouristProfile ? <TouristProfile navbarOpenCheck={this.state.navbar}
+                        ExitProfile={this.ExitProfile} tourist={this.state.tourist} /> : null}
+                    {this.showProfileCard()}
+                    {/* Loading */}
+                    {this.state.isLoading ? (
+                        <div className="viewLoading">
+                            <ReactLoading
+                                type={'spin'}
+                                color={'#203152'}
+                                height={'3%'}
+                                width={'3%'}
+                            />
+                        </div>
+                    ) : null}
+                </Container>
+                <div id={this.props.navbarOpenCheck} className="HomePageContainer hidden-md hidden-lg hidden-xl">
+                    <NavbarProfile ClickPage2={this.ClickPage2} />
+                    {this.state.showRequest ? this.ShowRequestsAlert() : null}
+                    {this.state.isOpenTouristProfile ? <TouristProfile navbarOpenCheck={this.state.navbar}
+                        ExitProfile={this.ExitProfile} tourist={this.state.tourist} /> : null}
+                    {this.showProfileCard()}
+                    {/* Loading */}
+                    {this.state.isLoading ? (
+                        <div className="viewLoading">
+                            <ReactLoading
+                                type={'spin'}
+                                color={'#203152'}
+                                height={'3%'}
+                                width={'3%'}
+                            />
+                        </div>
+                    ) : null}
+                </div>
+            </div>
         )
     }
 }

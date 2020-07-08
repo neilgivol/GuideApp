@@ -1,0 +1,202 @@
+.HobbiesList {
+    float: left;
+    height: 100%;
+}
+.HobbieAddedList {
+    height: 100%;
+    margin-left: 5px;
+}
+.HobbiesDiv {
+    margin: 0 auto;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+.HobbiesAdded {
+    float: right;
+    height: 100%;
+}
+.CardImage {
+    max-width: 100%;
+    max-height: 100%;
+}
+.CardItem img {
+    height: 195px;
+    width: 260px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+span.middleLine {
+    display: inline-block;
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.CardItem {
+    position: relative;
+    height: 195px;
+    width: 260px;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    margin: 3px;
+    position: relative;
+    border-radius: 8px;
+    border: 3px outset rgba(164, 164, 164, 0.28);
+    border-radius: 4px 4px 4px 4px;
+    transition: transform 0.3s;
+    box-shadow: 0 0.125rem 9.375rem rgba(90, 97, 105, 0.1),
+        0 0.25rem 0.5rem rgba(90, 97, 105, 0.12),
+        0 0.9375rem 1.375rem rgba(90, 97, 105, 0.1),
+        0 0.4375rem 2.1875rem rgba(165, 182, 201, 0.1);
+}
+.del {
+    position: absolute;
+    bottom: 84%;
+    left: 3%;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 10px;
+}
+.delSpan i {
+    color: black;
+    font-size: 20px;
+}
+.del:hover {
+    color: white;
+}
+.CardItem:hover {
+    background-color: #b3e0ff;
+    -ms-transform: scale(1.2); /* IE 9 */
+    -webkit-transform: scale(1.2); /* Safari 3-8 */
+    transform: scale(1.2);
+    z-index: 999;
+    cursor: pointer;
+}
+
+.CardItem:hover .titleCardDiv {
+    background-color: #00639d;
+    color: white;
+    cursor: pointer;
+}
+.CardItem:hover .titleCardDiv h4{
+    color: white;
+
+}
+
+.titleCardDiv h4 {
+    font-size: 24px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 34px;
+}
+
+
+.titleCardDiv {
+    height: 20%;
+    position: absolute;
+    top: 82%;
+    width: 100%;
+    opacity: 0.7;
+    background-color: #b3e0ff;
+    font-weight: bold;
+}
+.cardDiv{
+    margin-bottom: 100px;
+}
+
+.HobbiesListSide {
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+.titleAdded span {
+    margin-left: 10px;
+    font-size: 20px;
+}
+.cardDivCenter {
+    height: 100%;
+}
+
+.HobbieAddedList .CardItem {
+    max-height: 175px;
+}
+@media only screen and (max-width: 600px) {
+    .HobbiesDiv {
+        margin-right: 0px;
+    }
+    .HobbieAddedList {
+        margin-left: -16px;
+    }
+    .titleAdded span {
+        margin-left: 5px;
+        font-size: 15px;
+    }
+    .card .list-group-item {
+        padding: 10px;
+    }
+    .title {
+        margin-top: 0px;
+    }
+    .HobbiesList {
+        padding-right: 0px;
+    }
+    .HobbiesAdded {
+        padding-right: 0px;
+    }
+    .HobbiesListSide {
+        padding-right: 0px;
+        margin-right: -0px;
+    }
+    .CardItem {
+        height: 108px;
+        width: 144px;
+    }
+    .CardItem img {
+        height: 108px;
+        width: 144px;
+    }
+    .del {
+        position: absolute;
+        bottom: 77%;
+        left: 3%;
+        font-size: 8px;
+    }
+    span.middleLine {
+        height: 10px;
+        display: inline-block;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.8);
+    }
+    .titleCardDiv h4 {
+        font-size: 10px;
+        margin: 0 auto;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 15px;
+    }
+
+    .titleCardDiv h4:hover {
+        color: white;
+    }
+
+    .titleCardDiv {
+        height: 20%;
+        position: absolute;
+        top: 83%;
+        width: 100%;
+        opacity: 0.7;
+        background-color: #b3e0ff;
+        font-weight: bold;
+    }
+
+    .titleCardDiv:hover {
+        background-color: #00639d;
+        color: white;
+        cursor: pointer;
+    }
+    .centerDiv {
+        margin-bottom: 100px;
+    }
+    /* .cardDivCenter{
+        margin-bottom: 60px;
+    } */
+    .cardDiv {
+        margin-bottom: 60px;
+        padding-right: 0px;
+    }
+}

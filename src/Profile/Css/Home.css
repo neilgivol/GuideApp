@@ -1,0 +1,87 @@
+#close{
+    height: 100%;
+    left: 100px;
+    position: relative;
+    top: 0px;
+    flex-direction: column;
+    transition: 300ms ease all;
+    width: 90%;
+}
+
+
+#close .CardBodyDiv{
+    max-height: 800px;
+}
+
+
+#open{
+    height: 100%;
+    left: 160px;
+    position: relative;
+    top: 0px;
+    flex-direction: column;
+    transition: 300ms ease all;
+    width: 80%;
+}
+body{
+    overflow-y: scroll;
+  }
+.HomePageContainer{
+    position: relative;
+    margin-top:40px;
+    margin-bottom: 50px;
+}
+.homePage{
+    margin-bottom: 100px;
+    margin:0 auto;
+    max-height: 100%;
+    padding: 10px;
+}
+.foot{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    border:1px solid;
+}
+.copyright{
+    position: absolute;
+    border:1px solid #999;
+    width: 100%;
+    bottom:15px;
+}
+
+@media only screen and (max-width: 600px) {
+    .homePage{
+        margin-bottom: 100px;
+        max-height: 100%;
+        padding: 10px;
+    }
+   .centerDiv{
+    margin-bottom: 60px;
+   }
+   .homePage{
+       margin-top: 45px;
+   }
+   #close{
+    left: -8px;
+    width: 100%;
+    position: absolute;
+    top:-100px;
+ 
+   }
+   #open{
+       left:-8px;
+       width: 100%;
+       position: absolute;
+       top:-100px;
+     
+    }
+  
+  
+
+    /* #phoneHome{
+        padding-left: -15px;
+        padding-right: -15px;
+    } */
+  
+  }
