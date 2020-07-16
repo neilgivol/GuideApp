@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 
-function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc, QuestionFunc, numOfNotification, logOutFunction }) {
+function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks, logo, navbarCheckFunc, QuestionFunc, numOfNotification, logOutFunction, moveToChat }) {
   const [navOpen, setNavOpen] = useState(true)
   const [hoverIndex, setHoverIndex] = useState(-1)
   const [clickIndex, setClickIndex] = useState(-1)
@@ -11,6 +11,7 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
   const [badge, setBadge] = useState("badge")
   const [num, setNum] = useState(numOfNotification.length)
   const [arr, setArr] = useState([])
+  const [logout, setlogout] = useState("closeLogout")
 
 
  const checkClass=()=>{
@@ -21,6 +22,8 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
    return "badge";
   }
  }
+
+
 
  const ShowNotifications=()=>{
    let arr2 = [];
@@ -57,16 +60,17 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
 
       <div className="hidden-md hidden-sm">
        <figure id="image-logo-Question hidden-xs" className="logOutDiv" onClick={() => {logOutFunction()}}>
-        <span className="logoutIcon"><i className="fas fa-sign-out-alt"></i></span>
+        <span className="logoutIcon"><i onMouseLeave={()=>{setlogout("closeLogout")}} onMouseEnter={()=>{setlogout("openLogout")}} className="fas fa-sign-out-alt"></i></span>
+        <span className={logout}>Logout</span>
       </figure>
 
       <figure id="image-logo-Question hidden-xs" className="notification" onClick={()=>{setShowNot(!showNot)}}>
         <span className="notificationIcon"><i className="fas fa-bell"></i></span>
         <span className={checkClass()}>{numOfNotification.length}</span>
-        {showNot ? <div id="listNotifDiv" className="ListNotifications"><h5 className="divTitleNotif">Notifications</h5><div id="listUL"><ul id="ulID1">{numOfNotification.length>0? numOfNotification.map(item=><li>{"You have new message from " + item.name}</li>):null}</ul></div></div> :null}
+        {showNot ? <div id="listNotifDiv" className="ListNotifications"><h5 className="divTitleNotif">Notifications</h5><div id="listUL"><ul id="ulID1">{numOfNotification.length>0? numOfNotification.map((item,index)=><li key={index}  onClick={()=>{moveToChat(item.email)}}>{"You have new message from " + item.name}</li>):null}</ul></div></div> :null}
       </figure>
 
-      <figure id="image-logo-Question hidden-xs" onClick={() => { setClickQuestion(!clickQuestion); QuestionFunc(clickQuestion); }}>
+      <figure id="image-logo-Question hidden-xs" onClick={() => { setClickQuestion(clickQuestion); QuestionFunc(clickQuestion); }}>
         <span className="QuestionCircle" ><i onMouseLeave={() => { setTutorial("closeTutorial") }} onMouseEnter={() => { setTutorial("openTutorial") }} className="fas fa-question-circle"></i></span>
         <span className={tutorial}>Watch Tutorial</span>
       </figure>
@@ -74,16 +78,17 @@ function ResponsiveNavigation({ background, hoverBackground, linkColor, navLinks
 
       <div className="hidden-lg hidden-xl hidden-sm ">
       <figure id="image-logo-Question hidden-xs" className="logOutDiv2" onClick={() => {logOutFunction()}}>
-        <span className="logoutIcon2"><i className="fas fa-sign-out-alt"></i></span>
+        <span className="logoutIcon2"><i onMouseLeave={()=>{setlogout("closeLogout")}} onMouseEnter={()=>{setlogout("openLogout2")}} className="fas fa-sign-out-alt"></i></span>
+        <span className={logout}>Logout</span>
       </figure>
 
       <figure id="image-logo-Question hidden-xs " className="notification2" onClick={()=>{setShowNot(!showNot)}}>
         <span className="notificationIcon2"><i className="fas fa-bell"></i></span>
         <span className={checkClass()}>{numOfNotification.length}</span>
-        {showNot ? <div id="listNotifDiv2" className="ListNotifications"><h5 className="divTitleNotif2">Notifications</h5><div id="listUL2"><ul id="ulID1">{numOfNotification.length>0? numOfNotification.map(item=><li>{"You have new message from " + item.name}</li>):null}</ul></div></div> :null}
+        {showNot ? <div id="listNotifDiv2" className="ListNotifications"><h5 className="divTitleNotif2">Notifications</h5><div id="listUL2"><ul id="ulID1">{numOfNotification.length>0? numOfNotification.map((item,index)=><li key={index} onClick={()=>{moveToChat(item.email)}}>{"You have new message from " + item.name}</li>):null}</ul></div></div> :null}
       </figure>
 
-      <figure id="image-logo-Question hidden-xs" onClick={() => { setClickQuestion(!clickQuestion); QuestionFunc(clickQuestion); }}>
+      <figure id="image-logo-Question hidden-xs" onClick={() => { setClickQuestion(clickQuestion); QuestionFunc(clickQuestion); }}>
         <span className="QuestionCircle2" ><i onMouseLeave={() => { setTutorial("closeTutorial") }} onMouseEnter={() => { setTutorial("openTutorial2") }} className="fas fa-question-circle"></i></span>
         <span className={tutorial}>Watch Tutorial</span>
       </figure>

@@ -1,9 +1,7 @@
-import { MDBDataTableV5, MDBBtn } from 'mdbreact';
 import React, { Component } from 'react';
 import './DataTablesCss.css';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table-next';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem, Container } from 'react-bootstrap';
+import { Button, Col, Row, ListGroup, Card, ListGroupItem, Container } from 'react-bootstrap';
 import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
@@ -27,6 +25,7 @@ class ExpertisesDataTable extends Component {
             ExpertisePic: "",
             isNew: false,
             local: this.props.local,
+            expertises:this.props.expertises
 
 
         }
@@ -133,15 +132,25 @@ class ExpertisesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: " ההתמחות נמחקה בהצלחה",
-                        showConfirmButton: false,
-                        timer: 1800
-                    });
-
-
+                    if (result !== null) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: " ההתמחות נמחקה בהצלחה",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                        this.setState({expertises:result})
+                    }
+                    else{
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: " ההתמחות לא נמחקה ",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                    }
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -149,7 +158,6 @@ class ExpertisesDataTable extends Component {
                         ExpertiseName: "",
                         ExpertisePic: "",
                         upload:false
-
                     })
                 },
                 (error) => {
@@ -171,7 +179,7 @@ class ExpertisesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -179,17 +187,17 @@ class ExpertisesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                        this.setState({expertises:result})
                     }
-                    else {
+                    else{
                         Swal.fire({
                             position: "center",
                             icon: "error",
-                            title: " ההתמחות לא נשמרה",
+                            title: " ההתמחות לא נשמרה ",
                             showConfirmButton: false,
                             timer: 1800
                         });
                     }
-
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -197,7 +205,6 @@ class ExpertisesDataTable extends Component {
                         ExpertiseName: "",
                         ExpertisePic: "",
                         upload:false
-
                     })
                 },
                 (error) => {
@@ -219,7 +226,7 @@ class ExpertisesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -227,12 +234,13 @@ class ExpertisesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                        this.setState({expertises:result})
                     }
-                    else {
+                    else{
                         Swal.fire({
                             position: "center",
                             icon: "error",
-                            title: " ההתמחות לא נשמרה",
+                            title: " ההתמחות לא נשמרה ",
                             showConfirmButton: false,
                             timer: 1800
                         });
@@ -244,7 +252,6 @@ class ExpertisesDataTable extends Component {
                         ExpertiseName: "",
                         ExpertisePic: "",
                         upload:false
-
                     })
                 },
                 (error) => {
@@ -304,7 +311,7 @@ class ExpertisesDataTable extends Component {
                     <div className="row titleDataTable"><h3>עריכת התמחויות</h3></div>
                     <div className="row btnAddDataTable"><Button className="BtnSave" onClick={this.AddnewExpertise}><h3>הוספת התמחות</h3></Button></div>
                 </div>
-                <div className="EditTableBody">{this.props.expertises.map((exper) =>
+                <div className="EditTableBody">{this.state.expertises.map((exper) =>
                     <div className="imageEditDiv">
                         <img src={exper.Picture} />
                         <div className="fotterItemEdit">

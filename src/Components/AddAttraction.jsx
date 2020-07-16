@@ -6,9 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import "../Css/BuildTrip.css";
-import { Container } from "shards-react";
 import moment from 'moment'
-import { Button, Col, Row, Form, ListGroup, ListGroupItem, Card } from 'react-bootstrap';
+import { Button, Col, Row, Form, Card } from 'react-bootstrap';
 import ReactLoading from "react-loading";
 
 import TextField from '@material-ui/core/TextField';
@@ -262,21 +261,36 @@ class AddAttraction extends Component {
 
     //מוסיף אטרקציה למסלול טיול
     AddAtractionToArray = () => {
-
+        let boolCorrectDates = true;
         this.setState({
             lastDay: ""
         })
-
-        if (new Date(this.state.AttractionFromDate).toLocaleString() ==  new Date(this.state.AttractionToDate).toLocaleString()) {
+        if (this.state.ListTripArray !== null) {
+            for (let i = 0; i < this.state.ListTripArray.length; i++) {
+                const element = this.state.ListTripArray[i];
+                if (this.state.AttractionFromDate < element.ToHour && this.state.AttractionFromDate > element.FromHour) {
+                    Swal.fire({
+                        position: "center",
+                        icon: "error",
+                        title: "Dates can't be between " + element.FromHour.toLocaleString() + " to " + element.ToHour.toLocaleString() + "!" ,
+                        showConfirmButton: true,
+                    });
+                    boolCorrectDates = false;
+                }
+            }
+        }
+        if(new Date(this.state.AttractionFromDate).toLocaleString() ==  new Date(this.state.AttractionToDate).toLocaleString()){
             Swal.fire({
                 position: "center",
                 icon: "error",
-                title: "You must enter dates",
-                showConfirmButton: false,
-                timer: 1200
+                title: "You must add new dates",
+                showConfirmButton: true,
             });
+            boolCorrectDates = false;
         }
-        else{
+
+      
+        if(boolCorrectDates){
         let TripTourist = "";
         let AttractionPointInTrip = "";
         let tempArray = [];

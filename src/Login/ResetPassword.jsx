@@ -5,14 +5,13 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import 'mdbreact/dist/css/mdb.css';
 import './ResetPassword.css';
 import './SignIn.css';
-import logo from '../Img/logo.png';
 import { Link } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Swal from 'sweetalert2';
 import logoLast from '../Img/logoadvisor.png';
-import { myFirestore, myStorage, myFirebase } from "../services/firebase";
+import { myFirestore, myFirebase } from "../services/firebase";
 
 function Copyright() {
     return (

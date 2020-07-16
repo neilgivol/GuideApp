@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
-import ReactLoading from 'react-loading'
+import { withRouter } from 'react-router-dom';
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from 'react-datepicker';
 import '../Profile/Css/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import "../Css/BuildTrip.css";
 import { Container } from "shards-react";
-import moment from 'moment'
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
+import { Button, Row, ListGroup } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 //import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
-import { ItemContent } from 'semantic-ui-react';
 import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
-import { GoogleComponent } from 'react-google-location'
-import { Input } from '@material-ui/core';
 import Swal from "sweetalert2";
-import $ from "jquery";
-import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
 import AddAttraction from '../Components/AddAttraction';
 import TouristProfile from '../Components/TouristProfile';
+import iconPic from '../Img/iconHeadGoogleMap.png';
+import first from '../Img/profileDetails.jpeg';
+import second from '../Img/language.jpeg';
+import three from '../Img/expertise.jpeg';
+import Modal from 'react-modal';
+
 const defaultCenter = {
     lat: 32.088780, lng: 34.854863
 }
@@ -42,6 +40,20 @@ const styles = {
 const autoStyle = {
     margin: 'none'
 }
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '60%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        marginTop: '40px',
+        marginBottom: '40px',
+        transform: 'translate(-50%, -50%)',
+        height: '80%',
+        width: '80%',
+    }
+};
 
 class BuildTrip extends Component {
     constructor(props) {
@@ -60,7 +72,11 @@ class BuildTrip extends Component {
             ChooseTourist: false,
             chosen: '',
             TripTourist: '',
-            showTourist:false
+            showTourist:false,
+            tutorialSecond: false,
+            tutorialStart: this.props.openTutorial,
+            tutorialHobbies: false,
+            tutorialThree: false,
         }
 
         let local = this.state.local;
@@ -74,6 +90,10 @@ class BuildTrip extends Component {
     }
 
     componentDidMount() {
+        this.setState({
+            tutorialStart:false
+        })
+        this.props.QuestionFunc(false);
         let g = JSON.parse(localStorage.getItem('cities'))
         if (g == null) {
             this.props.GetCities();
@@ -84,8 +104,85 @@ class BuildTrip extends Component {
         this.GetTypesList();
         this.GetRegionsList();
         this.AddLine();
-
+        this.props.CheckMessagesNotifications()
     }
+    componentDidUpdate(PrevProps) {
+        if (PrevProps.openTutorial !== this.props.openTutorial) {
+            this.setState({
+                tutorialStart: this.props.openTutorial,
+
+            })
+        }
+    }
+
+//הדרכה ראשונה
+
+    //מציג הקדמה לאפליקציה
+    FirstEnter = () => {
+        return (
+            <div>
+                <Modal
+                    isOpen={true}
+                    //onAfterOpen={afterOpenModal}
+                    //onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                >
+                    <div className="divImageTutorial">
+                        <img className="imageDiv" src={first} />
+                    </div>
+                    <div className="buttonsTutorial">
+                        <Button onClick={() => { this.setState({ tutorialStart: false }); this.props.QuestionFunc(false) }} variant="danger" autoFocus> Skip</Button>
+                        <Button onClick={() => { this.setState({ tutorialStart: false, tutorialSecond: true }) }} variant="primary" autoFocus>Next</Button>
+                    </div>
+                </Modal>
+            </div>
+        )
+    }
+
+    //הקדמה התמחויות ותחביבים
+    nextToSecond = () => {
+        return <div>
+            <Modal
+                isOpen={true}
+                //onAfterOpen={afterOpenModal}
+                //onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+                <div>
+                    <img className="imageDiv" src={second} />
+                </div>
+                <div className="buttonsTutorial">
+                    <Button onClick={() => { this.setState({ tutorialSecond: false }) }} variant="danger" autoFocus> Skip</Button>
+                    <Button onClick={() => { this.setState({ tutorialSecond: false, tutorialThree: true }) }} variant="primary" autoFocus>Next</Button>
+                </div>
+            </Modal>
+        </div>
+    }
+
+    //הקדמה התמחויות ותחביבים
+    nextToThree = () => {
+        return <div>
+            <Modal
+                isOpen={true}
+                //onAfterOpen={afterOpenModal}
+                //onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
+            >
+                <div>
+                    <img className="imageDiv" src={three} />
+                </div>
+                <div className="buttonsTutorial">
+                    {/* <Button onClick={() => {this.setState({tutorialTrip:false})}} variant="danger" autoFocus> Skip</Button> */}
+                    <Button onClick={() => { this.setState({ tutorialThree: false }); this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
+                </div>
+            </Modal>
+        </div>
+    }
+
+    //מביא את רשימת התיירים של המדריך
     GetTouristLists = () => {
         let arr = [];
         if (localStorage.getItem('ListTourists')) {
@@ -593,7 +690,7 @@ class BuildTrip extends Component {
     //מוסיף נקודות אדומות על המפה
     AddMarkers = () => {
         if (this.state.ListTripArray) {
-            return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker title={item.Point.AttractionName} position={item.Point.location} />) : null)
+            return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker animation={Animation} icon={iconPic} title={item.Point.AttractionName + " " + item.FromHour.toLocaleString()} position={item.Point.location} />) : null)
         }
     }
 
@@ -610,7 +707,7 @@ class BuildTrip extends Component {
                     path={pathCoordinates}
                     geodesic={true}
                     options={{
-                        strokeColor: "#ff2527",
+                        strokeColor: "#125fb1",
                         strokeOpacity: 0.75,
                         strokeWeight: 2,
                         icons: [
@@ -666,7 +763,7 @@ class BuildTrip extends Component {
         }
         this.AddTripToSQL(tempArray)
         if (this.state.chosen.Token !== null) {
-            //this.SendNotification(this.state.chosen);
+            this.SendNotification(this.state.chosen);
         }
     }
 
@@ -675,7 +772,7 @@ class BuildTrip extends Component {
         let message = {
             to: tourist.Token,
             title: 'Update Trip',
-            body: 'Your Trip is update by ' + this.props.Guide.Email,
+            body: 'Your Trip is update by ' + this.props.Guide.FirstName + " " + this.props.Guide.LastName,
             sound: 'default',
             data: { path: 'MyTrip' },
         }
@@ -877,18 +974,23 @@ class BuildTrip extends Component {
             if (this.state.TouristsList) {
                 return (
                     <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
+                        {this.state.tutorialStart ? this.FirstEnter() : null}
+                    {this.state.tutorialSecond ? this.nextToSecond() : null}
+                    {this.state.tutorialThree ? this.nextToThree() : null}
                         <div className="SelectTourist">
+                      
                             <Row><h1>Choose Tourist:</h1></Row>
                             <Autocomplete
                                 onChange={(event, value) => this.AddTourist(value)}  // prints the selected value
                                 id="combo-box-demo"
                                 options={this.state.TouristsList}
                                 //groupBy={(option) => option.Region}
-                                getOptionLabel={(option) => option.Email}
+                                getOptionLabel={(option) => option.FirstName + " " + option.LastName}
                                 //style={}
                                 renderInput={(params) => <TextField {...params} margin="normal" label="Choose Tourist" variant="outlined" />}
                             />
                         </div>
+                      
                     </Container>
 
                 )
@@ -898,7 +1000,6 @@ class BuildTrip extends Component {
         else {
             return (
                 <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
-                
                     <div className="row">
                         <div className="col-md-7 col-sm-12 leftSide">
                             {this.state.open ?
@@ -954,6 +1055,9 @@ class BuildTrip extends Component {
                             </LoadScript>
                         </div>
                     </div>
+                    {this.state.tutorialStart ? this.FirstEnter() : null}
+                    {this.state.tutorialSecond ? this.nextToSecond() : null}
+                    {this.state.tutorialThree ? this.nextToThree() : null}
                     {this.state.showTourist ? (
                         <div>
                             <TouristProfile

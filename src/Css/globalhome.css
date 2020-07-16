@@ -6,6 +6,11 @@
     width: 100%;
     height: 100%;
 }
+.divImageTutorial{
+    width: 90%;
+    height: 90%;
+}
+
 .buttonsTutorial{
     text-align: center;
     margin-top:15px;

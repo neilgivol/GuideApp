@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 //import {Card} from 'react-bootstrap';
 //import firebase from '../services/firebase';
 import '../Css/ChatBox.css';
-import { myFirestore, myStorage, myFirebase } from '../services/firebase'
+import { myFirestore, myFirebase } from '../services/firebase'
 import images from '../Themes/Images'
 import { AppString } from './Const'
 import TouristProfile from '../Components/TouristProfile';
@@ -43,20 +43,26 @@ export default class ChatBox extends Component {
         this.groupChatId = null;
         this.removeListener = null;
         this.currentPhotoFile = null;
-        this.currentPerrUserMessages = [];
-
-        console.log(this.listMessage);
+        this.currentPeerUserMessages = [];
+        this.currentUserMessages = [];
 
         myFirestore.collection('users').doc(this.currentPeerUser.documentKey).get()
             .then((docRef) => {
-                this.currentPerrUserMessages = docRef.data().messages;
+                this.currentPeerUserMessages = docRef.data().messages;
+            }).then(()=>{
             })
+
+            myFirestore.collection('users').doc(this.currentUserDocumentId).get()
+            .then((docRef) => {
+                this.currentUserMessages = docRef.data().messages;
+            }).then(()=>{
+            })
+
     }
     componentWillReceiveProps(newProps) {
         if (newProps.currentPeerUser) {
             this.setState({ showTourist: false })
             this.currentPeerUser = newProps.currentPeerUser
-            console.log(this.currentPeerUser)
             this.GetAllTourists(this.currentPeerUser.email);
             this.getListHistory()
         }
@@ -69,7 +75,6 @@ export default class ChatBox extends Component {
     componentDidMount() {
         this.GetAllTourists(this.props.currentPeerUser.email);
         this.getListHistory();
-        console.log(this.props.currentPeerUser);
     }
     componentWillUnmount() {
         if (this.removeListener) {
@@ -96,7 +101,6 @@ export default class ChatBox extends Component {
 
 
     getListHistory = () => {
-        let notificationMessages = [];
         if (this.removeListener) {
             this.removeListener()
         }
@@ -125,10 +129,10 @@ export default class ChatBox extends Component {
                     })
 
                     localStorage.setItem('listOldMessages', JSON.stringify(this.listMessage));
-                   
-                    if (this.currentPerrUserMessages.length > 0) {
-                        this.currentPerrUserMessages.map((item) => {
-                            if (item.notificationId != this.currentUserId) {
+                    let notificationMessages = [];
+                    if (this.currentUserMessages.length > 0) {
+                        this.currentUserMessages.map((item) => {
+                            if (item.notificationId != this.currentPeerUser.id) {
                                     notificationMessages.push(
                                         {
                                             notificationId: item.notificationId,
@@ -139,7 +143,7 @@ export default class ChatBox extends Component {
                         })
                         myFirebase.firestore()
                         .collection('users')
-                        .doc(this.currentPeerUser.id)
+                        .doc(this.currentUserDocumentId)
                         .update(
                             {
                                 messages: notificationMessages
@@ -196,9 +200,11 @@ export default class ChatBox extends Component {
             .then(() => {
                 this.setState({ inputValue: '' })
             })
-            if (this.currentPerrUserMessages.length > 0) {
-                this.currentPerrUserMessages.map((item) => {
-                    if (item.notificationId != this.currentUserId) {
+
+
+            if (this.currentPeerUserMessages.length > 0) {
+                this.currentPeerUserMessages.map((item) => {
+                    if (item.notificationId != this.currentPeerUser.id) {
                         notificationMessages.push(
                             {
                                 notificationId: item.notificationId,
@@ -206,20 +212,14 @@ export default class ChatBox extends Component {
                             }
                         )
                     }
-                    else{
-                        notificationMessages.push({
-                            notificationId: this.currentUserId,
-                                number: this.listMessage.length
-                        })
-                    }
+
                 })
             }
-            else{
+
                 notificationMessages.push({
                     notificationId: this.currentUserId,
-                        number: this.listMessage.length
+                        number: 1
                 })
-            }
       
 
         myFirebase.firestore()
@@ -235,7 +235,7 @@ export default class ChatBox extends Component {
                 this.props.showToast(0, err.toString())
             })
 
-        //this.SendNotification(this.state.tourist.Token, content.trim())
+        this.SendNotification(this.state.tourist.Token, content.trim())
     }
 
     onChoosePhoto = event => {
@@ -298,7 +298,6 @@ export default class ChatBox extends Component {
     }
 
     GetAllTourists = (email) => {
-        console.log(email);
         fetch(this.apiUrl + "Tourist?email=" + email, {
             method: "GET",
             headers: new Headers({
@@ -314,7 +313,6 @@ export default class ChatBox extends Component {
                         tourist: result
                     });
                     this.OrgenizeTouristDetails(result);
-                    console.log(result);
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -374,11 +372,10 @@ export default class ChatBox extends Component {
         }
         let message = {
             to: token,
-            title: 'Chat message',
+            title: this.state.Guide.FirstName + " " + this.state.Guide.LastName,
             body: text,
             data: { path: 'Chat' }
         }
-        console.log(message);
         fetch(this.apiUrl + 'Tourist/Push', {
             method: 'POST',
             body: JSON.stringify(message),

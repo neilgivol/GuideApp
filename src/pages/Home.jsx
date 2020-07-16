@@ -1,4 +1,4 @@
-import React, { Component,useState } from 'react'
+import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom';
 import ProfileDetails from "../Profile/ProfileDetails.jsx";
 import ProfileCard from '../Profile/Components/ProfileCard.jsx';
@@ -13,13 +13,12 @@ import linkdin from '../Img/linkedin.png';
 import instegram from '../Img/The_Instagram_Logo.jpg';
 import ReactLoading from 'react-loading';
 import { Container, Row, Col } from "shards-react";
-import {myFirestore } from '../services/firebase'
+import { myFirestore } from '../services/firebase'
 import TouristProfile from '../Components/TouristProfile';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+//import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Modal from 'react-modal';
 import { Button } from 'react-bootstrap';
@@ -32,28 +31,63 @@ import first from '../Img/profileDetails.jpeg';
 import second from '../Img/language.jpeg';
 import three from '../Img/expertise.jpeg';
 
+
+import { withStyles } from '@material-ui/core/styles';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 const customStyles = {
-    content : {
-      top                   : '50%',
-      left                  : '50%',
-      right                 : 'auto',
-      bottom                : 'auto',
-      marginRight           : '-50%',
-      marginTop           : '40px',
-      marginBottom           : '40px',
-      transform             : 'translate(-50%, -50%)',
-      height: '570px',
-        width:'1000px'
+    content: {
+        top: '50%',
+        left: '60%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        marginTop: '40px',
+        marginBottom: '40px',
+        transform: 'translate(-50%, -50%)',
+        height: '80%',
+        width: '80%',
     }
-  };
-  
+};
+
+const styles = (theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(-1.5),
+    top: theme.spacing(-1.5),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             namePage: 'Profile Details',
-            docId:"",
-            idChat:"",
+            docId: "",
+            idChat: "",
             local: this.props.local,
             navbar: this.props.navbarOpenCheck,
             Guide: '',
@@ -77,7 +111,7 @@ class Home extends Component {
             showRequest: false,
             listOfTouristsGuide: [],
             requestTouristEmails: [],
-            notificationsMessages:[],
+            notificationsMessages: [],
             options: [
                 {
                     id: 0,
@@ -141,6 +175,12 @@ class Home extends Component {
                 AllAreas: this.props.AllAreas
             })
         }
+        if (PrevProps.openTutorial !== this.props.openTutorial) {
+            this.setState({
+                tutorialStart: this.props.openTutorial,
+
+            })
+        }
     }
     componentWillMount() {
         const Guidetemp = JSON.parse(localStorage.getItem('Guide'));
@@ -149,78 +189,76 @@ class Home extends Component {
             let docId = localStorage.getItem('docId');
             this.setState({
                 Guide: Guidetemp,
-                idChat:idChat,
-                docId:docId
+                idChat: idChat,
+                docId: docId
             })
             //this.ConnectFirebase(Guidetemp);
         }
         else {
             this.setState({
                 Guide: this.props.location.state.GuideTemp,
-                idChat:this.props.location.state.idChat,
-                docId:this.props.location.state.docId
+                idChat: this.props.location.state.idChat,
+                docId: this.props.location.state.docId
             })
             //this.ConnectFirebase(this.props.location.state.GuideTemp);
         }
     }
     componentDidMount() {
         this.setState({
-            isLoading: true
+            tutorialStart:false
         })
-        this.CheckMessagesNotifications();
+        this.props.QuestionFunc(false);
         this.GetAllTouristsGuide();
         this.CheckRequests();
-        //this.ConnectFirebase();
         this.GetHobbiesGuideList(this.state.Guide);
         this.GetLanguagesGuideList(this.state.Guide);
-        //this.GetAreasGuideList(this.state.Guide);
         this.GetExpertisesGuides(this.state.Guide);
         this.getLinksFromSQL(this.state.Guide);
+        this.props.CheckMessagesNotifications()
         this.setState({
             isLoading: false,
-           // tutorialStart: true
         })
 
-        console.log(new Date().toLocaleDateString())
+        //new Date().toLocaleDateString()
     }
 
-  
+
 
     //מציג הקדמה לאפליקציה
     FirstEnter = () => {
         return (
             <div>
-            <Modal
-             isOpen={true}
-          //onAfterOpen={afterOpenModal}
-          //onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-            >
-                <div>
-                    <img className="imageDiv" src={first} />
-                </div>
-                <div className="buttonsTutorial">
-                    <Button onClick={() => { this.setState({ tutorialStart: false });this.props.QuestionFunc(false) }} variant="danger" autoFocus> Skip</Button>
-                    <Button onClick={() => { this.setState({ tutorialStart: false, tutorialExpertises: true }) }} variant="primary" autoFocus>Next</Button>
-                          </div>
-            </Modal>
+                <Modal
+                    isOpen={true}
+                    //onAfterOpen={afterOpenModal}
+                    //onRequestClose={closeModal}
+                    style={customStyles}
+                    contentLabel="Example Modal"
+                >
+                    <div className="divImageTutorial">
+                        <img className="imageDiv" src={first} />
+                    </div>
+                    <div className="buttonsTutorial">
+                        <Button onClick={() => { this.setState({ tutorialStart: false }); this.props.QuestionFunc(false) }} variant="danger" autoFocus> Skip</Button>
+                        <Button onClick={() => { this.setState({ tutorialStart: false, tutorialExpertises: true }) }} variant="primary" autoFocus>Next</Button>
+                    </div>
+                </Modal>
             </div>
-            )
+        )
     }
 
     //הקדמה התמחויות ותחביבים
     nextToExper = () => {
         return <div>
-           <Modal
-             isOpen={true}
-          //onAfterOpen={afterOpenModal}
-          //onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
+            <Modal
+                isOpen={true}
+                //onAfterOpen={afterOpenModal}
+                //onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
             >
                 <div>
-                <img className="imageDiv" src={second} />
+                    <img className="imageDiv" src={second} />
                 </div>
                 <div className="buttonsTutorial">
                     <Button onClick={() => { this.setState({ tutorialExpertises: false }) }} variant="danger" autoFocus> Skip</Button>
@@ -234,68 +272,66 @@ class Home extends Component {
     nextToBuildTrip = () => {
         return <div>
             <Modal
-             isOpen={true}
-          //onAfterOpen={afterOpenModal}
-          //onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
+                isOpen={true}
+                //onAfterOpen={afterOpenModal}
+                //onRequestClose={closeModal}
+                style={customStyles}
+                contentLabel="Example Modal"
             >
-                    <div>
+                <div>
                     <img className="imageDiv" src={three} />
                 </div>
                 <div className="buttonsTutorial">
                     {/* <Button onClick={() => {this.setState({tutorialTrip:false})}} variant="danger" autoFocus> Skip</Button> */}
-                    <Button onClick={() => { this.setState({ tutorialTrip: false });this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
+                    <Button onClick={() => { this.setState({ tutorialTrip: false }); this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
                 </div>
             </Modal>
         </div>
     }
 
-    CheckMessagesNotifications=()=>{
+    CheckMessagesNotifications = () => {        
         let DocumentIdUser = this.state.docId;
         let messagesNotificationUser = [];
         if (localStorage.getItem('docId')) {
             DocumentIdUser = localStorage.getItem('docId');
             myFirestore.collection('users').doc(DocumentIdUser).get()
-            .then((docRef) => {
-                messagesNotificationUser = docRef.data().messages;
-               this.orgenizeNotifications(messagesNotificationUser);
-            })
+                .then((docRef) => {
+                    messagesNotificationUser = docRef.data().messages;
+                    this.orgenizeNotifications(messagesNotificationUser);
+                })
         }
     }
 
-    orgenizeNotifications=(notifications)=>{
-        console.log(notifications);
-        let arr =[];
+    orgenizeNotifications = (notifications) => {
+        let arr = [];
         let users = [];
-        if (notifications.length>0) {
-            notifications.map(item=>arr.push(item.notificationId));
+        if (notifications.length > 0) {
+            notifications.map(item => arr.push(item.notificationId));
             for (let i = 0; i < arr.length; i++) {
                 const documentId = arr[i];
-                  myFirestore.collection('users')
-                     .where('id', "==", documentId)
-                     .get()
-                     .then(function (querySnapshot) {
-                         querySnapshot.forEach(function (doc) {
-                           users.push(doc.data());
-                         })
-                         console.log(users)
-                     })
-                     .then((data)=>{
-                         this.setState({
-                             notificationsMessages:users
-                         })
-                         this.props.numOfNotifications(users);
-                     })
+                myFirestore.collection('users')
+                    .where('id', "==", documentId)
+                    .get()
+                    .then(function (querySnapshot) {
+                        querySnapshot.forEach(function (doc) {
+                            users.push(doc.data());
+                        })
+                    })
+                    .then((data) => {
+                        this.setState({
+                            notificationsMessages: users
+                        })
+                        this.props.numOfNotifications(users);
+                    })
             }
         }
-        else{
+        else {
             this.props.numOfNotifications(0);
 
         }
-      
+
     }
-   
+
     //בודק אם יש בקשות חברות חדשות
     CheckRequests = () => {
         fetch(this.apiUrl + "BuildTrip/GetRequests?email=" + this.state.Guide.Email, {
@@ -317,6 +353,10 @@ class Home extends Component {
             );
     }
 
+     handleClose = () => {
+        this.setState({ showRequest: false })
+  };
+
     //מציג את בקשות החברות החדשות
     ShowRequestsAlert = () => {
         for (let i = 0; i < this.state.requestTouristEmails.length; i++) {
@@ -324,11 +364,11 @@ class Home extends Component {
             return <div>
                 <Dialog
                     open={true}
-                    onClose={false}
+                    onClose={this.handleClose}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">{"You Have Request Alert From " + element}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title"  onClose={this.handleClose}>{"You Have Request Alert From " + element}</DialogTitle>
                     <DialogContent>
                         {/* <DialogContentText id="alert-dialog-description">
                         by clicking yes your picture will be changed
@@ -421,7 +461,7 @@ class Home extends Component {
             })
             .then(
                 (result) => {
-                   // this.SendNotificationStartChat(element);
+                    this.SendNotificationStartChat(element);
                     this.ChandeRequest(result);
                 },
                 (error) => {
@@ -447,7 +487,7 @@ class Home extends Component {
             })
             .then(
                 (result) => {
-                   // this.SendNotificationDeclineChat(element);
+                    this.SendNotificationDeclineChat(element);
                     this.ChandeRequest(result);
                 },
                 (error) => {
@@ -476,7 +516,7 @@ class Home extends Component {
         let message = {
             to: token,
             title: 'Accept Request',
-            body: this.state.Guide.Email + ' Accept your request',
+            body: this.state.Guide.FirstName + " " + this.state.Guide.LastName + ' Accept your request',
             data: { path: "myProfile", info: JSON.stringify(guide) }
         }
 
@@ -519,7 +559,7 @@ class Home extends Component {
         let message = {
             to: token,
             title: 'Decline Request',
-            body: this.state.Guide.Email + ' Decline your request',
+            body: this.state.Guide.FirstName + " " + this.state.Guide.LastName + ' Decline your request',
             data: { path: "Decline", info: JSON.stringify(guide) }
         }
 
@@ -648,8 +688,9 @@ class Home extends Component {
                     this.setState({
                         linksfromSQL: result
                     })
+                         this.orgenzie(result)
                     //שולח את הרשימה לפונקציה שמסדרת את כל הלינקים
-                    this.orgenzie(result);
+                   
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -707,7 +748,7 @@ class Home extends Component {
         });
     }
     funcGoogleFacebook = () => {
-        return <ProfileCard local={this.state.local} GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.fulllink} />
+        return <ProfileCard local={this.state.local} GuideDetails={this.state.Guide} GuideExpertises={this.state.GuideExpertises} guideListHobbies={this.state.GuideHobbies} languages={this.state.GuideLanguages} areas={this.state.GuideAreas} GuideLinks={this.state.linksfromSQL} />
     }
 
     //רינדור החלק המרכזי במסך לפי ה name page
@@ -862,7 +903,7 @@ class Home extends Component {
             <div>
                 <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer hidden-sm hidden-xs">
                     <NavbarProfile ClickPage2={this.ClickPage2} />
-                    {this.props.openTutorial ? this.FirstEnter() : null}
+                    {this.state.tutorialStart ? this.FirstEnter() : null}
                     {this.state.tutorialExpertises ? this.nextToExper() : null}
                     {this.state.tutorialTrip ? this.nextToBuildTrip() : null}
                     {this.state.showRequest ? this.ShowRequestsAlert() : null}

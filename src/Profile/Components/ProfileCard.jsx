@@ -9,13 +9,13 @@ import StarRatings from 'react-star-ratings';
 import pic from '../../Img/Default-welcomer.png';
 import FileUpload from '../Components/fileUpload';
 import { Progress } from "shards-react";
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { myFirestore, myStorage, myFirebase } from '../../services/firebase'
+import { myFirebase } from '../../services/firebase'
 
 class ProfileCard extends Component {
     constructor(props) {
@@ -29,6 +29,7 @@ class ProfileCard extends Component {
             pictures: [],
             hobbies: this.props.guideListHobbies,
             expertise: this.props.GuideExpertises,
+            links:this.props.GuideLinks,
             local: this.props.local,
             upload: false,
             showDivPicture: false,
@@ -43,6 +44,34 @@ class ProfileCard extends Component {
     }
     componentWillMount() {
     }
+
+    componentDidUpdate(PrevProps) {
+        if (PrevProps.GuideExpertises !== this.props.GuideExpertises) {
+            this.setState({
+                expertise:this.props.GuideExpertises
+            })
+            this.calculateProcces();
+        }
+        if (PrevProps.guideListHobbies !== this.props.guideListHobbies) {
+            this.setState({
+                hobbies:this.props.guideListHobbies
+            })
+            this.calculateProcces();
+        }
+        if (PrevProps.languages !== this.props.languages) {
+            this.setState({
+                languages:this.props.languages
+            })
+            this.calculateProcces();
+        }
+        if (PrevProps.GuideLinks !== this.props.GuideLinks) {
+            this.setState({
+                links:this.props.GuideLinks
+            })
+            this.calculateProcces();
+        }
+    }
+
     onDrop(picture) {
         let newPic = "";
         for (let index = 0; index < picture.length; index++) {
@@ -54,7 +83,6 @@ class ProfileCard extends Component {
         this.setState({
             pictures: newPic,
         });
-        console.log(this.state.pictures)
     }
     UploadPicture = (pic) => {
         const data = new FormData();
@@ -81,12 +109,17 @@ class ProfileCard extends Component {
                     console.log("err post=", error);
                 });
     }
-
-    componentDidMount() {
-        const userLanguages = JSON.parse(localStorage.getItem('languages'));
-        const links = JSON.parse(localStorage.getItem('links'));
-        const hobbies = JSON.parse(localStorage.getItem('Hobby'));
-        const expertises = JSON.parse(localStorage.getItem('Expertise'));
+    calculateProcces=()=>{
+        const userLanguages = this.state.languages;
+        const links = this.state.links;
+        const hobbies = this.state.hobbies;
+        const expertises = this.state.expertise;
+        let all = {
+            userLanguages:userLanguages,
+            links:links,
+            hobbies:hobbies,
+            expertises:expertises
+        }        
         let tempSum = 0;
         let userBirth = this.state.user.BirthDay;
         let userPhone = this.state.user.Phone;
@@ -130,6 +163,10 @@ class ProfileCard extends Component {
         this.setState({
             sum: tempSum
         })
+    }
+
+    componentDidMount() {
+        this.calculateProcces();
     }
     changeup = () => {
         if (this.state.upload) {

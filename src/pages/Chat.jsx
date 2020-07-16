@@ -10,14 +10,11 @@ import ChatBox from '../Components/ChatBox';
 import WelcomeCard from '../Components/WelcomeCard';
 import profilePic from '../Img/Default-welcomer.png';
 import ReactLoading from 'react-loading'
-import TouristProfile from '../Components/TouristProfile';
-import moment from 'moment'
 import {Button } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css'
-import {myFirestore, myStorage,myFirebase} from '../services/firebase'
+import {myFirestore,myFirebase} from '../services/firebase'
 //import images from '../Themes/Images'
 //import './ChatBoard.css';
-import AppString from '../Components/Const'
 //import {AppString} from './../Const'
 class Chat extends Component {
     constructor(props) {
@@ -77,9 +74,8 @@ class Chat extends Component {
                 }
             })
     }
+   
     componentDidMount() {
-               // this.props.showToast(1, "You have new message")
-
         let guideTemp = JSON.parse(localStorage.getItem('Guide'));
         this.setState({
             Guide: guideTemp
@@ -99,6 +95,7 @@ class Chat extends Component {
 
                 })
             this.getListUser();
+         
         }
         else {
             this.ConnectFirebase();
@@ -197,7 +194,7 @@ class Chat extends Component {
             let viewListUser = [];
             let classname = "";
             this.searchUsers.map((item) => {
-                if (item.id !== this.currentUserIdchat && item.id !== undefined && item.type == "Guide") {
+                if (item.id !== this.currentUserIdchat && item.id !== undefined && item.type == "Tourist" && item.guideEmail === this.state.Guide.Email) {
                     this.GetAllTourists(item.email);
                     classname = this.getClassnameforUserandNotification(item.id);
                     viewListUser.push(
@@ -241,6 +238,18 @@ class Chat extends Component {
                 discplayedContacts: viewListUser,
                 isLoading: false
             })
+
+            if (this.props.location.state !== undefined) {
+                let arrayTemp = this.searchUsers;
+              for (let i = 0; i < arrayTemp.length; i++) {
+                  const element = arrayTemp[i];
+                  if (element.email == this.props.location.state.userEmail) {
+                      this.setState({currentPeerUser:element})
+                  }
+                  
+              }
+            }
+            this.props.CheckMessagesNotifications()
         }
         else {
             console.log("No user is Present")

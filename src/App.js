@@ -11,7 +11,7 @@ import MainFooter from "./Profile/Components/MainFooter";
 import FileUpload from "./Profile/Components/fileUpload.jsx";
 import $ from "jquery";
 import { toast, ToastContainer } from "react-toastify";
-import { myFirestore, myStorage, myFirebase } from "./services/firebase";
+import { myFirestore, myFirebase } from "./services/firebase";
 import ReactLoading from "react-loading";
 import BuildTrip from "./pages/BuildTrip";
 import Swal from "sweetalert2";
@@ -51,6 +51,9 @@ class App extends Component {
         super(props);
         this.state = {
             local: true,
+            docId: "",
+            idChat: "",
+            notificationsMessages: [],
             navbarCheckOpen: "open",
             tempGuide: "",
             AllAreas: [],
@@ -91,6 +94,14 @@ class App extends Component {
         this.CheckAttractionsLocalStorage();
         this.CheckCitiesLocalStorage();
         this.CheckIfGuideInLocalStorage();
+        this.CheckMessagesNotifications();
+    }
+    componentDidUpdate(PrevState) {
+        if (PrevState.numOfNotifications !== this.state.numOfNotifications) {
+            setTimeout(() => {
+                this.CheckMessagesNotifications();
+            }, 45000);
+        }
     }
 
     CheckAttractionsLocalStorage = () => {
@@ -414,9 +425,17 @@ class App extends Component {
     };
 
     questionFunction = (quest) => {
-        this.setState({
-            openTutorial: !this.state.openTutorial
-        });
+        if (!quest) {
+            this.setState({
+                openTutorial: false
+            });
+        }
+        else{
+            this.setState({
+                openTutorial: true
+            });
+        }
+       
     };
 
     numOfNotifications = (num) => {
@@ -425,10 +444,56 @@ class App extends Component {
                 numOfNotifications: num
             },
             () => {
-                console.log("num2=", num);
             }
         );
     };
+
+    CheckMessagesNotifications = () => {        
+        let DocumentIdUser = this.state.docId;
+            let messagesNotificationUser = [];
+        if (localStorage.getItem('docId')) {
+            DocumentIdUser = localStorage.getItem('docId');
+            myFirestore.collection('users').doc(DocumentIdUser).get()
+                .then((docRef) => {
+                    messagesNotificationUser = docRef.data().messages;
+                    this.orgenizeNotifications(messagesNotificationUser);
+                })
+        }      
+    }
+
+    orgenizeNotifications = (notifications) => {
+        let arr = [];
+        let users = [];
+        if (notifications.length > 0) {
+            notifications.map(item => arr.push(item.notificationId));
+            for (let i = 0; i < arr.length; i++) {
+                const documentId = arr[i];
+                myFirestore.collection('users')
+                    .where('id', "==", documentId)
+                    .get()
+                    .then(function (querySnapshot) {
+                        querySnapshot.forEach(function (doc) {
+                            users.push(doc.data());
+                        })
+                    })
+                    .then((data) => {
+                        this.setState({
+                            notificationsMessages: users
+                        })
+                        this.numOfNotifications(users);
+                    })
+            }
+        }
+        else {
+            this.numOfNotifications(0);
+        }
+    }
+    MoveToChatByClick = (email)=>{
+        this.props.history.push({
+                pathname: "/chat/",
+                state: { userEmail: email }
+            });
+    }
 
     logOutFunction = () => {
         localStorage.removeItem("docId");
@@ -825,7 +890,13 @@ class App extends Component {
 
     //לוקח את פרטי המשתמש מהעמוד ההתחברות(אימייל וסיסמא) ובודק האם נמצא במסד נתונים
     PostGuideToCheckSignIn = (signInUser, num) => {
-        //this.setState({isLoading:true})
+        if (signInUser.Email === "isradvisor@gmail.com" && signInUser.Password === "isradvisor" ) {
+            this.props.history.push({
+                pathname: "/Admin/",
+            });
+        }
+        else{
+               //this.setState({isLoading:true})
         //pay attention case sensitive!!!! should be exactly as the prop in C#!
         fetch(this.apiUrl + "Guide/PostToCheck", {
             method: "POST",
@@ -865,6 +936,7 @@ class App extends Component {
                     console.log("err post=", error);
                 }
             );
+        }
     };
 
     connectToFirebase = (e) => {
@@ -896,6 +968,7 @@ class App extends Component {
                             });
                     }
                 });
+                this.setState({docId:docId})
             this.MoveToHomePage(e, docId, idChat);
         } catch (error) {}
     };
@@ -944,6 +1017,7 @@ class App extends Component {
                 // document.getElementById("1").innerHTML =
                 //     "Error in singing up please try again";
             }
+            this.setState({docId:docId})
             this.MoveToHomePage(e, docId, idChat);
         } else {
             this.setState({ isLoading: false });
@@ -1143,7 +1217,7 @@ class App extends Component {
                     <Route path="/upload">
                         <FileUpload local={this.state.local} />
                     </Route>
-                    <Route exact path="/reset">
+                    <Route path="/reset">
                         <ResetPassword local={this.state.local} />
                     </Route>
                     <Route exact path="/">
@@ -1165,6 +1239,7 @@ class App extends Component {
                             logOutFunction={this.logOutFunction}
                             numOfNotification={this.state.numOfNotifications}
                             QuestionFunc={this.questionFunction}
+                            moveToChat = {this.MoveToChatByClick}
                             navbarCheckFunc={this.navbarCheck}
                             navLinks={navLinks}
                             logo={menu}
@@ -1185,11 +1260,13 @@ class App extends Component {
                             openTutorial={this.state.openTutorial}
                             QuestionFunc={this.questionFunction}
                             numOfNotifications={this.numOfNotifications}
+                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
                     <Route path="/chat">
                         <ResponsiveNavigation
+                                                    moveToChat = {this.MoveToChatByClick}
                             logOutFunction={this.logOutFunction}
                             numOfNotification={this.state.numOfNotifications}
                             navbarCheckFunc={this.navbarCheck}
@@ -1210,11 +1287,13 @@ class App extends Component {
                             }
                             AllExpertises={this.state.AllExpertises}
                             AllHobbies={this.state.AllHobbies}
+                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                         />
                         <MainFooter className="mainfooterDiv hidden-xs" />
                     </Route>
                     <Route path="/BuildTrip">
                         <ResponsiveNavigation
+                                                    moveToChat = {this.MoveToChatByClick}
                             logOutFunction={this.logOutFunction}
                             numOfNotification={this.state.numOfNotifications}
                             navbarCheckFunc={this.navbarCheck}
@@ -1223,6 +1302,7 @@ class App extends Component {
                             background="#fff"
                             hoverBackground="#A2D4FF"
                             linkColor="#1988ff"
+                            QuestionFunc={this.questionFunction}
                         />
                         <BuildTrip
                             SaveListAtt={this.SaveListAtt}
@@ -1236,11 +1316,15 @@ class App extends Component {
                             tourist={this.state.tourist}
                             listAPI={this.state.listAtt}
                             GetCities={this.GetAllCitiesFromGOVIL}
+                            openTutorial={this.state.openTutorial}
+                            QuestionFunc={this.questionFunction}
+                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
                     <Route path="/contact">
                         <ResponsiveNavigation
+                                                    moveToChat = {this.MoveToChatByClick}
                             logOutFunction={this.logOutFunction}
                             numOfNotification={this.state.numOfNotifications}
                             navbarCheckFunc={this.navbarCheck}
@@ -1255,6 +1339,7 @@ class App extends Component {
                             //user={this.state.tempGuide}
                             tourist={this.state.tourist}
                             local={this.state.local}
+                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
@@ -1280,7 +1365,7 @@ class App extends Component {
                         />
                         <MainFooter className="hidden-xs" />
                     </Route>
-                    <Route path="/Admin">
+                    <Route exact path="/Admin">
                         <Admin />
                     </Route>
                 </Switch>

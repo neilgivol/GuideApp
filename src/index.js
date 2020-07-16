@@ -7,9 +7,10 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "shards-ui/dist/css/shards.min.css";
+
+//basename= {window.location.pathname || ""}
 ReactDOM.render(
-    <BrowserRouter basename= {window.location.pathname || ""}
-    >
+    <BrowserRouter basename= {window.location.pathname || ""}>
 <App />
 </BrowserRouter>
 , document.getElementById('root'));

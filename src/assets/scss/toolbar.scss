@@ -31,6 +31,18 @@
     margin-right: 5px;
     margin-top: 5px;
 }
+.closeLogout {
+    display: none;
+}
+.openLogout {
+    position: absolute;
+    right: 0.1%;
+    top: 60%;
+    font-size: 18px;
+    color: #125fb1;
+    margin-right: 5px;
+    margin-top: 5px;
+}
 .logoutIcon i {
     position: absolute;
     right: 0%;
@@ -105,6 +117,15 @@
     display: none;
 }
 .openTutorial2 {
+    position: absolute;
+    right: 0.1%;
+    top: 60%;
+    font-size: 18px;
+    color: #125fb1;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+.openLogout2 {
     position: absolute;
     right: 0.1%;
     top: 60%;
@@ -322,6 +343,8 @@
     background-color:#bdddff ;
 
 }
+
+
 
 //********************Navbar**************************
 nav.responsive-toolbar {

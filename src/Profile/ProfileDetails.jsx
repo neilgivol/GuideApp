@@ -17,8 +17,7 @@ import './Css/ProfileDetails.css';
 import Swal from 'sweetalert2';
 import Links from './Components/Links';
 import ReactLoading from 'react-loading';
-import MouseMover from './Components/MouseMover';
-import { myFirestore, myStorage, myFirebase } from "../services/firebase";
+import { myFirebase } from "../services/firebase";
 
 //import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {

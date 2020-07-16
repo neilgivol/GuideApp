@@ -1,9 +1,7 @@
-import { MDBDataTableV5, MDBBtn } from 'mdbreact';
 import React, { Component } from 'react';
 import './DataTablesCss.css';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table-next';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
+import { Button, Col, Row, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
 import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
@@ -152,15 +150,27 @@ class HobbiesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: " התחביב נמחק בהצלחה",
-                        showConfirmButton: false,
-                        timer: 1800
-                    });
-
-
+                    if (result !== null) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: " התחביב נמחק בהצלחה",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                        this.setState({
+                            hobbies:result
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "התחביב לא נמחק",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                    }
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -168,10 +178,7 @@ class HobbiesDataTable extends Component {
                         HobbyName: "",
                         HobbyPic: "",
                         upload:false
-
-                    }),()=>{
-                        this.props.GetHobbies();
-                    }
+                    })
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -192,7 +199,7 @@ class HobbiesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -200,6 +207,9 @@ class HobbiesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                        this.setState({
+                            hobbies:result
+                        })
                     }
                     else {
                         Swal.fire({
@@ -210,7 +220,6 @@ class HobbiesDataTable extends Component {
                             timer: 1800
                         });
                     }
-
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -218,9 +227,7 @@ class HobbiesDataTable extends Component {
                         HobbyName: "",
                         HobbyPic: "",
                         upload:false
-                    }),()=>{
-                        this.props.GetHobbies();
-                    }
+                    })
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -241,7 +248,7 @@ class HobbiesDataTable extends Component {
             .then(
                 (result) => {
                     console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -249,6 +256,9 @@ class HobbiesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                        this.setState({
+                            hobbies:result
+                        })
                     }
                     else {
                         Swal.fire({
@@ -266,9 +276,7 @@ class HobbiesDataTable extends Component {
                         HobbyName: "",
                         HobbyPic: "",
                         upload:false
-                    }),()=>{
-                        this.props.GetHobbies();
-                    }
+                    })
                 },
                 (error) => {
                     console.log("err post=", error);

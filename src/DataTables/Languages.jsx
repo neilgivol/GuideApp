@@ -1,9 +1,8 @@
-import { MDBDataTableV5, MDBBtn, MDBInput } from 'mdbreact';
+import { MDBDataTableV5 } from 'mdbreact';
 import React, { Component } from 'react';
 import './DataTablesCss.css';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table-next';
 import { Link, withRouter } from 'react-router-dom';
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
+import { Button, Col, Row, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
 import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
@@ -22,7 +21,8 @@ class LanguagesDataTable extends Component {
             selectedLanguage: "",
             openEdit: false,
             local: this.props.local,
-            isNew: false
+            isNew: false,
+            languages:this.props.languages
 
         }
         let local = this.state.local;
@@ -33,9 +33,13 @@ class LanguagesDataTable extends Component {
     }
 
     componentWillMount() {
+       this.orgenizeLanguages(this.props.languages);
+    }
+
+    orgenizeLanguages=(languages)=>{
         let tempArr = [];
-        for (let i = 0; i < this.props.languages.length; i++) {
-            const language = this.props.languages[i];
+        for (let i = 0; i < languages.length; i++) {
+            const language = languages[i];
             let lan = {
                 LCode: language.LCode,
                 LName: language.LName,
@@ -43,7 +47,6 @@ class LanguagesDataTable extends Component {
                 Edit: <div><Button type="button" className="" onClick={() => this.Edit(language)}>Edit</Button> <Button className="" type="button" onClick={() => this.Del(language)}>Delete</Button></div>,
             }
             tempArr.push(lan);
-
         }
 
         this.setState({
@@ -137,14 +140,25 @@ class LanguagesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
-                    Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: " השפה נמחקה בהצלחה",
-                        showConfirmButton: false,
-                        timer: 1800
-                    });
+                    if (result !== null) {
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: " השפה נמחקה בהצלחה",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                    this.orgenizeLanguages(result);
+                    }
+                    else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "השפה לא נמחקה",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                    }
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -171,8 +185,7 @@ class LanguagesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -180,17 +193,17 @@ class LanguagesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                    this.orgenizeLanguages(result);
                     }
                     else {
                         Swal.fire({
                             position: "center",
                             icon: "error",
-                            title: " השפה לא נשמרה",
+                            title: "השפה לא נשמרה",
                             showConfirmButton: false,
                             timer: 1800
                         });
                     }
-
                     this.setState({
                         isNew: false,
                         openEdit: false,
@@ -217,8 +230,7 @@ class LanguagesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
-                    if (result == 1) {
+                    if (result !== null) {
                         Swal.fire({
                             position: "center",
                             icon: "success",
@@ -226,6 +238,7 @@ class LanguagesDataTable extends Component {
                             showConfirmButton: false,
                             timer: 1800
                         });
+                    this.orgenizeLanguages(result);
                     }
                     else {
                         Swal.fire({
@@ -236,7 +249,6 @@ class LanguagesDataTable extends Component {
                             timer: 1800
                         });
                     }
-
                     this.setState({
                         isNew: false,
                         openEdit: false,

@@ -1,20 +1,15 @@
 import React, { Component } from 'react';
-import { MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBBtn, MDBModalFooter } from 'mdbreact';
-import logo from '../Img/logo.png';
+import { MDBCardBody, MDBInput, MDBBtn } from 'mdbreact';
 import Facebook from "./Facebook.js";
 import { Link, withRouter } from 'react-router-dom';
 import Google from './Google';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem, Container } from 'react-bootstrap';
+import { Col, Row, Card, Container } from 'react-bootstrap';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Swal from 'sweetalert2'
-import logo2 from '../Img/Isravisionlogo.png';
-import logo3 from '../Img/Isravisionlogo1.png';
-import logo4 from '../Img/Isravisionlogo2.png';
-import Dialog from '@material-ui/core/Dialog';
 import logoLast from '../Img/logoadvisor.png';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
@@ -42,8 +37,6 @@ class SignIn extends Component {
             checkBoxVal: "unCheck",
             rememberMe: false,
             lieceneNum: "",
-            govILAsk: false,
-
         }
     }
     componentWillUnmount() {
@@ -71,7 +64,7 @@ class SignIn extends Component {
                 govILAsk: !this.state.govILAsk
             });
         }
-      
+
     }
 
     HandelEmailInput = (e) => {
@@ -99,7 +92,7 @@ class SignIn extends Component {
             Swal.fire({
                 position: 'center',
                 icon: 'success',
-                title: 'מעתה פרטי המשתמש ישמרו לכניסות הבאות',
+                title: 'Your Password and Email are saved',
                 showConfirmButton: false,
                 timer: 1200
             })
@@ -109,60 +102,15 @@ class SignIn extends Component {
             Swal.fire({
                 position: 'center',
                 icon: 'success',
-                title: 'מעתה פרטי המשתמש אינם ישמרו לכניסות הבאות',
+                title: 'Your Password and Email are not saved',
                 showConfirmButton: false,
                 timer: 1200
             })
         }
     }
-//יוצא מהשאלה אם המדריך רשום באתר משרד התיירות
-    Exit = () => {
-        console.log("Exist");
-        this.setState({
-            govILAsk: false
-        })
-    }
+  
 
-    //שואל אם המדריך רשום באתר משרד התיירות
-    alertGuidesGovILAsk = () => {
-        let licenseNum
-        return (
-            <Row className="divGov">
-                <h5>Do you have an account at the ministry of tourism  website?</h5>
-                <Col className="InputNumber" md="12">
-                    <MDBInput
-                        type="number"
-                        onChange={this.HandelNumberInput}
-                        label="Enter Your Liecnse Number"
-                    />
-                </Col>
-                <Col className="ButtonClass" md="12">
-                    <Col className="ButtonClass" md="6">
-                        <MDBBtn
-                            type="button"
-                            gradient="blue"
-                            rounded
-                            className="btn-block z-depth-1a"
-                            onClick={this.SignInWithGovIL}>
-                            Yes
-                                            </MDBBtn>
-                    </Col>
-                    <Col className="ButtonClass" md="6">
-                        <MDBBtn
-                            type="button"
-                            gradient="peach"
-                            rounded
-                            className="btn-block z-depth-1a"
-                            onClick={this.Exit}>
-                            No
-                                            </MDBBtn>
-                    </Col>
-                </Col>
-
-
-            </Row>)
-    }
-
+  
     //לוקח את פרטי המשתמש ושולח אותם למסד נתונים כדי לבדוק האם קיים משתמש כזה
     SignInFunc = () => {
         localStorage.clear();
@@ -174,120 +122,143 @@ class SignIn extends Component {
             Password: this.state.password
         }
         //הפרטים נשלחים לפונקציה שנמצאת בAPP.JS
-        this.props.checkSignIn(signInUser,2);
+        this.props.checkSignIn(signInUser, 2);
     }
 
     SignInWithGovIL = () => {
         if (this.state.lieceneNum !== "") {
             this.props.GovList(this.state.lieceneNum);
         }
-        else{
+        else {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Please insert License Number!',
-              })
+            })
         }
     }
 
     render() {
         return (
             <div className="Cont">
-                {this.state.govILAsk ? <div className="aletGov">{this.alertGuidesGovILAsk()}</div> : null}
                 <Container className='AdminContainer'>
                     <Row className="logoRow">
                         <Col md="12 text-center" className="divLogo" >
                             <img className="LogoDiv" alt="" src={logoLast} />
                         </Col>
                     </Row>
-                    {this.state.govILAsk ? null  :  
-                    <Row className="RowDivSignIn text-center">
-                        <Col className="ColDivSignIn" xl="6">
-                            <Card className="CardDivSignIn">
-                                <MDBCardBody className="cardBody mx-4">
-                                    <div className="text-center titleSignIn">
-                                        <h3 className="dark-grey-text">
-                                            <strong>Sign in</strong>
-                                        </h3>
-                                    </div>
-                                    <div className="text-center EmailInput">
-                                        <MDBInput size="lg"
-                                            label="Your email"
-                                            value={this.state.email}
-                                            group
-                                            type="email"
-                                            validate
-                                            error="wrong"
-                                            success="right"
-                                            onChange={this.HandelEmailInput}
-                                        />
-                                        <MDBInput size="lg"
-                                        className="passwordInput"
-                                            label="Your password"
-                                            value={this.state.password}
-                                            group
-                                            type="password"
-                                            validate
-                                            onChange={this.HandelPasswordInput}
+                        <Row className="RowDivSignIn text-center">
+                            <Col className="ColDivSignIn" xl="6">
+                                <Card className="CardDivSignIn">
+                                    <MDBCardBody className="cardBody">
+                                        <div className="text-center titleSignIn">
+                                            <h3 className="dark-grey-text">
+                                                <strong>Sign in</strong>
+                                            </h3>
+                                        </div>
+                                        <div className="text-center EmailInput">
+                                            <MDBInput size="lg"
+                                                label="Your email"
+                                                value={this.state.email}
+                                                group
+                                                type="email"
+                                                validate
+                                                error="wrong"
+                                                success="right"
+                                                onChange={this.HandelEmailInput}
+                                            />
+                                            <MDBInput size="lg"
+                                                className="passwordInput"
+                                                label="Your password"
+                                                value={this.state.password}
+                                                group
+                                                type="password"
+                                                validate
+                                                onChange={this.HandelPasswordInput}
 
-                                        />
-                                    </div>
+                                            />
+                                        </div>
 
-                                    <div className="divRemember">
-                                        <FormControlLabel
-                                            control={<Checkbox id="rememberMe" value="lsRememberMe" checked={this.state.rememberMe} color="primary" />}
-                                            label="Remember me"
-                                            onChange={this.RememberMe}
-                                        />
-                                    </div>
-                                    <div className="text-center mb-3 btnSignIn">
-                                        <MDBBtn
-                                            type="button"
-                                            gradient="blue"
-                                            rounded
-                                            className="btn-block z-depth-1a"
-                                            onClick={this.SignInFunc}
-                                        >
-                                            Sign in
+                                        <div className="divRemember">
+                                            <FormControlLabel
+                                                control={<Checkbox id="rememberMe" value="lsRememberMe" checked={this.state.rememberMe} color="primary" />}
+                                                label="Remember me"
+                                                onChange={this.RememberMe}
+                                            />
+                                        </div>
+                                        <div className="text-center mb-3 btnSignIn">
+                                            <MDBBtn
+                                                type="button"
+                                                gradient="blue"
+                                                rounded
+                                                className="btn-block z-depth-1a"
+                                                onClick={this.SignInFunc}
+                                            >
+                                                Sign in
                 </MDBBtn>
-                                    </div>
-                                    <div>
-                                        <div className="or-seperator"><i>or</i></div>
+                                        </div>
+                                        <div>
+                                            <div className="or-seperator"><i>or</i></div>
 
-                                    </div>
-                                    <Row>
-                                        <Col lg="6" md="12">
-                                            <Facebook checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
-                                        </Col>
-                                        <Col lg="6" md="12">
-                                            <Google checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
-                                        </Col>
-                                    </Row>
-                                </MDBCardBody>
-                                <MDBModalFooter className="mx-5 pt-3 mb-1">
-                                    <Row className="footerSignIn">
-                                        <Col xs="6" className="forgotPass">
+                                        </div>
+                                        <Row>
+                                            <Col lg="6" md="12">
+                                                <Facebook checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
+                                            </Col>
+                                            <Col lg="6" md="12">
+                                                <Google checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
+                                            </Col>
+                                        </Row>
+                                        <div>
+                                            <div className="or-seperator"><i>or</i></div>
+
+                                        </div>
+                                        <Row>
+
+                                            <Col sm="12">
+                                                <h5>Do you have an account at the ministry of tourism  website?</h5>
+
+                                            </Col>
+                                            <Col className="InputNumber" sm="12">
+                                                <MDBInput
+                                                    type="number"
+                                                    onChange={this.HandelNumberInput}
+                                                    label="Enter Your Liecnse Number"
+                                                />
+                                            </Col>
+                                            <Col className="text-center mb-3 btnSignIn" xl="6">
+                                                <MDBBtn
+                                                    type="button"
+                                                    rounded
+                                                    className="btn-block z-depth-1a winter-neva-gradient"
+                                                    onClick={this.SignInWithGovIL}>
+                                                    Enter
+                                            </MDBBtn>
+                                            </Col>
+                                        </Row>
+                                    </MDBCardBody>
+                                    {/* <MDBModalFooter className="mx-5 pt-3 mb-1"> */}
+                                    <div className="footerSignIn">
+                                        <div className="col-6 forgotPass">
                                             <p className="font-small blue-text"><Link to="/reset">Forgot Password?</Link></p>
-                                        </Col>
-                                        <Col xs="6" className="signUp">
+                                        </div>
+                                        <div className="col-6 signUp">
                                             <p className="font-small grey-text">
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>
                                             </p>
-                                        </Col>
-                                    </Row>
-                                </MDBModalFooter>
-                            </Card>
-                        </Col>
+                                        </div>
+                                    </div>
+                                    {/* </MDBModalFooter> */}
+                                </Card>
+                            </Col>
+                        </Row>
+                    <Row>
+                        <Box id="" mt={8} className="copy2">
+                            <Copyright />
+                        </Box>
                     </Row>
-                    }
-                    <Link to="/Admin"> Admin </Link>
-                  <Row>
-                  <Box id="" mt={8} className="copy2">
-                        <Copyright />
-                    </Box>
-                  </Row>
-                  
+
                 </Container>
             </div>
         );

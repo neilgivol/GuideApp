@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Card, ListGroup, ListGroupItem, Form, Button, Dropdown } from 'react-bootstrap';
 import '../Css/Hobbies.css';
 
 class HobbieCard extends Component {
