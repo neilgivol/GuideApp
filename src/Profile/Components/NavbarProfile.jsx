@@ -5,7 +5,6 @@ import {  Link } from 'react-router-dom';
 class NavbarProfile extends Component {
     state = {
         name: this.props.userNamePage,
-        classActiveArea: "noActive",
         classActiveDetails: "active",
         classActiveLang: "noActive",
         classActiveExpetise: "noActive",
@@ -22,7 +21,6 @@ class NavbarProfile extends Component {
         if (e.target.text === "Profile Details") {
             this.setState({
                 classActiveDetails: "active",
-                classActiveArea: "noActive",
                 classActiveLang: "noActive",
                 classActiveExpetise: "noActive",
                 classActiveHobbies: "noActive"
@@ -30,7 +28,6 @@ class NavbarProfile extends Component {
         }
         else if (e.target.text === "Area Knowledge") {
             this.setState({
-                classActiveArea: "active",
                 classActiveDetails: "noActive",
                 classActiveLang: "noActive",
                 classActiveExpetise: "noActive",
@@ -40,7 +37,6 @@ class NavbarProfile extends Component {
         else if (e.target.text === "Languages") {
             this.setState({
                 classActiveLang: "active",
-                classActiveArea: "noActive",
                 classActiveDetails: "noActive",
                 classActiveExpetise: "noActive",
                 classActiveHobbies: "noActive"
@@ -49,7 +45,6 @@ class NavbarProfile extends Component {
         else if (e.target.text === "Hobbies") {
             this.setState({
                 classActiveLang: "noActive",
-                classActiveArea: "noActive",
                 classActiveDetails: "noActive",
                 classActiveExpetise: "noActive",
                 classActiveHobbies: "active"
@@ -58,7 +53,6 @@ class NavbarProfile extends Component {
         else if (e.target.text === "Expertise") {
             this.setState({
                 classActiveLang: "noActive",
-                classActiveArea: "noActive",
                 classActiveDetails: "noActive",
                 classActiveExpetise: "active",
                 classActiveHobbies: "noActive"

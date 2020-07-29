@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import {
-    Button,
     Col,
     Row,
     Form,
@@ -10,7 +9,7 @@ import {
 } from "react-bootstrap";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import "../Profile/Css/ProfileDetails.css";
+import "../Profile/ProfileDetails/ProfileDetails.css";
 import "../Profile/Css/Home.css";
 import pic from "../Img/Default-welcomer.png";
 import "../Css/TouristProfile.css";
@@ -26,7 +25,6 @@ class TouristProfile extends Component {
 
     }
     componentDidMount() {
-        console.log(this.props.tourist);
         if (this.props.tourist.ProfilePic == "" || this.props.tourist.ProfilePic == null) {
             this.setState({
                 pic: this.pic
@@ -45,15 +43,15 @@ class TouristProfile extends Component {
             <div className="divProfileTourist">
                 <Card small className="profileDetails1">
                     <Card.Header className="NameToruistDiv">
-                        <h2 id="nameTourist">
+                        <h5 id="nameTourist">
                             {this.state.tourist.FirstName}{" "}
                             {this.state.tourist.LastName}
-                        </h2>
+                        </h5>
                         <div className='delProfileTourist' onClick={() => this.props.ExitProfile('close')}>
                             <span className='delSpanTour'><i class="fas fa-times"></i></span>
                         </div>
                     </Card.Header>
-                    <ListGroup flush>
+                    <ListGroup >
                         <ListGroupItem className="p-3">
                             <Row>
                                 <Form className="myForm">
@@ -96,7 +94,7 @@ class TouristProfile extends Component {
                                             </p>
                                             <p>
                                                 <b>Language:</b>{" "}
-                                                {this.state.tourist.Language}{" "}
+                                                {this.state.tourist.LNameEnglish}{" "}
                                             </p>
                                         </Col>
                                         <Col
@@ -153,8 +151,8 @@ class TouristProfile extends Component {
                             </Row>
                         </ListGroupItem>
                     </ListGroup>
-                </Card>
-                <Card small className="profileDetails">
+                {/* </Card>
+                <Card small className="profileDetails"> */}
                     <ListGroup flush>
                         <ListGroupItem className="p-3">
                             <Row>
@@ -162,7 +160,7 @@ class TouristProfile extends Component {
                                         <Row>
                                             <div
                                                 className="form-group hobbiesDivList">
-                                                <h2>Hobbies:</h2>
+                                                <h3>Hobbies:</h3>
                                                 <div className="HobbiesDivTourist">
                                                     {this.state.tourist.HobbiesNames.map(
                                                         (hobby) => (
@@ -191,7 +189,7 @@ class TouristProfile extends Component {
                                         </Row>
                                         <Row>
                                         <div   className="form-group hobbiesDivList">
-                                                <h2>Expertises:</h2>
+                                                <h3>Expertises:</h3>
                                                 <div className="HobbiesDivTourist">
                                                     {this.state.tourist.ExpertisesNames.map(
                                                         (expertise) => (

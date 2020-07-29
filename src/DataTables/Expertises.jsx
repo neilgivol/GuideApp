@@ -6,7 +6,7 @@ import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import '../Profile/Css/ProfileDetails.css';
+import '../Profile/ProfileDetails/ProfileDetails.css';
 import pic from '../Img/iconHead.png';
 import FileUpload from '../Profile/Components/fileUpload';
 import Swal from "sweetalert2";
@@ -131,7 +131,6 @@ class ExpertisesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",
@@ -178,7 +177,6 @@ class ExpertisesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",
@@ -225,7 +223,6 @@ class ExpertisesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",

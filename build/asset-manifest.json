@@ -1,23 +1,25 @@
 {
   "files": {
-    "main.css": "/bgroup10/prod/guideapp/static/css/main.41586bff.chunk.css",
-    "main.js": "/bgroup10/prod/guideapp/static/js/main.48ad62ed.chunk.js",
-    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.48ad62ed.chunk.js.map",
+    "main.css": "/bgroup10/prod/guideapp/static/css/main.5e9ab127.chunk.css",
+    "main.js": "/bgroup10/prod/guideapp/static/js/main.a2c7c37a.chunk.js",
+    "main.js.map": "/bgroup10/prod/guideapp/static/js/main.a2c7c37a.chunk.js.map",
     "runtime-main.js": "/bgroup10/prod/guideapp/static/js/runtime-main.cd561631.js",
     "runtime-main.js.map": "/bgroup10/prod/guideapp/static/js/runtime-main.cd561631.js.map",
     "static/css/2.5edb1ac2.chunk.css": "/bgroup10/prod/guideapp/static/css/2.5edb1ac2.chunk.css",
-    "static/js/2.5ebaab3b.chunk.js": "/bgroup10/prod/guideapp/static/js/2.5ebaab3b.chunk.js",
-    "static/js/2.5ebaab3b.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.5ebaab3b.chunk.js.map",
+    "static/js/2.264e6690.chunk.js": "/bgroup10/prod/guideapp/static/js/2.264e6690.chunk.js",
+    "static/js/2.264e6690.chunk.js.map": "/bgroup10/prod/guideapp/static/js/2.264e6690.chunk.js.map",
     "index.html": "/bgroup10/prod/guideapp/index.html",
-    "precache-manifest.51ba42283d4b90736456caa02e0c23b7.js": "/bgroup10/prod/guideapp/precache-manifest.51ba42283d4b90736456caa02e0c23b7.js",
+    "precache-manifest.d19b90f98dd4f4bcb8ce2a5ffff143b3.js": "/bgroup10/prod/guideapp/precache-manifest.d19b90f98dd4f4bcb8ce2a5ffff143b3.js",
     "service-worker.js": "/bgroup10/prod/guideapp/service-worker.js",
     "static/css/2.5edb1ac2.chunk.css.map": "/bgroup10/prod/guideapp/static/css/2.5edb1ac2.chunk.css.map",
-    "static/css/main.41586bff.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.41586bff.chunk.css.map",
-    "static/js/2.5ebaab3b.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.5ebaab3b.chunk.js.LICENSE.txt",
+    "static/css/main.5e9ab127.chunk.css.map": "/bgroup10/prod/guideapp/static/css/main.5e9ab127.chunk.css.map",
+    "static/js/2.264e6690.chunk.js.LICENSE.txt": "/bgroup10/prod/guideapp/static/js/2.264e6690.chunk.js.LICENSE.txt",
     "static/media/Default-welcomer.png": "/bgroup10/prod/guideapp/static/media/Default-welcomer.9d1403c3.png",
     "static/media/The_Instagram_Logo.jpg": "/bgroup10/prod/guideapp/static/media/The_Instagram_Logo.00beabec.jpg",
     "static/media/mdb.css": "/bgroup10/prod/guideapp/static/media/arrow_right.8ef6a08c.svg",
     "static/media/Admin.css": "/bgroup10/prod/guideapp/static/media/back7.39ad445d.png",
+    "static/media/buildtrip0.jpeg": "/bgroup10/prod/guideapp/static/media/buildtrip0.6366040b.jpeg",
+    "static/media/buildtrip1.jpeg": "/bgroup10/prod/guideapp/static/media/buildtrip1.22199f7b.jpeg",
     "static/media/expertise.jpeg": "/bgroup10/prod/guideapp/static/media/expertise.2d7d8b2b.jpeg",
     "static/media/all.min.css": "/bgroup10/prod/guideapp/static/media/fa-solid-900.ec763292.svg",
     "static/media/facebook.png": "/bgroup10/prod/guideapp/static/media/facebook.6a8e6677.png",
@@ -26,14 +28,14 @@
     "static/media/language.jpeg": "/bgroup10/prod/guideapp/static/media/language.38798bd9.jpeg",
     "static/media/linkedin.png": "/bgroup10/prod/guideapp/static/media/linkedin.660ffeb0.png",
     "static/media/logoadvisor.png": "/bgroup10/prod/guideapp/static/media/logoadvisor.9ade8bb5.png",
-    "static/media/profileDetails.jpeg": "/bgroup10/prod/guideapp/static/media/profileDetails.5fb6b737.jpeg",
+    "static/media/profileDetails.jpeg": "/bgroup10/prod/guideapp/static/media/profileDetails.9611b4b2.jpeg",
     "static/media/website.png": "/bgroup10/prod/guideapp/static/media/website.ff6e9809.png"
   },
   "entrypoints": [
     "static/js/runtime-main.cd561631.js",
     "static/css/2.5edb1ac2.chunk.css",
-    "static/js/2.5ebaab3b.chunk.js",
-    "static/css/main.41586bff.chunk.css",
-    "static/js/main.48ad62ed.chunk.js"
+    "static/js/2.264e6690.chunk.js",
+    "static/css/main.5e9ab127.chunk.css",
+    "static/js/main.a2c7c37a.chunk.js"
   ]
 }

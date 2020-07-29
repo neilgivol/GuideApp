@@ -4,9 +4,10 @@ import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import '../Profile/Css/ProfileDetails.css'
+import '../Profile/ProfileDetails/ProfileDetails.css'
 import "../Css/Contact.css";
 import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
+import Swal from "sweetalert2";
 
 class Contact extends Component {
     constructor(props) {
@@ -43,8 +44,6 @@ class Contact extends Component {
             Body: this.state.message,
             EmailFrom: this.state.email,
         }
-        console.log(message);
-        console.log(this.apiUrl + 'Guide/SendEmailToApp')
         fetch(this.apiUrl + 'Guide/SendEmailToApp', {
             method: 'POST',
             body: JSON.stringify(message),
@@ -57,7 +56,20 @@ class Contact extends Component {
             })
             .then(
                 (result) => {
-                    console.log(result);
+                    if(result == "success"){
+                        this.setState({
+                            name: '',
+                            email: '',
+                            message: ''
+                        })
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "The message was sent successfully",
+                            showConfirmButton: false,
+                            timer: 1800
+                        });
+                    }
                 },
                 (error) => {
                     console.log("err post=", error);
@@ -73,10 +85,10 @@ class Contact extends Component {
         return (
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
             <Row>
-                <Col md="6">
+                <Col md="6" className="SendMessageContact">
                     <Card>
                         <Card.Header className="border-bottom headDiv">
-                            <h3 className="m-0">Contact Us</h3>
+                            <h6 className="m-0">Contact Us</h6>
                         </Card.Header>
                         <ListGroup flush>
                             <ListGroupItem className="p-3">
@@ -125,7 +137,7 @@ class Contact extends Component {
                 </Col>
                 <Col md="6">
                     <ListGroup className="DetailsContact">
-                        <ListGroupItem> <h4><span><i class="fas fa-envelope"></i></span><a href="mailto:IsraAdvisor@gmail.com"> IsraAdvisor@gmail.com</a></h4></ListGroupItem>
+                        <ListGroupItem> <h4><span><i class="fas fa-envelope"></i></span><a href="mailto:Isradvisor@gmail.com"> Isradvisor@gmail.com</a></h4></ListGroupItem>
                         <ListGroupItem> <h4><span><i class="fas fa-phone-alt"></i></span><a href="tel:1-800-800-830"> 1-800-800-830</a></h4></ListGroupItem>
                         <ListGroupItem> <h4><span><i class="fas fa-map-marker-alt"></i></span> עמק חפר 4025000</h4></ListGroupItem>
                     </ListGroup>

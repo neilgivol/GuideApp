@@ -10,13 +10,20 @@
     bottom: -30px;
     border: none;
 }
-.copyR span{
-    position: absolute;
-    left:50.5%;
-    bottom: -30px;
-    border: none;
-}
-.copyright{
-}
-.nav{
-}
+
+
+@media only screen and (device-width: 768px) {
+    .main-footer{
+        width: 100%;
+        position: fixed;
+        bottom: 0px;
+        margin-top:10px
+    }
+    .copy span{
+        position: absolute;
+        left:45%;
+        bottom: -30px;
+        border: none;
+    }
+   
+    }

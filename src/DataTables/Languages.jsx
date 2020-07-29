@@ -7,7 +7,7 @@ import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import '../Profile/Css/ProfileDetails.css';
+import '../Profile/ProfileDetails/ProfileDetails.css';
 import Swal from "sweetalert2";
 
 class LanguagesDataTable extends Component {
@@ -294,7 +294,7 @@ class LanguagesDataTable extends Component {
         return (
             <div>
                 {this.state.openEdit ?
-                    <Card small className="mb-4 editFormDiv">
+                    <Card small id="langDiv" className="mb-4 editFormDiv">
                         <Card.Header className="border-bottom headDiv">
                             <h6 className="m-0">Edit Language</h6>
                             <div className="ExistDiv">

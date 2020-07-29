@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Col, Row, Card, Container } from 'react-bootstrap';
-
 import Checkbox from '@material-ui/core/Checkbox';
 import Swal from 'sweetalert2'
 import logoLast from '../Img/logoadvisor.png';
@@ -21,7 +20,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="#" to='#'>
-                IsrAdvisor
+                IsraAdvisor
         </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -38,9 +37,6 @@ class SignIn extends Component {
             rememberMe: false,
             lieceneNum: "",
         }
-    }
-    componentWillUnmount() {
-        clearInterval(this.myInterval)
     }
     componentWillMount() {
         //אם החליף תמונה
@@ -64,21 +60,23 @@ class SignIn extends Component {
                 govILAsk: !this.state.govILAsk
             });
         }
-
     }
 
+    //משנה אימייל
     HandelEmailInput = (e) => {
         this.setState({
             email: e.target.value
         }
         )
     }
+    //משנה סיסמה
     HandelPasswordInput = (e) => {
         this.setState({
             password: e.target.value
         }
         )
     }
+    //משנה מספר מדריך
     HandelNumberInput = (e) => {
         this.setState({
             lieceneNum: e.target.value
@@ -86,6 +84,7 @@ class SignIn extends Component {
         )
     }
 
+    //שומר שם וסיסמה
     RememberMe = () => {
         if (!this.state.rememberMe) {
             this.setState({ rememberMe: true });
@@ -109,8 +108,6 @@ class SignIn extends Component {
         }
     }
   
-
-  
     //לוקח את פרטי המשתמש ושולח אותם למסד נתונים כדי לבדוק האם קיים משתמש כזה
     SignInFunc = () => {
         localStorage.clear();
@@ -125,6 +122,7 @@ class SignIn extends Component {
         this.props.checkSignIn(signInUser, 2);
     }
 
+    //התחברות עם מדריך ממשרד התיירות
     SignInWithGovIL = () => {
         if (this.state.lieceneNum !== "") {
             this.props.GovList(this.state.lieceneNum);
@@ -147,7 +145,7 @@ class SignIn extends Component {
                             <img className="LogoDiv" alt="" src={logoLast} />
                         </Col>
                     </Row>
-                        <Row className="RowDivSignIn text-center">
+                        <Row id="RowSignIn" className="RowDivSignIn text-center">
                             <Col className="ColDivSignIn" xl="6">
                                 <Card className="CardDivSignIn">
                                     <MDBCardBody className="cardBody">
@@ -202,10 +200,10 @@ class SignIn extends Component {
 
                                         </div>
                                         <Row>
-                                            <Col lg="6" md="12">
+                                            <Col lg="6" md="6" sm="12">
                                                 <Facebook checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromFacebook={this.props.PostGuideToSQLFromFacebook} />
                                             </Col>
-                                            <Col lg="6" md="12">
+                                            <Col lg="6" md="6" sm="12">
                                                 <Google checkifExistFunc={this.props.checkIfexistUsers} PostGuideToSQLFromGoogle={this.props.PostGuideToSQLFromGoogle} />
                                             </Col>
                                         </Row>
@@ -237,19 +235,20 @@ class SignIn extends Component {
                                             </Col>
                                         </Row>
                                     </MDBCardBody>
-                                    {/* <MDBModalFooter className="mx-5 pt-3 mb-1"> */}
                                     <div className="footerSignIn">
-                                        <div className="col-6 forgotPass">
+                                        <div className='row'>
+                                        <div id="ForgetPassID" className="col-6 forgotPass">
                                             <p className="font-small blue-text"><Link to="/reset">Forgot Password?</Link></p>
                                         </div>
-                                        <div className="col-6 signUp">
+                                        <div id="signUpID" className="col-6 signUp">
                                             <p className="font-small grey-text">
                                                 Not a member?
                                                 <Link to="/SignUp">SignUp</Link>
                                             </p>
                                         </div>
+                                        </div>
+                                       
                                     </div>
-                                    {/* </MDBModalFooter> */}
                                 </Card>
                             </Col>
                         </Row>

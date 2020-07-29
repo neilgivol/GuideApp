@@ -1,22 +1,37 @@
-.title h2 {
+
+/*כותרות ראשיות בעמוד הפרופיל*/
+.title h3 {
     margin-left: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+.title{
+    height: 30px;
+}
+
+.listgroupTitle{
+    background-color: #e0eef9;
+}
+
+#languageGroupItem{
+    padding:0px;
 }
 
 .imageDiv {
     width: 100%;
     height: 100%;
 }
+
+/*Tutorial*/
 .divImageTutorial{
     width: 90%;
     height: 90%;
 }
-
 .buttonsTutorial{
     text-align: center;
     margin-top:15px;
     background-color: rgb(235, 232, 232);
 }
-
 
 .divBtnSave {
     text-align: center;
@@ -156,7 +171,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-    .title h2 {
+    .title h3 {
         font-size: 20px;
     }
 

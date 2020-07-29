@@ -5,41 +5,43 @@ import '../Profile/Css/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import "../Css/BuildTrip.css";
+import "../BuildTrip/BuildTrip.css";
 import { Container } from "shards-react";
 import { Button, Row, ListGroup } from 'react-bootstrap';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-//import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import { GoogleMap, LoadScript, Marker, Polyline } from '@react-google-maps/api';
 import Swal from "sweetalert2";
-import AddAttraction from '../Components/AddAttraction';
+import AddAttraction from '../BuildTrip/AddAttraction';
 import TouristProfile from '../Components/TouristProfile';
 import iconPic from '../Img/iconHeadGoogleMap.png';
-import first from '../Img/profileDetails.jpeg';
-import second from '../Img/language.jpeg';
-import three from '../Img/expertise.jpeg';
+import first from '../Img/buildtrip0.jpeg';
+import second from '../Img/buildtrip1.jpeg';
 import Modal from 'react-modal';
 
+//מרכז מפת הגוגל
 const defaultCenter = {
-    lat: 32.088780, lng: 34.854863
+    lat: 31.768318, lng: 34.854863
 }
+//עיצוב מפת הגוגל
 const mapStyles = {
-    width: '600px',
-    height: '750px',
+    width: '400px',
+    height: '800px',
 };
 
-const styles = {
-    position: "relative",
-    padding: "10px 15px",
-    fontSize: "20px",
-    border: "1px solid #f9fafa",
-    background: "#f9fafa",
-    cursor: "pointer"
-};
-const autoStyle = {
-    margin: 'none'
-}
+// const styles = {
+//     position: "relative",
+//     padding: "10px 15px",
+//     fontSize: "20px",
+//     border: "1px solid #f9fafa",
+//     background: "#f9fafa",
+//     cursor: "pointer"
+// };
+// const autoStyle = {
+//     margin: 'none'
+// }
+
+//Tutorial Style
 const customStyles = {
     content: {
         top: '50%',
@@ -75,8 +77,6 @@ class BuildTrip extends Component {
             showTourist:false,
             tutorialSecond: false,
             tutorialStart: this.props.openTutorial,
-            tutorialHobbies: false,
-            tutorialThree: false,
         }
 
         let local = this.state.local;
@@ -86,7 +86,6 @@ class BuildTrip extends Component {
         }
         this.toggle = this.toggle.bind(this);
         //this.EditNewAttraction = this.EditNewAttraction.bind(this);
-
     }
 
     componentDidMount() {
@@ -94,30 +93,28 @@ class BuildTrip extends Component {
             tutorialStart:false
         })
         this.props.QuestionFunc(false);
-        let g = JSON.parse(localStorage.getItem('cities'))
+        let g = JSON.parse(localStorage.getItem('cities')) //בדיקה אם הגיעה רשימת הערים ממשרד התיירות
         if (g == null) {
             this.props.GetCities();
         }
-        this.GetTouristLists();
-
-        this.sortAlpha();
-        this.GetTypesList();
-        this.GetRegionsList();
-        this.AddLine();
-        this.props.CheckMessagesNotifications()
+        this.GetTouristLists(); //מביא את רשימת התיירים של המדריך
+        this.sortAlpha(); //מסדר רשימות
+        this.GetTypesList(); //מביא את רשימת סוגי האטרקציות
+        this.GetRegionsList(); //מביא רשימת אזורים בארץ
+        this.AddLine(); //מוסיף קווים למפה
+        this.props.CheckMessagesNotifications() //בודק נוטיפיקיישן
     }
+
     componentDidUpdate(PrevProps) {
         if (PrevProps.openTutorial !== this.props.openTutorial) {
             this.setState({
                 tutorialStart: this.props.openTutorial,
-
             })
         }
     }
 
 //הדרכה ראשונה
-
-    //מציג הקדמה לאפליקציה
+    //מציג הקדמה למסלול טיול
     FirstEnter = () => {
         return (
             <div>
@@ -140,7 +137,7 @@ class BuildTrip extends Component {
         )
     }
 
-    //הקדמה התמחויות ותחביבים
+    //הקדמה שנייה למסלול טיול
     nextToSecond = () => {
         return <div>
             <Modal
@@ -154,29 +151,7 @@ class BuildTrip extends Component {
                     <img className="imageDiv" src={second} />
                 </div>
                 <div className="buttonsTutorial">
-                    <Button onClick={() => { this.setState({ tutorialSecond: false }) }} variant="danger" autoFocus> Skip</Button>
-                    <Button onClick={() => { this.setState({ tutorialSecond: false, tutorialThree: true }) }} variant="primary" autoFocus>Next</Button>
-                </div>
-            </Modal>
-        </div>
-    }
-
-    //הקדמה התמחויות ותחביבים
-    nextToThree = () => {
-        return <div>
-            <Modal
-                isOpen={true}
-                //onAfterOpen={afterOpenModal}
-                //onRequestClose={closeModal}
-                style={customStyles}
-                contentLabel="Example Modal"
-            >
-                <div>
-                    <img className="imageDiv" src={three} />
-                </div>
-                <div className="buttonsTutorial">
-                    {/* <Button onClick={() => {this.setState({tutorialTrip:false})}} variant="danger" autoFocus> Skip</Button> */}
-                    <Button onClick={() => { this.setState({ tutorialThree: false }); this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
+                    <Button onClick={() => { this.setState({ tutorialSecond: false });this.props.QuestionFunc(false) }} variant="primary" autoFocus>Finish</Button>
                 </div>
             </Modal>
         </div>
@@ -203,8 +178,9 @@ class BuildTrip extends Component {
             this.GetTouristsFromSQL(arr2);
         }
         }
-      
     }
+
+    //מביא את כל רשימת הסטטוסים של התיירים בשרת
     GetTouristsFromSQL = (emails) => {
         fetch(this.apiUrl + "BuildTrip/GetAllListTouristsStatus", {
             method: "POST",
@@ -226,6 +202,7 @@ class BuildTrip extends Component {
             );
     };
 
+    //במידה והתייר עובד עם המדריך מוסיפים לרשימת תיירים של מדריך
     UpdateListTourists = (res) =>{
         let TempArr = [];
         for (let i = 0; i < res.length; i++) {
@@ -241,11 +218,14 @@ class BuildTrip extends Component {
             TouristsList:TempArr
         })
     }
+
+    //הצגת פרופיל תייר
     ShowProfile = ()=>{
         this.setState({
             showTourist:!this.state.showTourist
         })
     }
+    //יציאה מפרופיל תייר
     ExitProfile = (res) =>{
         if (res == 'close') {
             this.setState({
@@ -297,10 +277,12 @@ class BuildTrip extends Component {
             Regions: uniqueTags
         })
     }
+
     //!***************************************************************************************לטפל בזה אם יש זמן*******************************
     //מכין מערך של רשימת סוגי אטרקציות שמתאימות לתייר
     filterTouristHandE = (value) => {
         let HobbiesAndExpertises = [];
+
         for (let i = 0; i < value.HobbiesNames.length; i++) {
             const element = value.HobbiesNames[i];
             HobbiesAndExpertises.push(element);
@@ -400,17 +382,16 @@ class BuildTrip extends Component {
                 default:
                     break;
             }
-
         }
     }
-
     //*************************************************************************************************************************************8 */
-
+    //כפתור הוספת אטרקציה
     toggle = () => {
         this.setState({
             open: !this.state.open
         });
     }
+    //סידור אזורים בארץ
     sortAlpha = () => {
         const AllAttractions = [...this.state.AllAttractions].sort((a, b) => {
             if (a.Region < b.Region) return -1;
@@ -420,133 +401,123 @@ class BuildTrip extends Component {
         this.setState({ AllAttractions: AllAttractions });
     }
 
+    // //מוסיף אטרקציה למסלול טיול
+    // AddAtractionToArray = () => {
+    //     this.setState({
+    //         lastDay: ""
+    //     })
+    //     // if (this.state.AttractionFromDate  || this.state.AttractionToDate) {
+    //     // }
+    //     let TripTourist = "";
+    //     let AttractionPointInTrip = "";
+    //     let tempArray = [];
+    //     if (this.state.ListTripArray !== null) {
+    //         for (let i = 0; i < this.state.ListTripArray.length; i++) {
+    //             const element = this.state.ListTripArray[i];
+    //             tempArray.push(element);
+    //         }
+    //     }
+    //     //בודק אם האטרקציה מתוך רשימת האטרקציות או הכנסה ידנית של המדריך
+    //     if (this.state.newAttraction !== "") {
+    //         if (this.state.CityNewAttraction !== "") {
+    //             let Name = this.state.newAttraction;
+    //             let Region = this.state.RegionNewAttraction;
+    //             let AreaName = this.state.CityNewAttraction;
+    //             let location = {
+    //                 lng: this.state.CityNewAttraction.X,
+    //                 lat: this.state.CityNewAttraction.Y
+    //             };
+    //             let type = this.state.TypeNewAttraction;
+    //             let p = {
+    //                 AttractionName: Name,
+    //                 AreaName: AreaName.Name,
+    //                 location: location,
+    //                 Attraction_Type: type,
+    //                 Region: Region
+    //             }
+    //             AttractionPointInTrip = {
+    //                 Point: p,
+    //                 FromHour: new Date(this.state.AttractionFromDate),
+    //                 ToHour: new Date(this.state.AttractionToDate)
+    //             };
 
+    //             tempArray.push(AttractionPointInTrip);
+    //             const list = tempArray.sort((a, b) => {
+    //                 if (a.FromHour < b.FromHour) return -1;
+    //                 if (a.FromHour > b.FromHour) return 1;
+    //                 return 0;
+    //             });
+    //             let ddd = this.OrderDaysTrip(list);
+    //             tempArray = ddd;
 
-    //מוסיף אטרקציה למסלול טיול
-    AddAtractionToArray = () => {
-        this.setState({
-            lastDay: ""
-        })
-        // if (this.state.AttractionFromDate  || this.state.AttractionToDate) {
-        // }
-        let TripTourist = "";
-        let AttractionPointInTrip = "";
-        let tempArray = [];
-        if (this.state.ListTripArray !== null) {
-            for (let i = 0; i < this.state.ListTripArray.length; i++) {
-                const element = this.state.ListTripArray[i];
-                tempArray.push(element);
-            }
-        }
-        //בודק אם האטרקציה מתוך רשימת האטרקציות או הכנסה ידנית של המדריך
-        if (this.state.newAttraction !== "") {
-            if (this.state.CityNewAttraction !== "") {
-                let Name = this.state.newAttraction;
-                let Region = this.state.RegionNewAttraction;
-                let AreaName = this.state.CityNewAttraction;
-                let location = {
-                    lng: this.state.CityNewAttraction.X,
-                    lat: this.state.CityNewAttraction.Y
-                };
-                let type = this.state.TypeNewAttraction;
-                let p = {
-                    AttractionName: Name,
-                    AreaName: AreaName.Name,
-                    location: location,
-                    Attraction_Type: type,
-                    Region: Region
-                }
-                AttractionPointInTrip = {
-                    Point: p,
-                    FromHour: new Date(this.state.AttractionFromDate),
-                    ToHour: new Date(this.state.AttractionToDate)
-                };
+    //             TripTourist = {
+    //                 TouristEmail: this.state.chosen.Email,
+    //                 TripListArray: tempArray
+    //             }
 
-                tempArray.push(AttractionPointInTrip);
-                const list = tempArray.sort((a, b) => {
-                    if (a.FromHour < b.FromHour) return -1;
-                    if (a.FromHour > b.FromHour) return 1;
-                    return 0;
-                });
-                // console.log(list);
-                let ddd = this.OrderDaysTrip(list);
-                tempArray = ddd;
+    //             this.setState({
+    //                 AttractionFromDate: new Date(),
+    //                 ListTripArray: tempArray,
+    //                 open: !this.state.open,
+    //                 TripTourist: TripTourist,
+    //                 newAttraction: "",
+    //                 RegionNewAttraction: "",
+    //                 CityNewAttraction: "",
+    //                 TypeNewAttraction: "",
+    //                 cities: this.props.cities,
+    //                 openNewAttraction: false,
+    //                 SelectedAttraction: ""
+    //             })
+    //             localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+    //         }
+    //         else {
+    //             Swal.fire({
+    //                 position: "center",
+    //                 icon: "error",
+    //                 title: " Must Insert City Name",
+    //                 showConfirmButton: false,
+    //                 timer: 1200
+    //             });
+    //         }
+    //     }
+    //     else {
+    //         AttractionPointInTrip = {
+    //             Point: this.state.SelectedAttraction,
+    //             FromHour: this.state.AttractionFromDate.toLocaleString(),
+    //             ToHour: this.state.AttractionToDate.toLocaleString()
+    //         };
+    //         if (this.state.image !== "") {
+    //             AttractionPointInTrip.Point.Image = this.state.image;
+    //         }
+    //         tempArray.push(AttractionPointInTrip);
+    //         const list = tempArray.sort((a, b) => {
+    //             if (a.FromHour < b.FromHour) return -1;
+    //             if (a.FromHour > b.FromHour) return 1;
+    //             return 0;
+    //         });
+    //         let ddd = this.OrderDaysTrip(list);
+    //         tempArray = ddd;
+    //         TripTourist = {
+    //             TouristEmail: this.state.chosen.Email,
+    //             TripListArray: tempArray
+    //         }
 
-                TripTourist = {
-                    TouristEmail: this.state.chosen.Email,
-                    TripListArray: tempArray
-                }
-
-                this.setState({
-                    AttractionFromDate: new Date(),
-                    ListTripArray: tempArray,
-                    open: !this.state.open,
-                    TripTourist: TripTourist,
-                    newAttraction: "",
-                    RegionNewAttraction: "",
-                    CityNewAttraction: "",
-                    TypeNewAttraction: "",
-                    cities: this.props.cities,
-                    openNewAttraction: false,
-                    SelectedAttraction: ""
-                })
-                //console.log(this.state.ListTripArray);
-                localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
-                //localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
-                //this.props.SaveListAtt(tempArray);
-            }
-            else {
-                Swal.fire({
-                    position: "center",
-                    icon: "error",
-                    title: " Must Insert City Name",
-                    showConfirmButton: false,
-                    timer: 1200
-                });
-            }
-        }
-        else {
-            AttractionPointInTrip = {
-                Point: this.state.SelectedAttraction,
-                FromHour: this.state.AttractionFromDate.toLocaleString(),
-                ToHour: this.state.AttractionToDate.toLocaleString()
-            };
-            if (this.state.image !== "") {
-                AttractionPointInTrip.Point.Image = this.state.image;
-            }
-            tempArray.push(AttractionPointInTrip);
-            const list = tempArray.sort((a, b) => {
-                if (a.FromHour < b.FromHour) return -1;
-                if (a.FromHour > b.FromHour) return 1;
-                return 0;
-            });
-            let ddd = this.OrderDaysTrip(list);
-            tempArray = ddd;
-            TripTourist = {
-                TouristEmail: this.state.chosen.Email,
-                TripListArray: tempArray
-            }
-            console.log(TripTourist);
-
-            this.setState({
-                AttractionFromDate: new Date(),
-                ListTripArray: tempArray,
-                open: !this.state.open,
-                TripTourist: TripTourist,
-                newAttraction: "",
-                RegionNewAttraction: "",
-                CityNewAttraction: "",
-                TypeNewAttraction: "",
-                cities: this.props.cities,
-                openNewAttraction: false,
-                SelectedAttraction: ""
-            })
-            //console.log(this.state.ListTripArray);
-            localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
-            //localStorage.setItem('ListTripArray', JSON.stringify(tempArray));
-            //this.props.SaveListAtt(tempArray);
-        }
-    }
+    //         this.setState({
+    //             AttractionFromDate: new Date(),
+    //             ListTripArray: tempArray,
+    //             open: !this.state.open,
+    //             TripTourist: TripTourist,
+    //             newAttraction: "",
+    //             RegionNewAttraction: "",
+    //             CityNewAttraction: "",
+    //             TypeNewAttraction: "",
+    //             cities: this.props.cities,
+    //             openNewAttraction: false,
+    //             SelectedAttraction: ""
+    //         })
+    //         localStorage.setItem('TripTourist', JSON.stringify(TripTourist));
+    //     }
+    // }
 
     //מציג את מסלול הטיול
     renderListTrip = () => {
@@ -567,6 +538,8 @@ class BuildTrip extends Component {
                 </div>)
         }
     }
+
+    //עריכת אטרקציה
     EditAttraction = (item) => {
         this.setState({
             EditAttraction: true,
@@ -575,6 +548,7 @@ class BuildTrip extends Component {
         })
     }
 
+    //סידור אטרקציות לפי ימים
     OrderDaysTrip = (list) => {
         let elem = "";
         let tempArray = [];
@@ -629,12 +603,7 @@ class BuildTrip extends Component {
         return tempArray;
     }
 
-
-
     //עורך את האטרקציה
-
-
-
     clearSelect = () => {
         this.setState({
             SelectedAttraction: ""
@@ -645,7 +614,6 @@ class BuildTrip extends Component {
     deleteLocation = (item) => {
         let temparr = null;
         let TripTourist = "";
-        // console.log(item);
         let newArrayTemp = [];
         for (let i = 0; i < this.state.ListTripArray.length; i++) {
             const element = this.state.ListTripArray[i];
@@ -687,14 +655,14 @@ class BuildTrip extends Component {
         localStorage.setItem('TripTourists', JSON.stringify(temparr2));
     }
 
-    //מוסיף נקודות אדומות על המפה
+    //מוסיף נקודות על המפה
     AddMarkers = () => {
         if (this.state.ListTripArray) {
             return (this.state.ListTripArray ? this.state.ListTripArray.map((item) => <Marker animation={Animation} icon={iconPic} title={item.Point.AttractionName + " " + item.FromHour.toLocaleString()} position={item.Point.location} />) : null)
         }
     }
 
-    //מוסיף קו בין הנקודות האדומות
+    //מוסיף קו בין הנקודות 
     AddLine = () => {
         if (this.state.ListTripArray) {
             let pathCoordinates = [];
@@ -724,8 +692,6 @@ class BuildTrip extends Component {
     }
 
     //מציג רשימת אטרקציות לפי הסוג שנבחר
-
-
     onStart = () => {
         this.setState({ activeDrags: ++this.state.activeDrags });
     };
@@ -733,12 +699,14 @@ class BuildTrip extends Component {
         this.setState({ activeDrags: --this.state.activeDrags });
     };
 
+    //לאחר בחירת תייר
     AddTourist = (value) => {
         this.setState({ chosen: value })
         this.filterTouristHandE(value);
         this.GetPointsTouristFromSQL(value.Email);
     }
 
+    //שמירת טיול בשרת
     saveTrip = () => {
         let tempArray = [];
         for (let i = 0; i < this.state.TripTourist.TripListArray.length; i++) {
@@ -762,12 +730,57 @@ class BuildTrip extends Component {
             tempArray.push(TripPoint);
         }
         this.AddTripToSQL(tempArray)
-        if (this.state.chosen.Token !== null) {
-            this.SendNotification(this.state.chosen);
+    }
+    AddTripToSQL = (tripPoints) => {
+        for (let i = 0; i < tripPoints.length; i++) {
+            let FromHour =  new Date(tripPoints[i].FromHour).toLocaleString()
+            tripPoints[i].FromHour = FromHour
+            let ToHour =  new Date(tripPoints[i].ToHour).toLocaleString()
+            tripPoints[i].ToHour = ToHour
         }
+        //pay attention case sensitive!!!! should be exactly as the prop in C#!
+        fetch(this.apiUrl + 'BuildTrip/GetAtt', {
+            method: "POST",
+            body: JSON.stringify(tripPoints),
+            headers: new Headers({
+                "Content-type": "application/json; charset=UTF-8", 'Accept-encoding': 'gzip, deflate' //very important to add the 'charset=UTF-8'!!!!
+            })
+        })
+            .then((res) => {
+                return res.json();
+            })
+            .then(
+                (result) => {
+                    if (result !== null) {
+                        this.RenderListFromSQL(result);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "The Trip Added",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        if (this.state.chosen.Token !== null) {
+                            this.SendNotification(this.state.chosen);
+                        }
+                    }
+                     else {
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "The Trip did'nt Added",
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
+                    }
+                },
+                (error) => {
+                    console.log("err post=", error);
+                }
+            );
     }
 
-
+    //שליחת התראה לתייר על עדכון טיול
     SendNotification = (tourist) => {
         let message = {
             to: tourist.Token,
@@ -797,6 +810,7 @@ class BuildTrip extends Component {
             );
     }
 
+    //מביא את רשימת האטרקציות של התייר
     GetPointsTouristFromSQL = (email) => {
         fetch(this.apiUrl + "BuildTrip?email=" + email, {
             method: "GET",
@@ -809,7 +823,9 @@ class BuildTrip extends Component {
             })
             .then(
                 (result) => {
-                    this.RenderListFromSQL(result);
+                    if (result !== null) {
+                        this.RenderListFromSQL(result);
+                    }
                     this.setState({ ChooseTourist: true })
                 },
                 (error) => {
@@ -818,50 +834,16 @@ class BuildTrip extends Component {
             );
     };
 
-    AddTripToSQL = (tripPoints) => {
-        for (let i = 0; i < tripPoints.length; i++) {
-            let FromHour =  new Date(tripPoints[i].FromHour).toLocaleString()
-            tripPoints[i].FromHour = FromHour
-            let ToHour =  new Date(tripPoints[i].ToHour).toLocaleString()
-            tripPoints[i].ToHour = ToHour
-        }
-        //pay attention case sensitive!!!! should be exactly as the prop in C#!
-        fetch(this.apiUrl + "BuildTrip", {
-            method: "POST",
-            body: JSON.stringify(tripPoints),
-            headers: new Headers({
-                "Content-type": "application/json; charset=UTF-8" //very important to add the 'charset=UTF-8'!!!!
-            })
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then(
-                (result) => {
-                    if (result !== null) {
-                        this.RenderListFromSQL(result);
-                        Swal.fire({
-                            position: "center",
-                            icon: "success",
-                            title: "The Trip Added",
-                            showConfirmButton: false,
-                            timer: 1200
-                        });
-                    } else {
-                    }
-                },
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    }
-
+    //הצגת רשימת האטרקציות מהשרת
     RenderListFromSQL = (res) => {
         let temparr = "";
         let tempArr = [];
         let TripTourist = null;
         let AttractionPointInTrip = '';
-        if (res.length > 0) {
+        if ( res !== null) {
+            
+        }
+        if (res.length > 0 ) {
             for (let i = 0; i < res.length; i++) {
                 const sqlPoint = res[i];
                 let p = this.props.Attractions.find(myFunction)
@@ -953,8 +935,6 @@ class BuildTrip extends Component {
         }
     }
 
-
-
     MoveList = (tempArray, touristJson) => {
         this.setState({
             ListTripArray: tempArray,
@@ -976,7 +956,6 @@ class BuildTrip extends Component {
                     <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
                         {this.state.tutorialStart ? this.FirstEnter() : null}
                     {this.state.tutorialSecond ? this.nextToSecond() : null}
-                    {this.state.tutorialThree ? this.nextToThree() : null}
                         <div className="SelectTourist">
                       
                             <Row><h1>Choose Tourist:</h1></Row>
@@ -992,16 +971,14 @@ class BuildTrip extends Component {
                         </div>
                       
                     </Container>
-
                 )
             }
-
         }
         else {
             return (
                 <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
-                    <div className="row">
-                        <div className="col-md-7 col-sm-12 leftSide">
+                    <div className="row allsides">
+                        <div className="col-md-6 col-lg-7 col-xs-12 leftSide">
                             {this.state.open ?
                                 <AddAttraction
                                     CloseOpenDiv={this.CloseOpenDiv}
@@ -1019,45 +996,40 @@ class BuildTrip extends Component {
                                     EditAttraction={this.state.EditAttraction}
                                     item={this.state.item}
                                 /> : null}
-                            <div className="col-md-12 col-lg-9 col-sm-12 showTrip">
-                                <div className="titleDivTrip"><h2>{this.state.chosen.FirstName} {this.state.chosen.LastName} - Trip</h2></div>
+                            <div className="col-sm-12 showTrip">
+                                <div className="titleDivTrip"><h3>{this.state.chosen.FirstName} {this.state.chosen.LastName} - Trip</h3></div>
                                 <div>
                                     <Button className="btn col-5" variant="success" onClick={this.toggle}>Add Attraction</Button>
                                     <Button className="btn col-5" variant="info" onClick={this.ShowProfile}>Profile Tourist</Button>
-
                                 </div>
                                 <div className="TripList">
                                     {this.state.ListTripArray ? <ListGroup variant="flush" className="listGroupTrip">
                                         {this.renderListTrip()}</ListGroup> : null}
                                 </div>
                                 <div>
-                                <Button className="btn col-5" variant="danger" onClick={() => this.setState({ ChooseTourist: false, ListTripArray: [] })}>Logout Tourist Trip</Button>
+                                <Button className="btn col-5" variant="danger" onClick={() => this.setState({ ChooseTourist: false, ListTripArray: [] })}>Switch Tourist</Button>
                                 <Button className="btn col-5" variant="primary" onClick={() => this.saveTrip()}>Save Trip</Button>
                                 </div>
                             </div>
                         </div>
                         {/* AIzaSyCna1GfDry3zMNWiD9GlUK4VzUc1bu6_Wk */}
-
-                        <div className="col-3 rightSide hidden-xs hidden-sm">
+                        <div className="col-lg-3 col-sm-6 rightSide hidden-xs">
                             <LoadScript
                                 //libraries= 'places'
                                 googleMapsApiKey='AIzaSyD_2VscttN1yLn9NLZYH_60pdYHfA6jzfQ'>
                                 <GoogleMap
                                     mapContainerStyle={mapStyles}
-                                    zoom={8}
+                                    zoom={7.8}
                                     center={defaultCenter}
                                 >
-
                                     {this.AddMarkers()}
                                     {this.AddLine()}
                                 </GoogleMap>
-
                             </LoadScript>
                         </div>
                     </div>
                     {this.state.tutorialStart ? this.FirstEnter() : null}
                     {this.state.tutorialSecond ? this.nextToSecond() : null}
-                    {this.state.tutorialThree ? this.nextToThree() : null}
                     {this.state.showTourist ? (
                         <div>
                             <TouristProfile
@@ -1073,8 +1045,6 @@ class BuildTrip extends Component {
     }
     render() {
         const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
-
-
         return (
             <div>
                 {this.renderAll()}
@@ -1082,5 +1052,4 @@ class BuildTrip extends Component {
         );
     }
 }
-
 export default withRouter(BuildTrip);

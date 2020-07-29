@@ -4,15 +4,17 @@ import '.././Profile/Css/Home.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import '../Css/Chat.css';
+import '../Chat/Chat.css';
 import { Container } from "shards-react";
-import ChatBox from '../Components/ChatBox';
-import WelcomeCard from '../Components/WelcomeCard';
+import ChatBox from '../Chat/ChatBox';
+import WelcomeCard from '../Chat/WelcomeCard';
 import profilePic from '../Img/Default-welcomer.png';
 import ReactLoading from 'react-loading'
 import {Button } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css'
-import {myFirestore,myFirebase} from '../services/firebase'
+import {myFirestore,myFirebase} from '../services/firebase';
+import TouristProfile from '../Components/TouristProfile';
+
 //import images from '../Themes/Images'
 //import './ChatBoard.css';
 //import {AppString} from './../Const'
@@ -28,6 +30,7 @@ class Chat extends Component {
             discplayedContacts: [],
             isLoading: true,
             tourist:this.props.tourist,
+            showTourist:false,
             openToruist:false,
             local:this.props.local,
             OpenPhoneList:false,
@@ -202,6 +205,7 @@ class Chat extends Component {
                             id={item.key}
                             className={classname}
                             onClick={() => {
+                                this.props.numOfNotificationsSet([])
                                 this.notificationErase(item.id)
                                 this.setState({
                                     currentPeerUser: item,
@@ -245,11 +249,11 @@ class Chat extends Component {
                   const element = arrayTemp[i];
                   if (element.email == this.props.location.state.userEmail) {
                       this.setState({currentPeerUser:element})
+                      this.props.numOfNotificationsSet([])
                   }
                   
               }
             }
-            this.props.CheckMessagesNotifications()
         }
         else {
             console.log("No user is Present")
@@ -263,11 +267,6 @@ class Chat extends Component {
         else{
             return item
         }
-    // this.GetAllTourists(email);
-    // console.log(this.state.tourist);
-    // console.log(this.state.profileTourPic);
-    // return this.state.profileTourPic
-
     }
     GetAllTourists = (email) => {
         fetch(this.apiUrl + "Tourist?email=" + email, {
@@ -340,6 +339,21 @@ class Chat extends Component {
         })
     }
 
+    showTouristChat=(tourist)=>{
+        this.setState({
+            tourist:tourist,
+            showTourist: !this.state.showTourist
+        })
+       
+    }
+    ExitProfile = (res) => {
+        if (res == 'close') {
+            this.setState({
+                showTourist: false
+            })
+        }
+    }
+
 
     componentWillMount() {
 
@@ -351,7 +365,6 @@ class Chat extends Component {
             openToruist:!this.state.openToruist,
             OpenPhoneList:false
         })
-        console.log(this.state.openToruist)
     }
     openNavbarPhone = ()=>{
 this.setState({
@@ -366,7 +379,7 @@ this.setState({
         return (
             <Container fluid id={this.props.navbarOpenCheck} className="HomePageContainer" >
                 <div className="root">
-                    <div className="body hidden-sm hidden-xs">
+                    <div className="body hidden-xs">
                         <div className="viewListUser">
                             <div className="profileviewleftside">
                                 <img
@@ -380,14 +393,14 @@ this.setState({
                         </div>
                         <div className="viewBoard">
                             {this.state.currentPeerUser ? (
-                                <ChatBox AllExpertises={this.props.AllExpertises} AllHobbies={this.props.AllHobbies} LanguagesListOrgenized={this.props.LanguagesListOrgenized} local={this.props.local} currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} navbarOpenCheck={this.state.navbar} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
+                                <ChatBox orgenizeNotifications={this.props.orgenizeNotifications} showTouristChat={this.showTouristChat} AllExpertises={this.props.AllExpertises} AllHobbies={this.props.AllHobbies} LanguagesListOrgenized={this.props.LanguagesListOrgenized} local={this.props.local} currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} navbarOpenCheck={this.state.navbar} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
                                     currentUserPhoto={this.state.Guide.ProfilePic}
                                 />
                                 )}
                         </div>
                     </div>
                   
-                    <div className="body hidden-md hidden-lg hidden-xl phoneBody">
+                    <div className="body hidden-sm hidden-md hidden-lg hidden-xl phoneBody">
                     <Button className="primary col-xs-2 navprovilePhone" onClick={this.openNavbarPhone} className="menuPhone chatBtnList hidden-xl hidden-lg hidden-md">
             <i class="fas fa-bars"></i>
             </Button>
@@ -396,7 +409,7 @@ this.setState({
                         </div> : null}
             <div className={this.state.classChatBoxPhone}>
                             {this.state.currentPeerUser ? (
-                                <ChatBox AllExpertises={this.props.AllExpertises} AllHobbies={this.props.AllHobbies} LanguagesListOrgenized={this.props.LanguagesListOrgenized} local={this.props.local} currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} navbarOpenCheck={this.state.navbar} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
+                                <ChatBox orgenizeNotifications={this.props.orgenizeNotifications} showTouristChat={this.showTouristChat} AllExpertises={this.props.AllExpertises} AllHobbies={this.props.AllHobbies} LanguagesListOrgenized={this.props.LanguagesListOrgenized} local={this.props.local} currentPeerUser={this.state.currentPeerUser} showToast={this.props.showToast} Guide={this.state.Guide} navbarOpenCheck={this.state.navbar} />) : (<WelcomeCard currentUserName={this.state.Guide.FirstName}
                                     currentUserPhoto={this.state.Guide.ProfilePic}
                                 />
                                 )}
@@ -413,6 +426,15 @@ this.setState({
                             />
                         </div>
                     ) : null}
+                    {this.state.showTourist ? (
+                    <div className="alldivTourist">
+                        <TouristProfile
+                            ExitProfile={this.ExitProfile}
+                            navbarOpenCheck={this.state.navbar}
+                            tourist={this.state.tourist}
+                        />
+                    </div>
+                ) : null}
                 </div>
             </Container>
         )

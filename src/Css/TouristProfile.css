@@ -1,7 +1,29 @@
+
+.divProfileTourist {
+    z-index: 999;
+    position: absolute;
+    top: 7%;
+    left: 7%;
+    max-width: 90%;
+    margin-bottom: 50px;
+}
+.divProfileTourist .myForm {
+    width: 100%;
+}
+.colImgDiv {
+    text-align: center;
+}
+.NameToruistDiv {
+    position: relative;
+    height: 60px;
+    background-color: rgba(0, 128, 255, 0.612);
+}
+/*תמונת הפרופיל של התייר*/
 .TouristImg {
     height: 120px;
     width: 120px;
 }
+/*פרטי התייר*/
 .personalDetails {
     margin-bottom: 20px;
     text-align: left;
@@ -18,53 +40,32 @@
 .profileDetails1 {
     margin-bottom: 20px;
 }
+/*רשימת תחביבי התייר*/
 .hobbiesDivList {
     margin: 30px;
 }
 .ExpertisesDivList {
     margin: 30px;
 }
-.divProfileTourist {
-    z-index: 999;
-    position: absolute;
-    top: 7%;
-    left: 7%;
-    opacity: 0.95;
-    max-width: 90%;
-    margin-bottom: 50px;
-}
-.divProfileTourist .myForm {
-    width: 100%;
-}
-
-.colImgDiv {
-    text-align: center;
-}
-.NameToruistDiv {
-    background-color: rgba(0, 128, 255, 0.612);
-}
-.NameToruistDiv h2 {
-    /* margin-left: 8%;
-    margin-bottom: 3%;
-    margin-top: 3%; */
-}
 .HobbiesDivTourist {
     flex-wrap: wrap;
     display: flex;
 }
 .HobbiesDivTourist .CardItem {
-    height: 216px;
-    width: 288px;
+    height: 108px;
+    width: 144px;
 }
 .HobbiesDivTourist .CardItem img {
-    height: 216px;
-    width: 288px;
+    height: 108px;
+    width: 144px;
 }
 .titleCardDivTourist h4 {
+    font-size: 14px;
     text-align: center;
     vertical-align: middle;
     margin-top: 5px;
     font-weight: 650;
+    line-height: 10px;
 }
 .titleCardDivTourist {
     height: 20%;
@@ -91,7 +92,7 @@
     z-index: none;
     cursor: pointer;
 }
-.divProfileTourist h2 {
+.divProfileTourist h3 {
     text-align: left;
 }
 #nameTourist {
@@ -99,26 +100,35 @@
 }
 .delProfileTourist {
     position: absolute;
-    bottom: 84%;
+    bottom: 50%;
     left: 97%;
     color: rgba(0, 0, 0, 0.8);
     font-size: 30px;
 }
 .delSpanTour i {
-    font-size: 30px;
+    font-size: 20px;
     color: black;
 }
 
+/***********************PHONE***********************/
 @media only screen and (max-width: 600px) {
     .delSpanTour i {
-        font-size: 22px;
+        font-size: 16px;
         color: black;
     }
-    .HobbiesDivTourist .CardItem {
+   #close .HobbiesDivTourist .CardItem {
         height: 108px;
         width: 144px;
     }
-    .HobbiesDivTourist .CardItem img {
+   #close .HobbiesDivTourist .CardItem img {
+        height: 108px;
+        width: 144px;
+    }
+   #open .HobbiesDivTourist .CardItem {
+        height: 108px;
+        width: 144px;
+    }
+   #open .HobbiesDivTourist .CardItem img {
         height: 108px;
         width: 144px;
     }
@@ -129,6 +139,7 @@
         font-weight: 650;
         font-size: 14px;
         margin-top: -10px;
+        line-height: 40px;
     }
     .titleCardDivTourist {
         height: 20%;
@@ -144,15 +155,13 @@
         position: absolute;
         top: 10%;
         max-width: 96%;
-        opacity: 0.95;
     }
 
     .delProfileTourist {
         position: absolute;
-        bottom: 92%;
+        bottom: 50%;
         left: 93%;
         color: rgba(0, 0, 0, 0.8);
-        font-size: 16px;
     }
     .ExpertisesDivList {
         margin: 0px;
@@ -167,4 +176,6 @@
         padding-right: 10px;
         margin-left: 10px;
     }
+
+  
 }

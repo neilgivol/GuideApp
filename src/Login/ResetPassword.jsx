@@ -18,7 +18,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
             <Link color="inherit" href="#">
-                IsraVisor
+                IsraAdvisor
         </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -56,12 +56,11 @@ class ResetPassword extends Component {
             })
             .then(
                 (result) => {
-                    console.log(result)
                     this.updateInFirebase(user.PasswordGuide, result);
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'נשלחה סיסמא חדשה למייל',
+                        title: 'password sent to your email',
                         showConfirmButton: false,
                         timer: 1200
                     });
@@ -119,11 +118,16 @@ class ResetPassword extends Component {
             .then(
                 (result) => {
                     if (result.Email !== null) {
-                        console.log(result);
                         this.ResetUserPassword(result);
                     }
                     else {
-                        alert("Error Email Adress")
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Error email address',
+                            showConfirmButton: false,
+                            timer: 1200
+                        });
                     }
                 },
                 (error) => {
@@ -142,8 +146,10 @@ class ResetPassword extends Component {
         return (
             <div className="Cont">
                 <MDBContainer>
-                    <MDBRow className="RowDivSignIn">
-                        <MDBCol md="6" className="LogoDiv divLogo"><img alt="" src={logoLast} /></MDBCol>
+                <MDBRow className="logoRow">
+          <MDBCol md="12" id="signUpImage" className="divLogo"><img className="LogoDiv" alt="" src={logoLast} /></MDBCol>
+          </MDBRow>    
+                              <MDBRow className="RowDivSignIn">
                         <MDBCol className="ColDivSignIn resetDivBody" md="6">
                             <MDBCard className="CardDivSignIn">
                                 <MDBCardBody className="mx-4 CardBody cardReset">
@@ -179,7 +185,7 @@ class ResetPassword extends Component {
                         </MDBCol>
                     </MDBRow>
                     <MDBRow>
-                  <Box id="copyR" mt={8} className="CopyRights">
+                  <Box mt={8} className="copy2">
                         <Copyright />
                     </Box>
                   </MDBRow>

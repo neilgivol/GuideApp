@@ -6,7 +6,7 @@ import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import '../Profile/Css/ProfileDetails.css';
+import '../Profile/ProfileDetails/ProfileDetails.css';
 import pic from '../Img/iconHead.png';
 import FileUpload from '../Profile/Components/fileUpload';
 import Swal from "sweetalert2";
@@ -39,7 +39,6 @@ class HobbiesDataTable extends Component {
         this.setState({
             hobbies: this.props.hobbies
         })
-        console.log(this.props.hobbies);
     }
 
     componentDidUpdate(PrevProps) {
@@ -57,7 +56,6 @@ class HobbiesDataTable extends Component {
     }
 
     Edit = (e) => {
-        console.log(e)
         this.setState({
             selectedHobby: e,
             isNew: false,
@@ -69,7 +67,8 @@ class HobbiesDataTable extends Component {
 
     CloseDiv = () => {
         this.setState({
-            openEdit: false
+            openEdit: false,
+            upload: false
         })
     }
 
@@ -77,15 +76,10 @@ class HobbiesDataTable extends Component {
         this.setState({
             upload: !this.state.upload
         })
-
-        this.upload();
     }
 
     upload = () => {
-        if (this.state.upload) {
             return <div className="uploadDivEdit"><FileUpload changeURL={this.ChangeProfileImage} local={this.props.local} /></div>
-        }
-        //this.ChangeProfileImage();
     }
 
     ChangeProfileImage = (newurl) => {
@@ -126,7 +120,6 @@ class HobbiesDataTable extends Component {
 
     AddNewHobby = () => {
         let newPicture = { pic };
-        console.log(newPicture);
         this.setState({
             HobbyName: "",
             HobbyPic: newPicture.pic,
@@ -149,7 +142,6 @@ class HobbiesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",
@@ -198,7 +190,6 @@ class HobbiesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",
@@ -247,7 +238,6 @@ class HobbiesDataTable extends Component {
             })
             .then(
                 (result) => {
-                    console.log("result= ", result)
                     if (result !== null) {
                         Swal.fire({
                             position: "center",
@@ -286,7 +276,7 @@ class HobbiesDataTable extends Component {
     render() {
         return (
             <div className="AdminContainer">
-                {this.upload()}
+               {this.state.upload?this.upload():null}
                 {this.state.openEdit ?
                     <Card small className="mb-4 editFormDiv">
                         <Card.Header className="border-bottom headDiv">

@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import '../Css/Footer.css';
 
 const MainFooter = ({ contained, menuItems, copyright }) => (
-  <footer className="main-footer d-flex p-2 px-3 bg-white border-top hidden-sm hidden-xs">
+  <footer className="main-footer d-flex p-2 px-3 bg-white border-top hidden-xs">
     <Container fluid={contained}>
       <Row>
-        <Col className="copy hidden-xs hidden-sm"><span className="copyright ml-auto my-auto mr-2">{copyright}</span></Col>
+        <Col id="datatableFooter" className="copy hidden-xs"><span className="copyright ml-auto my-auto mr-2">{copyright}</span></Col>
       </Row>
     </Container>
   </footer>

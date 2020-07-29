@@ -5,11 +5,29 @@
     text-align: center;
 }
 .MessageBody textarea{
-    height: 250px;
+    height: 140px;
+}
+.SendMessageContact{
+    margin-bottom: 100px;
 }
 
 @media only screen and (max-width: 600px) {
+    .SendMessageContact{
+        margin-bottom: 20px;
+    }
     .DetailsContact{
         margin-bottom: 60px;
+    }
+    .DetailsContact h4{
+        font-size: 16px;
+    }
+}
+
+@media only screen and (device-width: 768px) {
+    .SendMessageContact{
+        margin-top: 45px;
+    }
+    .DetailsContact{
+        margin-top: 45px;
     }
 }

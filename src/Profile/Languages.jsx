@@ -4,7 +4,6 @@ import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import MultiSelect from "@kenshooui/react-multi-select";
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
-import './Css/Language.css';
 
 const Guide = JSON.parse(localStorage.getItem('Guide'));
 
@@ -27,8 +26,6 @@ class Languages extends Component {
         }
     }
 
-
-
     componentDidMount() {
         let array = [];
         //רץ על כל השפות של המדריך מהמסד נתונים
@@ -47,6 +44,9 @@ class Languages extends Component {
             //מכניס את המערך הזמני למערך שפות שנבחרו ובכך מציג אותם למסך
             selectedItems: array
         })
+
+        this.props.CheckMessagesNotifications();
+
     }
 
     handleChange(selectedItems) {
@@ -72,7 +72,6 @@ class Languages extends Component {
 
         // אם אין שפות בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימות שפות - ימחקו כל השפות של המדריך
         if (tempArrayGuideLanguages.length === 0) {
-            console.log("del")
             fetch(this.apiUrl + '/Language/' + GuideCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
@@ -81,7 +80,6 @@ class Languages extends Component {
                 })
             })
                 .then(res => {
-                    console.log('res=', res);
                     return res.json()
                 })
                 .then(
@@ -114,13 +112,10 @@ class Languages extends Component {
 
         })
             .then(res => {
-                console.log('res=', res);
                 return res.json()
             })
             .then(
                 (result) => {
-                    console.log("fetch POST= ", result);
-                    console.log(result);
                     this.setState({
                         ListFromSQL: result
                     });
@@ -134,7 +129,6 @@ class Languages extends Component {
     //עדכון רשימת השפות החדשה על המסך לאחר שהוכנסו למסד הנתונים
     UpdateList = (e) => {
         this.props.updateLanguage();
-        console.log(e);
         let array = [];
         for (let i = 0; i < e.length; i++) {
             const SQLelement = e[i];
@@ -145,7 +139,6 @@ class Languages extends Component {
                 }
             }
         }
-        console.log(array);
         this.setState({
             selectedItems: array
         });
@@ -153,7 +146,7 @@ class Languages extends Component {
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'הפרטים שלך עודכנו בהצלחה',
+            title: 'Your languages updates!',
             showConfirmButton: false,
             timer: 1200
         });
@@ -161,13 +154,13 @@ class Languages extends Component {
     render() {
         const { items, selectedItems } = this.state;
         return (
-            <Card>
+            <Card className="cardDivCenter">
                 {/* <Card.Header>Languages</Card.Header> */}
                 <ListGroup>
-                    <ListGroupItem>
-                        <div className="row title"><h2>Choose Language:</h2></div>
+                    <ListGroupItem className="listgroupTitle">
+                        <div className="row title"><h3>Choose Language:</h3></div>
                     </ListGroupItem>
-                    <ListGroupItem>
+                    <ListGroupItem id="languageGroupItem" className="">
                         <MultiSelect
                             items={items}
                             selectedItems={selectedItems}

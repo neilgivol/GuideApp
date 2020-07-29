@@ -1,35 +1,35 @@
+/*במצב שתפריט בצד סגור*/
 #close{
     height: 100%;
-    left: 100px;
+    left: 30px;
     position: relative;
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
     width: 90%;
 }
-
-
 #close .CardBodyDiv{
     max-height: 800px;
 }
-
-
+/*במצב שהתפריט בצד פתוח*/
 #open{
     height: 100%;
-    left: 160px;
+    left: 100px;
     position: relative;
     top: 0px;
     flex-direction: column;
     transition: 300ms ease all;
     width: 80%;
 }
-body{
+
+
+  /*דיב ראשי*/
+  body{
     overflow-y: scroll;
   }
 .HomePageContainer{
     position: relative;
     margin-top:40px;
-    margin-bottom: 50px;
 }
 .homePage{
     margin-bottom: 100px;
@@ -37,12 +37,14 @@ body{
     max-height: 100%;
     padding: 10px;
 }
-.foot{
+
+/* .foot{
     position: absolute;
     bottom: 0px;
     width: 100%;
     border:1px solid;
-}
+} */
+
 .copyright{
     position: absolute;
     border:1px solid #999;
@@ -50,14 +52,18 @@ body{
     bottom:15px;
 }
 
+/*Phone*/
 @media only screen and (max-width: 600px) {
     .homePage{
         margin-bottom: 100px;
         max-height: 100%;
         padding: 10px;
     }
-   .centerDiv{
-    margin-bottom: 60px;
+   #close .homePage .centerDiv{
+    margin-bottom: 30px;
+   }
+   #open .homePage .centerDiv{
+    margin-bottom: 30px;
    }
    .homePage{
        margin-top: 45px;
@@ -67,7 +73,6 @@ body{
     width: 100%;
     position: absolute;
     top:-100px;
- 
    }
    #open{
        left:-8px;
@@ -76,12 +81,70 @@ body{
        top:-100px;
      
     }
-  
-  
-
-    /* #phoneHome{
-        padding-left: -15px;
-        padding-right: -15px;
-    } */
-  
   }
+
+
+/*iPad*/
+  @media only screen and (device-width: 768px) {
+  /*במצב שתפריט בצד סגור*/
+#close{
+    height: 100%;
+    left: 30px;
+    position: relative;
+    flex-direction: column;
+    transition: 300ms ease all;
+    width: 93%;
+    top:-50px;
+}
+
+/*במצב שהתפריט בצד פתוח*/
+#open{
+    height: 100%;
+    left: 30px;
+    position: relative;
+    flex-direction: column;
+    transition: 300ms ease all;
+    width: 93%;
+    top:-50px;
+
+}
+.divImageTutorial img{
+    width: 800px;
+}
+
+
+ #open .homePage{
+    margin-right: 15px;
+    margin-bottom: 10px;
+
+   }
+   #close .homePage{
+    margin-right: 15px;
+    margin-bottom: 10px;
+
+   }
+   #open .homePage .centerDiv{
+    margin-bottom: 10px;
+   }
+   #close .homePage .centerDiv{
+    margin-bottom: 10px;
+
+}
+#open .homePage .cardDiv{
+    margin-bottom: 0px;
+       }
+       #close .homePage .cardDiv{
+        margin-bottom: 0px;
+    
+    }
+  }
+  
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+   
+  }
+  
+  @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+    /* For landscape layouts only */
+  }
+
+  

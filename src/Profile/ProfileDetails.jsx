@@ -1,25 +1,21 @@
 import React, { Component } from 'react';
 import { Button, Col, Row, Form, ListGroup, Card, ListGroupItem } from 'react-bootstrap';
-//import DatePicker from 'react-datepicker';
 import DatePicker from 'react-date-picker'
 import { withRouter } from 'react-router-dom';
-//import { withStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import ReactPhoneInput from "react-phone-input-2";
-//import "react-datepicker/dist/react-datepicker.css";
 import 'react-phone-input-2/lib/style.css';
 import 'react-dropdown/style.css';
 import '../Css/globalhome.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css";
 import "../shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
-import './Css/ProfileDetails.css';
+import './ProfileDetails/ProfileDetails.css';
 import Swal from 'sweetalert2';
-import Links from './Components/Links';
+import Links from './ProfileDetails/Links';
 import ReactLoading from 'react-loading';
 import { myFirebase } from "../services/firebase";
 
-//import {Card, CardHeader} from 'shards-react';
 class ProfileDetails extends Component {
     constructor(props) {
         super(props)
@@ -55,6 +51,7 @@ class ProfileDetails extends Component {
             linksfromSQL:this.props.linksfromSQL,
             isLoading:false
         })
+        this.props.CheckMessagesNotifications();
     }
     componentDidUpdate(PrevProps, state) {
         if (PrevProps.fullLinks !== this.props.fullLinks) {
@@ -68,11 +65,12 @@ class ProfileDetails extends Component {
             })
         }
     }
-
+//עדכון פלאפון
     handleOnChange3 = value => {
         this.setState({ phone: value }, () => {
         });
     };
+    //עדכון מגדר
     handleChangeGender = (e) => {
         this.setState({
             gender: e.target.value,
@@ -81,7 +79,7 @@ class ProfileDetails extends Component {
 
         });
     }
-
+//עדכון שם פרטי
     onChangeFirstName = (e) => {
         this.setState({ 
             user: { ...this.state.user, FirstName: e.target.value },
@@ -89,24 +87,21 @@ class ProfileDetails extends Component {
         });
         
     }
+//עדכון שם משפחה
     onChangeLastName = (e) => {
-       
         this.setState({
             user: { ...this.state.user, LastName: e.target.value },
             lastNameIsValid: e.target.validity.valid
         });   
     }
-    onChangePhone = (e) => {
-        this.setState({
-            user: { ...this.state.user, Phone: e.target.value }
-        });
-    }
+  //עדכון מספר רישוי משרד התיירות
     onChangeLicense = (e) => {
         this.setState({
             user: { ...this.state.user, License: e.target.value },
             licesnseIsValid:e.target.validity.valid
         });
     }
+    //עדכון מלל מדריך
     onChangeDescriptionGuide = (e) => {
         this.setState({
             user: { ...this.state.user, DescriptionGuide: e.target.value }
@@ -151,7 +146,7 @@ class ProfileDetails extends Component {
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'הפרטים שלך עודכנו בהצלחה',
+            title: 'Your details updates!',
             showConfirmButton: false,
             timer: 1200
         });
@@ -167,6 +162,7 @@ class ProfileDetails extends Component {
               });
         }
     }
+    //עדכון שם בפיירבייס
     updateInFirebase = (name) => {
         let currentUserIdchat = localStorage.getItem("idChat")
         let currentUserDocumentId = localStorage.getItem('docId');
@@ -177,8 +173,7 @@ class ProfileDetails extends Component {
     //שינוי הפרטים של המשתמש על המסך לאחר שלחץ על כפתור העידכון
     uploadNewDetails = (guideUpdate) => {
         if (this.state.linksfromSQL.length === 0) {
-            console.log("del")
-            fetch(this.apiUrl + 'Links/' + this.state.user.gCode, {
+            fetch(this.apiUrl + 'Link/' + this.state.user.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
                 headers: new Headers({
@@ -186,12 +181,10 @@ class ProfileDetails extends Component {
                 })
             })
                 .then(res => {
-                    console.log('res=', res);
                     return res.json()
                 })
                 .then(
                     (result) => {
-                        console.log(result);
                     },
                     (error) => {
                         console.log("err post=", error);
@@ -205,6 +198,7 @@ class ProfileDetails extends Component {
         this.props.updateGuide();
     }
   
+//רינדור מחדש
     renderPage = (guideUpdate) => {
         localStorage.setItem('Guide', JSON.stringify(guideUpdate))
         this.props.history.push({
@@ -212,6 +206,8 @@ class ProfileDetails extends Component {
             state: { GuideTemp: guideUpdate }
         });
     }
+
+    //עדכון לינקים
     postLinksToSQL = (links) => {
         fetch(this.apiUrl + 'Link/UpdateLinks', {
             method: 'PUT',
@@ -237,13 +233,12 @@ class ProfileDetails extends Component {
                 });
                 this.props.updateGuide();
     }
-
-
     updateLinks = (linksList) => {
         this.setState({
             linksfromSQL: linksList
         })
     }
+    
     render() {
         return (
             <Card small className="mb-4 profileDetails">

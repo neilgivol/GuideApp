@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Css/Hobbies.css';
-import HobbieAdded from './Components/HobbieAdded';
-import HobbiesList from './Components/HobbiesList';
+import HobbieAdded from './Hobbies/HobbieAdded';
+import HobbiesList from './Hobbies/HobbiesList';
 import ReactLoading from 'react-loading'
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import '.././Css/globalhome.css';
@@ -27,7 +27,6 @@ class Hobbies extends Component {
         }
     }
     componentDidMount() {
-        console.log("DidMount_Hobbies");
         if (this.props.guideListHobbies.length !== 0) {
             //שולח לפונקציה שמעדכנת את רשימת התחביבים של המדריך על המסך
             this.UpdateList(this.props.guideListHobbies);
@@ -38,25 +37,19 @@ class Hobbies extends Component {
             })
         }
 
-
+        this.props.CheckMessagesNotifications();
     }
 
     //הוספת תחביב חדש למערך.
     addToCart = (newItem) => {
         const tempArr = [];
-        console.log(newItem);
         for (let i = 0; i < this.state.itemsArray.length; i++) {
             const element = this.state.itemsArray[i];
             //בדיקה האם התחביב נמצא כבר במערך או לא
             if (newItem.id !== element.id) {
                 tempArr.push(element);
-                console.log(element);
             }
         }
-        console.log(tempArr);
-        //let cartTemp = this.state.itemsInCart;
-        //cartTemp.push(newItem);
-        //console.log(cartTemp);
         this.setState({
             itemsInCart: [...this.state.itemsInCart, newItem],
             itemsArray: tempArr,
@@ -95,7 +88,6 @@ class Hobbies extends Component {
 
         // אם אין תחביבים בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימים תחביבים - ימחקו כל התחביבים של המדריך
         if (tempArray.length === 0) {
-            console.log("del")
             fetch(this.apiUrl + '/Hobby/' + this.props.GuideDetails.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
@@ -104,7 +96,6 @@ class Hobbies extends Component {
                 })
             })
                 .then(res => {
-                    console.log('res=', res);
                     return res.json()
                 })
                 .then(
@@ -128,7 +119,7 @@ class Hobbies extends Component {
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'הפרטים שלך עודכנו בהצלחה',
+            title: 'Your hobbies update!',
             showConfirmButton: false,
             timer: 1200
         });
@@ -145,13 +136,10 @@ class Hobbies extends Component {
 
         })
             .then(res => {
-                console.log('res=', res);
                 return res.json()
             })
             .then(
                 (result) => {
-                    console.log("fetch POST= ", result);
-                    console.log(result);
                     this.setState({
                         ListFromSQL: result
                     });
@@ -166,7 +154,6 @@ class Hobbies extends Component {
     UpdateList = (result) => {
         this.props.updateHobbies();
         let temp = [];
-        console.log(result);
         for (let i = 0; i < result.length; i++) {
             const element = result[i];
             let hobby = {
@@ -208,15 +195,15 @@ class Hobbies extends Component {
             <Card className="cardDivCenter">
                 {/* <Card.Header>Hobbies</Card.Header> */}
                 <ListGroup>
-                    <ListGroupItem>
-                        <div className="row title"><h2>Choose Hobbies:</h2></div>
+                    <ListGroupItem className="listgroupTitle">
+                        <div className="row title"><h3>Choose Hobbies:</h3></div>
                     </ListGroupItem>
-                    <ListGroupItem>
+                    <ListGroupItem id="AllHobbieDiv">
                         <div className='row HobbiesDiv'>
                             <div className='col HobbiesList col-md col-xs-12'>
                                 <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
                             </div>
-                            <span className="middleLine col-md-1 col-xs-12"></span>
+                            <span className="middleLine hidden-md hidden-lg hidden-sm hidden-xl col-xs-12"></span>
                             <div className='col HobbiesAdded col-md col-xs-12'>
                                 <div className="row titleAdded"><span>Selected:</span> </div>
                                 <div className="row HobbiesListSide HobbieAddedList">

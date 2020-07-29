@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HobbiesList from './Components/HobbiesList';
-import HobbieAdded from './Components/HobbieAdded';
+import HobbiesList from './Hobbies/HobbiesList';
+import HobbieAdded from './Hobbies/HobbieAdded';
 import '../Css/globalhome.css';
 import Swal from 'sweetalert2';
 import ReactLoading from 'react-loading'
@@ -36,6 +36,7 @@ class Expertise extends Component {
             })
         }
 
+        this.props.CheckMessagesNotifications();
 
     }
 
@@ -87,7 +88,6 @@ class Expertise extends Component {
         // אם אין התמחויות בסל בעת לחיצה על כפתור השמירה ובמסד הנתונים קיימים התמחויות - ימחקו כל ההתמחויוית של המדריך
 
         if (tempArray.length === 0) {
-            console.log("del")
             fetch(this.apiUrl + '/Expertise/' + this.props.GuideDetails.gCode, {
                 method: 'DELETE',
                 //body: JSON.stringify({id:7}),
@@ -96,7 +96,6 @@ class Expertise extends Component {
                 })
             })
                 .then(res => {
-                    console.log('res=', res);
                     return res.json()
                 })
                 .then(
@@ -121,7 +120,7 @@ class Expertise extends Component {
         Swal.fire({
             position: 'center',
             icon: 'success',
-            title: 'הפרטים שלך עודכנו בהצלחה',
+            title: 'Your expertises update!',
             showConfirmButton: false,
             timer: 1200
         });
@@ -138,13 +137,10 @@ class Expertise extends Component {
 
         })
             .then(res => {
-                console.log('res=', res);
                 return res.json()
             })
             .then(
                 (result) => {
-                    console.log("fetch POST= ", result);
-                    console.log(result);
                     this.setState({
                         ListFromSQL: result
                     });
@@ -198,15 +194,15 @@ class Expertise extends Component {
             <Card className="cardDivCenter">
                 {/* <Card.Header>Expertises</Card.Header> */}
                 <ListGroup>
-                    <ListGroupItem>
-                        <div className="row title"><h2>Choose Expertises:</h2></div>
+                    <ListGroupItem className="listgroupTitle">
+                        <div className="row title"><h3>Choose Expertises:</h3></div>
                     </ListGroupItem>
-                    <ListGroupItem>
+                    <ListGroupItem id="AllHobbieDiv">
                         <div className='row HobbiesDiv'>
                             <div className='col HobbiesList col-md col-xs-12'>
                                 <HobbiesList addToCart={this.addToCart} itemsInArray={this.state.itemsArray} />
                             </div>
-                            <span className="middleLine col-md-1 col-xs-12"></span>
+                            <span className="middleLine hidden-md hidden-lg hidden-sm hidden-xl col-xs-12"></span>
                             <div className='col HobbiesAdded col-md col-xs-12'>
                                 <div className="row titleAdded"><span>Selected:</span> </div>
                                 <div className="row HobbiesListSide HobbieAddedList">

@@ -50,31 +50,25 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            local: true,
-            docId: "",
-            idChat: "",
-            notificationsMessages: [],
-            navbarCheckOpen: "open",
-            tempGuide: "",
-            AllAreas: [],
-            AllHobbies: [],
-            sqlHobbies: [],
-            AllExpertises: [],
-            sqlExpertises: [],
-            GuidesFromGovIL: [],
-            LanguagesList: [],
-            LanguagesListOrgenized: [],
+            local:false, //אם השרת לוקאלי או לא
+            docId: "",  //קוד משתמש לפיירבס
+            idChat: "", //קוד משתמש לפיירבייס צ'אט
+            notificationsMessages: [],   //מערך התראות
+            navbarCheckOpen: "open",    //מצב התפריט השמאלי
+            tempGuide: "",             //מדריך
+            AllHobbies: [],           // כל התחביבים מסודרים
+            sqlHobbies: [],          //תחביבים מהשרת
+            AllExpertises: [],      //כל ההתמחויות מסודרות
+            sqlExpertises: [],     //התמחויות מהשרת 
+            GuidesFromGovIL: [],  //מדריך ממשרד התיירות
+            LanguagesList: [],   //רשימת השפות מהשרת
+            LanguagesListOrgenized: [], //שפות מסודרות
             isLoading: false,
-            Attractions: [],
-            tourist: "",
-            //AttractionsArray: [],
-            ListAttractions: [],
-            Cities: [],
-            listAtt: [],
-            listAPITypes: [],
-            image: "",
-            openTutorial: false,
-            numOfNotifications: 0
+            Attractions: [],  //כל ההאטרקציות
+            tourist: "",     //תייר
+            Cities: [],     //כל הערים
+            openTutorial: false, //הקדמה
+            numOfNotifications: 0 //התראות
         };
         let local = this.state.local;
         this.apiUrl = "http://localhost:49948/api/";
@@ -82,92 +76,33 @@ class App extends Component {
             this.apiUrl = "https://proj.ruppin.ac.il/bgroup10/PROD/api/";
         }
     }
-    //מביא את כל האזורים, התחביבים וההתמחויות שנמצאות במסד נתונים
+    
     componentDidMount() {
-        // localStorage.removeItem('TripTourists');
-
-        this.GetAllHobbies();
-        this.GetAllExpertises();
-        this.GetAllLanguages();
-        this.GetGuidesGOVFromSQL();
-        this.GetRequests();
-        this.CheckAttractionsLocalStorage();
-        this.CheckCitiesLocalStorage();
-        this.CheckIfGuideInLocalStorage();
-        this.CheckMessagesNotifications();
-    }
-    componentDidUpdate(PrevState) {
-        if (PrevState.numOfNotifications !== this.state.numOfNotifications) {
-            setTimeout(() => {
-                this.CheckMessagesNotifications();
-            }, 45000);
-        }
+        this.CheckHobbiesLocalStorage();          //מביא את כל התחביבים שקיימים במסד הנתונים
+        this.CheckExpertisesLocalStorage();      //מביא את כל ההתמחויות הקיימות במסד נתונים
+        this.CheckLanguagesLocalStorage();      //מביא את כל השפות שבשרת
+        this.GetGuidesGOVFromSQL(); //מביא את כל המדריכים שבאתר משרד התיירות
+       //this.GetRequests();
+        this.CheckAttractionsLocalStorage();    //בודק אם קיימות אטרקציות בלואקל סטורג'
+        this.CheckCitiesLocalStorage();        //בודק אם קיימים ערים בלוקאל סטורג'
+        this.CheckIfGuideInLocalStorage();    //בודק אם המדריך קיים בלוקאל סטורג'
+        this.CheckMessagesNotifications();   //בודק אם יש התראות חדשות למדריך
     }
 
-    CheckAttractionsLocalStorage = () => {
-        //this.GetAllAttractions();
 
-        if (localStorage.getItem("AllAtt") === null) {
-            this.GetAllAttractions();
+      //****************************בודק אם קיימים תחביבים בלואקל סטורג'*********************************************
+      CheckHobbiesLocalStorage = () => {
+        if (localStorage.getItem("AllHobbies") === null) {
+            this.GetAllHobbies();
         } else {
-            let temparr = JSON.parse(localStorage.getItem("AllAtt"));
+            let temparr = JSON.parse(localStorage.getItem("AllHobbies"));
             this.setState({
-                Attractions: temparr
+                AllHobbies: temparr
             });
         }
     };
-    CheckCitiesLocalStorage = () => {
-        if (localStorage.getItem("cities") === null) {
-            this.GetAllCitiesFromGOVIL();
-        } else {
-            let citiesLocal = JSON.parse(localStorage.getItem("cities"));
-            this.setState({
-                Cities: citiesLocal
-            });
-        }
-    };
-
-    CheckIfGuideInLocalStorage = () => {
-        if (localStorage.getItem("Guide") === null) {
-        } else {
-            let Guide = JSON.parse(localStorage.getItem("Guide"));
-            this.setState({ tempGuide: Guide });
-            this.connectToFirebase(Guide);
-        }
-    };
-
-    GetRequests = () => {
-        fetch(this.apiUrl + "BuildTrip", {
-            method: "GET",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8"
-            })
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then(
-                (result) => {},
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    };
-
-    showToast = (type, message) => {
-        switch (type) {
-            case 0:
-                toast.warning(message);
-                break;
-            case 1:
-                toast.success(message);
-            default:
-                break;
-        }
-    };
-
-    //מביא את כל התחביבים שקיימים במסד הנתונים
-    GetAllHobbies = () => {
+     //מביא את כל התחביבים שקיימים במסד הנתונים
+     GetAllHobbies = () => {
         fetch(this.apiUrl + "Hobby", {
             method: "GET",
             headers: new Headers({
@@ -202,8 +137,21 @@ class App extends Component {
         this.setState({
             AllHobbies: temp
         });
+            localStorage.setItem('AllHobbies',JSON.stringify(temp))
     };
+    //******************************************************************************************************************/
 
+ //****************************בודק אם קיימים התמחויות בלואקל סטורג'*********************************************
+ CheckExpertisesLocalStorage = () => {
+    if (localStorage.getItem("AllExpertises") === null) {
+        this.GetAllExpertises();
+    } else {
+        let temparr = JSON.parse(localStorage.getItem("AllExpertises"));
+        this.setState({
+            AllExpertises: temparr
+        });
+    }
+};
     //מביא את כל ההתמחויות הקיימות במסד נתונים
     GetAllExpertises = () => {
         fetch(this.apiUrl + "Expertise", {
@@ -239,9 +187,22 @@ class App extends Component {
         }
         this.setState({
             AllExpertises: temp
-        });
-    };
+        })
+            localStorage.setItem('AllExpertises',JSON.stringify(temp))
+    }
+    //******************************************************************************************************************/
 
+//****************************בודק אם קיימים שפות בלואקל סטורג'*********************************************
+CheckLanguagesLocalStorage = () => {
+    if (localStorage.getItem("AllLanguages") === null) {
+        this.GetAllLanguages();
+    } else {
+        let temparr = JSON.parse(localStorage.getItem("AllLanguages"));
+        this.setState({
+            LanguagesListOrgenized: temparr
+        });
+    }
+};
     //מביא את כל השפות שבשרת
     GetAllLanguages = () => {
         fetch(this.apiUrl + "Language", {
@@ -278,14 +239,14 @@ class App extends Component {
         }
         this.setState({
             LanguagesListOrgenized: tempArrayList
-        });
+        })
+            localStorage.setItem('AllLanguages',JSON.stringify(tempArrayList))
     };
+     //******************************************************************************************************************/
 
-    //מביא את כל המדריכים שבאתר משרד התיירות
-    GetGuidesGOVFromSQL = () => {
-        // this.setState({
-        //     isLoading: true
-        // });
+
+      //*******************************מביא את כל המדריכים שבאתר משרד התיירות*****************************************
+      GetGuidesGOVFromSQL = () => {
         var data = {
             resource_id: "5f5afc43-639a-4216-8286-d146a8e048fe", // the resource id
             limit: 10000
@@ -303,9 +264,22 @@ class App extends Component {
             GuidesFromGovIL: data.result.records
         });
     };
+    //******************************************************************************************************************/
 
-    //מביא את כל האטרקציות שבאתר משרד התיירות
-    GetAllAttractions = () => {
+   
+    //****************************בודק אם קיימות אטרקציות בלואקל סטורג'*********************************************
+    CheckAttractionsLocalStorage = () => {
+        if (localStorage.getItem("AllAtt") === null) {
+            this.GetAllAttractions();
+        } else {
+            let temparr = JSON.parse(localStorage.getItem("AllAtt"));
+            this.setState({
+                Attractions: temparr
+            });
+        }
+    };
+     //מביא את כל האטרקציות שבאתר משרד התיירות
+     GetAllAttractions = () => {
         this.setState({
             isLoading: true
         });
@@ -368,7 +342,6 @@ class App extends Component {
                     );
                 }
             }
-
             for (let i = 0; i < point.FullDescription.length - 3; i++) {
                 const element = point.FullDescription.slice(i, i + 3);
                 if (element === "<p>" || element === "</p>") {
@@ -390,9 +363,22 @@ class App extends Component {
             isLoading: false
         });
     };
+    //******************************************************************************************************************/
 
-    //מביא את כל הערים בארץ מ GOV-IL
-    GetAllCitiesFromGOVIL = () => {
+
+    //**************************************בודק אם קיימים ערים בלוקאל סטורג'********************************************
+    CheckCitiesLocalStorage = () => {
+        if (localStorage.getItem("cities") === null) {
+            this.GetAllCitiesFromGOVIL();
+        } else {
+            let citiesLocal = JSON.parse(localStorage.getItem("cities"));
+            this.setState({
+                Cities: citiesLocal
+            });
+        }
+    };
+     //מביא את כל הערים בארץ מ GOV-IL
+     GetAllCitiesFromGOVIL = () => {
         var data = {
             resource_id: "eb548bfa-a7ba-45c4-be7d-2e8271f55f70", // the resource id
             limit: 150
@@ -404,50 +390,26 @@ class App extends Component {
             success: this.AddCities
         });
     };
+    //מוסיף את הערים
     AddCities = (data) => {
         localStorage.setItem("cities", JSON.stringify(data.result.records));
         this.setState({
             Cities: data.result.records
         });
     };
+    //**************************************************************************************************************************/
 
-    //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות.
-    navbarCheck = (nav) => {
-        if (nav) {
-            this.setState({
-                navbarCheckOpen: "close"
-            });
+    //בודק אם המדריך שמור בלוקאל סטורג'
+    CheckIfGuideInLocalStorage = () => {
+        if (localStorage.getItem("Guide") === null) {
         } else {
-            this.setState({
-                navbarCheckOpen: "open"
-            });
+            let Guide = JSON.parse(localStorage.getItem("Guide"));
+            this.setState({ tempGuide: Guide });
+            this.connectToFirebase(Guide);
         }
     };
-
-    questionFunction = (quest) => {
-        if (!quest) {
-            this.setState({
-                openTutorial: false
-            });
-        }
-        else{
-            this.setState({
-                openTutorial: true
-            });
-        }
-       
-    };
-
-    numOfNotifications = (num) => {
-        this.setState(
-            {
-                numOfNotifications: num
-            },
-            () => {
-            }
-        );
-    };
-
+    
+    //*************************************בודק אם יש התראות חדשות למדריך********************************************
     CheckMessagesNotifications = () => {        
         let DocumentIdUser = this.state.docId;
             let messagesNotificationUser = [];
@@ -460,8 +422,8 @@ class App extends Component {
                 })
         }      
     }
-
-    orgenizeNotifications = (notifications) => {
+     //מסדר את הנוטיפיקיישנים במערך
+     orgenizeNotifications = (notifications) => {
         let arr = [];
         let users = [];
         if (notifications.length > 0) {
@@ -488,6 +450,60 @@ class App extends Component {
             this.numOfNotifications(0);
         }
     }
+    //**************************************************************************************************************************/
+
+    //נוטיפיקיישן
+    showToast = (type, message) => {
+        switch (type) {
+            case 0:
+                toast.warning(message);
+                break;
+            case 1:
+                toast.success(message);
+            default:
+                break;
+        }
+    };
+
+    //סוגר ופותח את התפריט שנמצא בשלב שאחרי ההתחברות.
+    navbarCheck = (nav) => {
+        if (nav) {
+            this.setState({
+                navbarCheckOpen: "close"
+            });
+        } else {
+            this.setState({
+                navbarCheckOpen: "open"
+            });
+        }
+    };
+
+    //show tutorial
+    questionFunction = (quest) => {
+        if (!quest) {
+            this.setState({
+                openTutorial: false
+            });
+        }
+        else{
+            this.setState({
+                openTutorial: true
+            });
+        }
+    };
+
+    //מציג את מספר הנוטיפיקיישנים למדריך
+    numOfNotifications = (num) => {
+        this.setState(
+            {
+                numOfNotifications: num
+            },
+            () => {
+            }
+        );
+    };
+
+   //שולח לעמוד הצ'אט
     MoveToChatByClick = (email)=>{
         this.props.history.push({
                 pathname: "/chat/",
@@ -495,6 +511,7 @@ class App extends Component {
             });
     }
 
+    //מתנתק מהמדריך
     logOutFunction = () => {
         localStorage.removeItem("docId");
         localStorage.removeItem("idChat");
@@ -512,7 +529,7 @@ class App extends Component {
         });
     };
 
-    //בדיקה אם המדריך ממשרד התיירות נרשם באפליקציה או לא
+    //*******************בדיקה אם המדריך ממשרד התיירות נרשם באפליקציה או לא**************************************
     CheckIfGuidGovILExistInSQL = (licenseNum) => {
         this.setState({ isLoading: true });
         //pay attention case sensitive!!!! should be exactly as the prop in C#!
@@ -594,7 +611,7 @@ class App extends Component {
                 const { value: password } = await Swal.fire({
                     title: "Input Password",
                     input: "password",
-                    inputPlaceholder: "Enter your password",
+                    inputPlaceholder: "Enter new password",
                     inputAttributes: {
                         minlength: 6,
                         autocapitalize: "off",
@@ -849,6 +866,8 @@ class App extends Component {
                 }
             );
     };
+        //********************************************סיום הכנסת מדריך מאתר משרד התיירות***************************************/
+
 
     //לוקח את הפרטים מעמוד ההרשמה ובודק האם האימייל נמצא במסד נתונים- אם לא נמצא יוסיף אותו למסד נתונים
     PostGuideToCheckSignUp = (userDetails) => {
@@ -938,7 +957,8 @@ class App extends Component {
             );
         }
     };
-
+    
+//התחברות לפיירבייס
     connectToFirebase = (e) => {
         let docId = "";
         let idChat = "";
@@ -1051,162 +1071,10 @@ class App extends Component {
         }
     };
 
-    //מביא את כל האזורים הקיימים במסד נתונים
-    GetAllAreas = () => {
-        fetch(this.apiUrl + "Area", {
-            method: "GET",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8"
-            })
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then(
-                (result) => {
-                    this.setState({
-                        AllAreas: result
-                    });
-                },
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    };
-    SaveListAtt = (array) => {
-        this.setState({
-            ListAttractions: array
-        });
-    };
-
-    //מביא אטרקציות מ - API TRIPOSO
-    listAPI = () => {
-        let arraylist = JSON.parse(localStorage.getItem("ListApi"));
-        if (arraylist !== null) {
-            this.setState({
-                listAPITypes: arraylist
-            });
-        } else {
-            this.setState({
-                isLoading: true
-            });
-            let arr = [
-                "beaches",
-                "museums",
-                "art",
-                "culture",
-                "history",
-                "wildlife",
-                "adrenaline",
-                "amusementparks",
-                "camping",
-                "climbing",
-                "diving",
-                "rafting",
-                "markets",
-                "poitype-Shopping_centre",
-                "wineries",
-                "zoos",
-                "poitype-Archaeological_site",
-                "district-old_city",
-                "character",
-                "!eatingout"
-            ];
-
-            this.setState({
-                listAPITypes: arr
-            });
-
-            this.GetAllPlaces(arr);
-        }
-    };
-    //מביא אטרקציות מ - API TRIPOSO
-    GetAttList = (number, cityName, arr) => {
-        let Type = "&tag_labels=" + arr[0];
-        for (let i = 1; i < arr.length; i++) {
-            const element = arr[i];
-            if (element.startsWith("!")) {
-                Type += "&tag_labels=" + element;
-            } else {
-                Type += "|" + element;
-            }
-        }
-        let num = "";
-        if (number !== 0) {
-            num = "&offset=" + number;
-        }
-        $.ajax({
-            url:
-                "https://www.triposo.com/api/20200405/poi.json?location_id=" +
-                cityName +
-                "&fields=all&count=100" +
-                num +
-                Type +
-                "&order_by=name&account=ZZR2AGIH&token=lq24f5n02dn276wmas9yrdpf9jq7ug3p",
-            dataType: "json",
-            success: this.addMore
-        });
-    };
-    //מביא אטרקציות מ - API TRIPOSO
-    addMore = (data) => {
-        for (let i = 0; i < data.results.length; i++) {
-            const element = data.results[i];
-            this.state.listAtt.push(element);
-        }
-        if (data.more) {
-            this.GetAttList(
-                this.state.listAtt.length,
-                "Israel",
-                this.state.listAPITypes
-            );
-        }
-
-        if (!data.more) {
-            this.setState({
-                loading: false
-            });
-            let arrtemp = this.state.listAtt;
-            // localStorage.setItem('ListApi', JSON.stringify(arrtemp));
-        }
-    };
-
-    //מביא אטרקציות מ - API TRIPOSO
-    GetAllPlaces = (arr) => {
-        this.GetAttList(0, "Israel", arr);
-    };
-
-    GetAllAttractionsFromSQL = () => {
-        this.setState({
-            isLoading: true
-        });
-        fetch(this.apiUrl + "BuildTrip/GetAllAttractions", {
-            method: "GET",
-            headers: new Headers({
-                "Content-Type": "application/json; charset=UTF-8"
-            })
-        })
-            .then((res) => {
-                return res.json();
-            })
-            .then(
-                (result) => {
-                    this.setState({
-                        AttractionsArray: result
-                    });
-                    this.GetAllAttractions();
-                },
-                (error) => {
-                    console.log("err post=", error);
-                }
-            );
-    };
+ 
 
     render() {
-        return this.state.loading === true ? (
-            <div className="spinner-border text-success" role="status">
-                <span className="sr-only">Loading...</span>
-            </div>
-        ) : (
+        return  (
             <div className="app">
                 <ToastContainer
                     autoClose={2000}
@@ -1251,10 +1119,8 @@ class App extends Component {
                             showToast={this.showToast}
                             AllLanguages={this.state.LanguagesListOrgenized}
                             local={this.state.local}
-                            ReloadHobbies={this.GetAllHobbies}
                             AllExpertises={this.state.AllExpertises}
                             AllHobbies={this.state.AllHobbies}
-                            AllAreas={this.state.AllAreas}
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             GetGuidesFromSQL={this.GetGuidesFromSQL}
                             openTutorial={this.state.openTutorial}
@@ -1277,6 +1143,9 @@ class App extends Component {
                             linkColor="#1988ff"
                         />
                         <Chat
+                        numOfNotificationsSet = {this.numOfNotifications}
+                            orgenizeNotifications = {this.orgenizeNotifications}
+                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                             showToast={this.showToast}
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             Guide={this.state.tempGuide}
@@ -1287,7 +1156,6 @@ class App extends Component {
                             }
                             AllExpertises={this.state.AllExpertises}
                             AllHobbies={this.state.AllHobbies}
-                            CheckMessagesNotifications={this.CheckMessagesNotifications}
                         />
                         <MainFooter className="mainfooterDiv hidden-xs" />
                     </Route>
@@ -1305,16 +1173,16 @@ class App extends Component {
                             QuestionFunc={this.questionFunction}
                         />
                         <BuildTrip
-                            SaveListAtt={this.SaveListAtt}
+                            //SaveListAtt={this.SaveListAtt}
                             Attractions={this.state.Attractions}
                             showToast={this.showToast}
                             cities={this.state.Cities}
                             navbarOpenCheck={this.state.navbarCheckOpen}
                             Guide={this.state.tempGuide}
                             local={this.state.local}
-                            ListAttractions={this.state.ListAttractions}
+                            //ListAttractions={this.state.ListAttractions}
                             tourist={this.state.tourist}
-                            listAPI={this.state.listAtt}
+                            //listAPI={this.state.listAtt}
                             GetCities={this.GetAllCitiesFromGOVIL}
                             openTutorial={this.state.openTutorial}
                             QuestionFunc={this.questionFunction}
@@ -1348,7 +1216,7 @@ class App extends Component {
                             languages={this.state.LanguagesList}
                             local={this.state.local}
                         />
-                        <MainFooter className="hidden-xs" />
+                        <MainFooter className="hidden-xs" id="footerAdmin" />
                     </Route>
                     <Route path="/Hobbies">
                         <HobbiesDataTable

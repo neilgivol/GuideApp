@@ -1,39 +1,62 @@
+
+#AllHobbieDiv{
+    padding:2px;
+}
+.cardDivCenter {
+    height: 100%;
+    margin-right: -30px;
+}
+/*רשימת תחביבים שלא נבחרו*/
 .HobbiesList {
+    padding-top:28px;
+    padding-bottom: 10px;
     float: left;
     height: 100%;
-}
-.HobbieAddedList {
-    height: 100%;
-    margin-left: 5px;
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
 }
 .HobbiesDiv {
     margin: 0 auto;
     border: 1px solid rgba(0, 0, 0, 0.125);
 }
+/*רשימת תחביבים שנבחרו*/
+.HobbieAddedList {
+    height: 100%;
+    margin-left: 5px;
+}
+.HobbieAddedList .CardItem {
+    max-height: 175px;
+}
 .HobbiesAdded {
     float: right;
     height: 100%;
 }
+/*תחביבים שנבחרו*/
+.HobbiesListSide {
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    justify-content: center;
+}
+.titleAdded span {
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+/*תמונת תחביב*/
 .CardImage {
     max-width: 100%;
     max-height: 100%;
 }
-.CardItem img {
-    height: 195px;
-    width: 260px;
+#open .CardItem img {
+    height: 170px;
+    width: 210px;
     max-width: 100%;
     max-height: 100%;
 }
-
-span.middleLine {
-    display: inline-block;
-    border-right: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.CardItem {
+#close .CardItem{
     position: relative;
-    height: 195px;
-    width: 260px;
+    height: 190px;
+    width: 240px;
     border: 1px solid rgba(0, 0, 0, 0.125);
     margin: 3px;
     position: relative;
@@ -46,6 +69,71 @@ span.middleLine {
         0 0.9375rem 1.375rem rgba(90, 97, 105, 0.1),
         0 0.4375rem 2.1875rem rgba(165, 182, 201, 0.1);
 }
+#close .CardItem img{
+    height: 190px;
+    width: 240px;
+    max-width: 100%;
+    max-height: 100%;
+}
+#open .CardItem {
+    position: relative;
+    height: 170px;
+    width: 210px;
+    margin: 3px;
+    position: relative;
+    border-radius: 8px;
+    border: 2px outset rgba(164, 164, 164, 0.28);
+    border-radius: 4px 4px 4px 4px;
+    transition: transform 0.3s;
+    box-shadow: 0 0.125rem 9.375rem rgba(90, 97, 105, 0.1),
+        0 0.25rem 0.5rem rgba(90, 97, 105, 0.12),
+        0 0.9375rem 1.375rem rgba(90, 97, 105, 0.1),
+        0 0.4375rem 2.1875rem rgba(165, 182, 201, 0.1);
+}
+
+.titleCardDiv {
+    height: 19%;
+    position: absolute;
+    top: 82%;
+    width: 100%;
+    opacity: 0.7;
+    background-color: #b3e0ff;
+    font-weight: bold;
+}
+.cardDiv{
+    margin-bottom: 100px;
+}
+.titleCardDiv h4 {
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+}
+
+.CardItem:hover {
+    background-color: #b3e0ff;
+    -ms-transform: scale(1.05); /* IE 9 */
+    -webkit-transform: scale(1.05); /* Safari 3-8 */
+    transform: scale(1.05);
+    z-index: 999;
+    cursor: pointer;
+}
+.CardItem:hover .titleCardDiv {
+    background-color: #00639d;
+    color: white;
+    cursor: pointer;
+}
+.CardItem:hover .titleCardDiv h4{
+    color: white;
+
+}
+
+/*קו הפרדה*/
+span.middleLine {
+    display: inline-block;
+    border-right: 1px solid rgba(0, 0, 0, 0.125);
+}
+/*מחיקת תחביב*/
 .del {
     position: absolute;
     bottom: 84%;
@@ -60,107 +148,62 @@ span.middleLine {
 .del:hover {
     color: white;
 }
-.CardItem:hover {
-    background-color: #b3e0ff;
-    -ms-transform: scale(1.2); /* IE 9 */
-    -webkit-transform: scale(1.2); /* Safari 3-8 */
-    transform: scale(1.2);
-    z-index: 999;
-    cursor: pointer;
-}
 
-.CardItem:hover .titleCardDiv {
-    background-color: #00639d;
-    color: white;
-    cursor: pointer;
-}
-.CardItem:hover .titleCardDiv h4{
-    color: white;
-
-}
-
-.titleCardDiv h4 {
-    font-size: 24px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 34px;
-}
-
-
-.titleCardDiv {
-    height: 20%;
-    position: absolute;
-    top: 82%;
-    width: 100%;
-    opacity: 0.7;
-    background-color: #b3e0ff;
-    font-weight: bold;
-}
-.cardDiv{
-    margin-bottom: 100px;
-}
-
-.HobbiesListSide {
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-}
-.titleAdded span {
-    margin-left: 10px;
-    font-size: 20px;
-}
-.cardDivCenter {
-    height: 100%;
-}
-
-.HobbieAddedList .CardItem {
-    max-height: 175px;
-}
+/******************Phone*****************************/
 @media only screen and (max-width: 600px) {
+    .card .list-group-item {
+        padding: 10px;
+    }
+    .centerDiv {
+        margin-bottom: 100px;
+    }
+    .cardDiv {
+        margin-bottom: 60px;
+        padding-right: 0px;
+    }
+    .cardDivCenter {
+        height: 100%;
+        margin-right: 0px;
+    }
+    /*כותרת ראשית של העמוד*/
+    .title {
+        margin-left: 5px;
+        margin-top: 0px;
+    }
+    /*תחביבים שלא נוספו*/
     .HobbiesDiv {
         margin-right: 0px;
     }
+    .HobbiesList {
+        padding-right: 0px;
+    }
+    
+
+    /*תחביבים שנוספו*/
     .HobbieAddedList {
         margin-left: -16px;
+    }
+    .HobbiesListSide {
+        padding-right: 0px;
+        margin-right: -0px;
+        justify-content: center;
+    }
+    .HobbiesAdded {
+        padding-right: 0px;
+        justify-content: center;
     }
     .titleAdded span {
         margin-left: 5px;
         font-size: 15px;
     }
-    .card .list-group-item {
-        padding: 10px;
-    }
-    .title {
-        margin-top: 0px;
-    }
-    .HobbiesList {
-        padding-right: 0px;
-    }
-    .HobbiesAdded {
-        padding-right: 0px;
-    }
-    .HobbiesListSide {
-        padding-right: 0px;
-        margin-right: -0px;
-    }
-    .CardItem {
+    /*כרטיס תחביב*/
+   #close .CardItem {
         height: 108px;
         width: 144px;
     }
-    .CardItem img {
+   #close .CardItem img {
         height: 108px;
         width: 144px;
-    }
-    .del {
-        position: absolute;
-        bottom: 77%;
-        left: 3%;
-        font-size: 8px;
-    }
-    span.middleLine {
-        height: 10px;
-        display: inline-block;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.8);
     }
     .titleCardDiv h4 {
         font-size: 10px;
@@ -169,11 +212,9 @@ span.middleLine {
         vertical-align: middle;
         line-height: 15px;
     }
-
     .titleCardDiv h4:hover {
         color: white;
     }
-
     .titleCardDiv {
         height: 20%;
         position: absolute;
@@ -183,20 +224,23 @@ span.middleLine {
         background-color: #b3e0ff;
         font-weight: bold;
     }
-
     .titleCardDiv:hover {
         background-color: #00639d;
         color: white;
         cursor: pointer;
     }
-    .centerDiv {
-        margin-bottom: 100px;
+    .del {
+        position: absolute;
+        bottom: 77%;
+        left: 3%;
+        font-size: 8px;
     }
-    /* .cardDivCenter{
-        margin-bottom: 60px;
-    } */
-    .cardDiv {
-        margin-bottom: 60px;
-        padding-right: 0px;
+    /*קו הפרדה*/
+    span.middleLine {
+        height: 10px;
+        display: inline-block;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.8);
     }
+   
+ 
 }

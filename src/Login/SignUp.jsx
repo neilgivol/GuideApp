@@ -8,13 +8,12 @@ import Swal from 'sweetalert2';
 import logoLast from '../Img/logoadvisor.png';
 import './SignUp.css';
 import './SignIn.css';
-//import { easing } from '@material-ui/core';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="#">
-        IsraVisor
+        IsraAdvisor
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -151,8 +150,10 @@ class SignUp extends Component {
     return (
         <div className="Cont">
       <MDBContainer>
-        <MDBRow className="RowDivSignIn">
-          <MDBCol md="6" className="LogoDiv divLogo"><img alt="" src={logoLast} /></MDBCol>
+          <MDBRow className="logoRow">
+          <MDBCol md="12" id="signUpImage" className="divLogo"><img className="LogoDiv" alt="" src={logoLast} /></MDBCol>
+          </MDBRow>
+          <MDBRow className="RowDivSignIn">
 
           <MDBCol className="ColDivSignIn" md="6">
             <MDBCard className="CardDivSignIn">
@@ -219,7 +220,7 @@ class SignUp extends Component {
                         success="right"
                         onChange={this.changeHandler}
                         required
-                        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,4}$"
                       />
                     </MDBCol>
                   </MDBRow>
